@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+<meta name="color-scheme" content="light">
+<title>PP2 Ultimate | Professional Practice II (Full English) - Complete Edition</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+html, body {
+  background: #ddeeff;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #1a2c3e;
+}
+body {
+  max-width: 850px;
+  margin: 0 auto;
+  padding: 0 12px 40px;
+}
+.hero {
+  text-align: center;
+  padding: 32px 20px 20px;
+}
+.hero-emoji { font-size: 68px; display: block; margin-bottom: 8px; }
+.hero h1 { font-size: 28px; font-weight: 800; color: #0a2f44; margin-bottom: 6px; }
+.hero p { font-size: 14px; color: #5a7d9a; }
+.acc-r { display: none; }
+.acc-lbl {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 20px;
+  cursor: pointer;
+  margin: 0 0 4px 0;
+  border-radius: 18px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+.ac-air { background: linear-gradient(135deg, #c26b2e, #db7c3a); }
+.ac-choke { background: linear-gradient(135deg, #b13e3e, #c95656); }
+.ac-bls { background: linear-gradient(135deg, #2a6f6f, #368a8a); }
+.ac-collapse { background: linear-gradient(135deg, #4f6f8f, #6389ae); }
+.ac-history { background: linear-gradient(135deg, #3f7e5c, #4f9e74); }
+.ac-vitals { background: linear-gradient(135deg, #7e5a9b, #9b75bc); }
+.ac-inject { background: linear-gradient(135deg, #aa6f3c, #c7894c); }
+.ac-revision { background: linear-gradient(135deg, #2c5f8a, #4280a8); }
+.ac-prevex { background: linear-gradient(135deg, #5a3e8a, #7c5abf); }
+.sicon { font-size: 32px; }
+.sname { color: white; font-size: 20px; font-weight: 800; flex: 1; }
+.scount { color: rgba(255,255,255,0.75); font-size: 13px; }
+.sarr { color: white; font-size: 24px; transition: transform .2s; }
+.acc-r:checked + .acc-lbl { border-radius: 18px 18px 0 0; }
+.acc-r:checked + .acc-lbl .sarr { transform: rotate(180deg); }
+.acc-body {
+  max-height: 0;
+  overflow: hidden;
+  background: white;
+  border-radius: 0 0 18px 18px;
+  transition: max-height 0.4s ease;
+  margin-bottom: 14px;
+}
+.acc-r:checked + .acc-lbl + .acc-body { max-height: 60000px; transition: max-height 0.7s ease; }
+.topics-wrap { padding: 18px 16px 22px; }
+.done-chk { display: none; }
+.topic-card {
+  border-radius: 18px;
+  margin: 8px 0;
+  border: 2px solid #e2edf7;
+  background: #fff;
+  transition: all .2s;
+}
+.topic-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: #f9fdfe;
+  border-bottom: 1px solid #e9f0f5;
+}
+.tnum {
+  width: 38px;
+  height: 38px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 16px;
+  color: white;
+  flex-shrink: 0;
+}
+.ac-air .tnum { background: #db7c3a; }
+.ac-choke .tnum { background: #c95656; }
+.ac-bls .tnum { background: #368a8a; }
+.ac-collapse .tnum { background: #6389ae; }
+.ac-history .tnum { background: #4f9e74; }
+.ac-vitals .tnum { background: #9b75bc; }
+.ac-inject .tnum { background: #c7894c; }
+.ac-revision .tnum { background: #4280a8; }
+.ac-prevex .tnum { background: #7c5abf; }
+.ttitle { flex: 1; font-size: 17px; font-weight: 800; color: #1c3a4f; }
+.topic-body { padding: 0 18px 18px; }
+.tcontent { background: #fefefe; }
+.ch {
+  background: #f4fafd;
+  border-radius: 20px;
+  padding: 14px 16px;
+  margin-bottom: 18px;
+  border-left: 5px solid;
+}
+.ac-air .ch { border-left-color: #db7c3a; }
+.ac-choke .ch { border-left-color: #c95656; }
+.ac-bls .ch { border-left-color: #368a8a; }
+.ac-collapse .ch { border-left-color: #6389ae; }
+.ac-history .ch { border-left-color: #4f9e74; }
+.ac-vitals .ch { border-left-color: #9b75bc; }
+.ac-inject .ch { border-left-color: #c7894c; }
+.ac-revision .ch { border-left-color: #4280a8; }
+.ac-prevex .ch { border-left-color: #7c5abf; }
+.ch h3 { font-size: 15px; font-weight: 800; margin-bottom: 10px; color: #144d6b; }
+.ch ul li {
+  padding: 5px 0 5px 18px;
+  position: relative;
+  list-style: none;
+  border-bottom: 1px solid #eaf0f5;
+}
+.ch ul li:last-child { border-bottom: none; }
+.ch ul li::before { content: "•"; position: absolute; left: 2px; color: #3f8db3; }
+.ch ol li {
+  padding: 5px 0 5px 18px;
+  position: relative;
+  list-style: none;
+  border-bottom: 1px solid #eaf0f5;
+}
+.ch ol li:last-child { border-bottom: none; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 16px;
+  font-size: 12.5px;
+  margin: 12px 0;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+th { background: #e6f0f8; padding: 8px 10px; font-weight: 800; color: #1f4e6e; }
+td { padding: 7px 10px; border-bottom: 1px solid #e2ecf3; }
+.mcq-wrap {
+  background: #eef4fc;
+  border-radius: 24px;
+  padding: 18px;
+  margin-top: 22px;
+}
+.mcq-hdr {
+  font-weight: 800;
+  font-size: 17px;
+  margin-bottom: 16px;
+  display: flex;
+  gap: 10px;
+  color: #1b4b6e;
+}
+.mcq-badge {
+  background: #d4a11e;
+  color: white;
+  font-size: 11px;
+  padding: 4px 12px;
+  border-radius: 40px;
+}
+.mi {
+  background: white;
+  border-radius: 20px;
+  padding: 16px;
+  margin-bottom: 16px;
+  border: 1px solid #cde0ef;
+}
+.mq {
+  font-weight: 800;
+  font-size: 15px;
+  margin-bottom: 12px;
+  display: flex;
+  gap: 12px;
+}
+.mn {
+  background: #dce6ef;
+  padding: 4px 10px;
+  border-radius: 30px;
+  font-size: 13px;
+}
+.mopts { display: flex; flex-direction: column; gap: 8px; }
+input[type="radio"] { display: none; }
+.mo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 40px;
+  border: 1.5px solid #d9e5f0;
+  background: #fff;
+  font-size: 13.5px;
+  cursor: pointer;
+}
+.mo:hover { background: #f2f9ff; }
+.ml {
+  font-weight: 800;
+  background: #eef2f7;
+  width: 28px;
+  height: 28px;
+  border-radius: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+input[type="radio"]:checked + .mo.cor {
+  background: #e3f5ec;
+  border-color: #2c8c5a;
+  color: #1b5e3a;
+}
+input[type="radio"]:checked + .mo.cor .ml {
+  background: #2c8c5a;
+  color: white;
+}
+input[type="radio"]:checked + .mo.wrg {
+  background: #ffe9e9;
+  border-color: #cd5c5c;
+  color: #962d2d;
+}
+input[type="radio"]:checked + .mo.wrg .ml {
+  background: #cd5c5c;
+  color: white;
+}
+.mexp summary {
+  padding: 10px 15px;
+  font-weight: 700;
+  background: #e9f2e9;
+  color: #1f7840;
+  cursor: pointer;
+  border-radius: 40px;
+  display: inline-block;
+  font-size: 12px;
+}
+.mxb {
+  background: #ebf7ef;
+  padding: 12px 16px;
+  border-radius: 18px;
+  margin-top: 8px;
+}
+.done-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 20px 0 10px;
+  padding: 12px;
+  border: 2px solid #c7dfee;
+  border-radius: 60px;
+  background: #fafeff;
+  font-weight: 700;
+  color: #467a9e;
+  cursor: pointer;
+}
+.done-btn:hover { background: #e2f0fa; }
+.done-chk:checked + .topic-card {
+  border-color: #2f9e68 !important;
+  background: #f1fcf5 !important;
+}
+.done-chk:checked + .topic-card .topic-header { background: #e2f3e8 !important; }
+.done-chk:checked + .topic-card .tnum { background: #2f9e68 !important; }
+.done-chk:checked + .topic-card .ttitle { color: #1d784c !important; }
+.footer {
+  text-align: center;
+  padding: 30px 18px 18px;
+  font-size: 12px;
+  color: #6e8eaa;
+  border-top: 1px solid #c2d9ec;
+  margin-top: 26px;
+}
+.stats-bar {
+  background: linear-gradient(135deg, #2c5f8a, #4280a8);
+  color: white;
+  padding: 16px 20px;
+  border-radius: 18px;
+  margin: 20px 0;
+  text-align: center;
+  font-weight: 700;
+  font-size: 15px;
+}
+</style>
+<base target="_blank">
+</head>
+<body>
+<div class="hero"><span class="hero-emoji">📚🩺</span><h1>Professional Practice II</h1><p>⁠Study now 📝 panic later ☠️</p></div>
+
+<div class="stats-bar">📊 9 Sections • 180 MCQs • All Content from Official Handbook</div>
+<!-- AIRWAY MANAGEMENT -->
+<input type="checkbox" id="acc-air" class="acc-r"><label for="acc-air" class="acc-lbl ac-air"><span class="sicon">🫁</span><span class="sname">Airway Management</span><span class="scount">1 Topic</span><span class="sarr">▾</span></label>
+<div class="acc-body"><div class="topics-wrap"><input type="checkbox" id="dn-air" class="done-chk"><div class="topic-card ac-air"><div class="topic-header"><span class="tnum">1</span><span class="ttitle">Complete Airway & Breathing Support</span></div><div class="topic-body"><div class="tcontent">
+
+<div class="ch"><h3>🫁 Airway Anatomy</h3>
+<ul>
+<li><strong>Two openings:</strong> Nose → nasopharynx, Mouth → oropharynx</li>
+<li>Passages separated anteriorly by palate, join posteriorly in pharynx</li>
+<li><strong>Epiglottis</strong> functionally separates oropharynx from laryngopharynx (hypopharynx)</li>
+<li><strong>Upper airway:</strong> nose/mouth to larynx</li>
+<li><strong>Lower airway:</strong> structures distal to larynx (trachea, bronchi, lungs)</li>
+</ul></div>
+<div class="ch"><h3>⚠️ Causes of Airway Obstruction</h3>
+<ul>
+<li><strong>In unconscious patient:</strong> posterior displacement of tongue (decreased muscle tone) — MOST COMMON</li>
+<li><strong>Foreign material:</strong> vomit, blood, foreign body</li>
+<li><strong>Laryngeal obstruction:</strong> oedema from burns, inflammation, anaphylaxis</li>
+<li><strong>Laryngeal spasm:</strong> upper airway stimulation or inhalation of foreign body</li>
+<li><strong>Lower airway obstruction:</strong> excessive bronchial secretions, mucosal oedema, bronchospasm, pulmonary oedema, aspiration of gastric contents</li>
+</ul></div>
+
+<div class="ch"><h3>👁️ Recognition (Look, Listen, Feel)</h3>
+<ul>
+<li><strong>Partial obstruction:</strong> noisy breathing, airway diminished</li>
+<li><strong>Inspiratory stridor:</strong> obstruction at laryngeal level</li>
+<li><strong>Expiratory wheeze:</strong> lower airway obstruction</li>
+<li><strong>Gurgling:</strong> liquid or semisolid foreign material in upper airway</li>
+<li><strong>Snoring:</strong> pharynx partially occluded by the tongue</li>
+<li><strong>Complete obstruction:</strong> paradoxical see-saw chest/abdominal movement, no air entry, cyanosis</li>
+</ul></div>
+<div class="ch"><h3>🔧 Opening the Airway</h3>
+<ul>
+<li><strong>Head tilt-chin lift:</strong> push down on forehead, place fingers under chin, pull UP on mandible bony parts (NOT soft tissues — pressure to neck soft tissues may obstruct airway)</li>
+<li><strong>Jaw thrust:</strong> stand at head, palms on temples, fingers under mandibular rami. Lift mandible until lower incisors higher than upper. Use when <strong>cervical spine injury suspected</strong></li>
+<li>After each manoeuvre: check with look, listen, feel</li>
+<li><strong>Finger sweep:</strong> remove any solid foreign body visible in the mouth</li>
+</ul></div>
+
+<div class="ch"><h3>📏 Oropharyngeal Airway (OPA)</h3>
+<ul>
+<li>Prevents backward displacement of tongue</li>
+<li><strong>Size:</strong> incisors to angle of jaw OR ear lobule to angle of the mouth</li>
+<li><strong>Insertion:</strong> upside down to junction of soft/hard palate, rotate 180°, advance until lies in posterior pharynx</li>
+</ul></div>
+<div class="ch"><h3>👃 Nasopharyngeal Airway (NPA)</h3>
+<ul>
+<li>Better tolerated than OPA</li>
+<li><strong>Indicated:</strong> clenched jaw, trismus, maxillofacial injuries</li>
+<li><strong>Contraindicated:</strong> fracture base of skull (risk of intracranial placement)</li>
+<li><strong>Size:</strong> 6-7mm for adults (measured by patient's little finger or anterior nares)</li>
+<li><strong>Insertion:</strong> check patency of right nostril first, lubricate, insert vertically along floor of nose with slight twisting</li>
+<li><strong>Side effects:</strong> bleeding in <strong>30% of cases</strong>; if tube too long → stimulates laryngeal reflexes → laryngeal spasm or vomiting</li>
+</ul></div>
+
+<div class="ch"><h3>💨 Oxygen Delivery (Indicated when PaO₂ &lt;60mmHg or SpO₂ &lt;90%)</h3>
+<table>
+<tr><th>Device</th><th>FiO₂</th><th>Flow Rate</th></tr>
+<tr><td>Nasal cannula</td><td>Up to 40%</td><td>6 L/min</td></tr>
+<tr><td>Simple face mask</td><td>Up to 60%</td><td>10 L/min</td></tr>
+<tr><td>Face tent</td><td>Up to 40%</td><td>15 L/min</td></tr>
+<tr><td>Non-rebreather mask</td><td>Up to 95%</td><td>15 L/min</td></tr>
+<tr><td>Venturi mask</td><td>Variable</td><td>Variable</td></tr>
+<tr><td>High flow nasal cannula (HFNC)</td><td>Up to 100%</td><td>High flow</td></tr>
+</table></div>
+<div class="ch"><h3>🌬️ Ventilation Methods</h3>
+<ul>
+<li><strong>Mouth-to-mask (pocket mask):</strong> transparent, uni-directed valve, has port for oxygen supplementation. Use two-hand technique for seal</li>
+<li><strong>Self-inflating bag (BVM):</strong> ventilates with air or oxygen. Single person use → leak can occur. <strong>High pressure forces gas into stomach → vomiting and aspiration</strong></li>
+</ul></div>
+
+<div class="ch"><h3>🔵 Laryngeal Mask Airway (LMA)</h3>
+<ul>
+<li>Wide bore tube with elliptical inflated cuff sealing around laryngeal inlet</li>
+<li><strong>Advantages:</strong> decreases gastric inflation/aspiration risk; no head extension needed (device of choice in C-spine injury); can be used by nursing/paramedical staff; useful if intubation failed and bag-mask inadequate</li>
+<li><strong>Size:</strong> 5 for adult male, 4 for adult female</li>
+<li><strong>Insertion:</strong> check cuff patency, deflate, lubricate. Hold like pen, insert behind upper incisors with upper surface to palate. Advance to posterior pharyngeal wall, press downwards and forwards</li>
+<li><strong>Cuff inflation:</strong> <strong>(size - 1) × 10 ml</strong> (e.g., size 5 → 40ml)</li>
+<li>Fix tube, auscultate chest — <strong>small leak is acceptable</strong></li>
+<li><strong>Limitations:</strong> significant leak in pulmonary oedema/bronchospasm; aspiration risk; may cause laryngeal spasm if patient not deeply unconscious; epiglottis may fold down covering laryngeal inlet</li>
+</ul></div>
+<div class="ch"><h3>🔴 Tracheal Intubation</h3>
+<ul>
+<li><strong>Advantages:</strong> protects airway from aspiration; adequate tidal volume; ability to suction secretions</li>
+<li><strong>Disadvantages:</strong> unrecognized misplacement; needs trained person; difficult intubation risk</li>
+<li><strong>Equipment:</strong> cuffed tracheal tubes <strong>size 8 for male, 7 for female</strong>; laryngoscope; syringe; lubricating jelly; tape</li>
+<li><strong>Confirmation of correct placement:</strong>
+  <ol>
+  <li>Auscultation</li>
+  <li>Increase in peak inspiratory pressure</li>
+  <li>Palpating cuff in sternal notch while compressing pilot balloon</li>
+  <li><strong>Capnography (CO₂ detection) — GOLD STANDARD</strong></li>
+  <li>Chest X-ray (rarely required, except ICU)</li>
+  </ol>
+</li>
+<li><strong>Rule:</strong> <em>"If doubt, get it out and ventilate the patient with a bag-mask"</em></li>
+<li><strong>Causes of difficult intubation:</strong> short neck, stiff neck, older scar in neck, big goiter/mass, receding lower jaw, prominent incisors, narrow mouth</li>
+</ul></div>
+
+<div class="ch"><h3>✂️ Cricothyroidotomy (Emergency Surgical Airway)</h3>
+<ul>
+<li><strong>Indications:</strong> "cannot intubate, cannot ventilate"; extensive facial trauma; laryngeal edema</li>
+<li><strong>Needle Cricothyroidotomy:</strong>
+  <ul>
+  <li>Complications: cannula outside trachea → <strong>massive surgical emphysema</strong>, <strong>hemorrhage</strong>, <strong>oesophageal perforation</strong></li>
+  </ul>
+</li>
+<li><strong>Surgical Cricothyroidotomy:</strong>
+  <ul>
+  <li><strong>Advantages:</strong> protected airway by cuffed tube; higher airway pressures; tracheal suction possible; enables lung ventilation despite complete airway obstruction above</li>
+  <li><strong>Equipment:</strong> #11 blade scalpel, tracheostomy or ET tube, iodine and swab, tracheal dilator & hook</li>
+  </ul>
+</li>
+</ul></div>
+</div><div class="mcq-wrap"><div class="mcq-hdr">📝 15 MCQs <span class="mcq-badge">Airway</span></div>
+<div class="mi"><div class="mq"><span class="mn">1</span>Most common cause of airway obstruction in unconscious patient?</div><div class="mopts"><input type="radio" name="air0" id="air0a"><label for="air0a" class="mo wrg"><span class="ml">A</span>Bronchospasm</label><input type="radio" name="air0" id="air0b"><label for="air0b" class="mo wrg"><span class="ml">B</span>Foreign body</label><input type="radio" name="air0" id="air0c"><label for="air0c" class="mo wrg"><span class="ml">C</span>Laryngospasm</label><input type="radio" name="air0" id="air0d"><label for="air0d" class="mo cor"><span class="ml">D</span>Tongue displacement</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ D: Posterior tongue displacement due to reduced muscle tone.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">2</span>Jaw thrust is preferred over head tilt-chin lift when?</div><div class="mopts"><input type="radio" name="air1" id="air1a"><label for="air1a" class="mo wrg"><span class="ml">A</span>Cardiac arrest</label><input type="radio" name="air1" id="air1b"><label for="air1b" class="mo wrg"><span class="ml">B</span>Choking</label><input type="radio" name="air1" id="air1c"><label for="air1c" class="mo wrg"><span class="ml">C</span>Facial trauma</label><input type="radio" name="air1" id="air1d"><label for="air1d" class="mo cor"><span class="ml">D</span>Suspected cervical spine injury</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ D: Jaw thrust avoids neck extension.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">3</span>Oropharyngeal airway size is estimated by?</div><div class="mopts"><input type="radio" name="air2" id="air2a"><label for="air2a" class="mo wrg"><span class="ml">A</span>Patient's thumb length</label><input type="radio" name="air2" id="air2b"><label for="air2b" class="mo wrg"><span class="ml">B</span>Nose to thyroid cartilage</label><input type="radio" name="air2" id="air2c"><label for="air2c" class="mo cor"><span class="ml">C</span>Incisors to angle of mandible</label><input type="radio" name="air2" id="air2d"><label for="air2d" class="mo wrg"><span class="ml">D</span>Corner of mouth to ear lobe</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: Length from incisors to angle of jaw.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">4</span>Which oxygen device delivers FiO₂ up to 95%?</div><div class="mopts"><input type="radio" name="air3" id="air3a"><label for="air3a" class="mo cor"><span class="ml">A</span>Non-rebreather mask</label><input type="radio" name="air3" id="air3b"><label for="air3b" class="mo wrg"><span class="ml">B</span>Venturi mask</label><input type="radio" name="air3" id="air3c"><label for="air3c" class="mo wrg"><span class="ml">C</span>Simple face mask</label><input type="radio" name="air3" id="air3d"><label for="air3d" class="mo wrg"><span class="ml">D</span>Nasal cannula</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ A: Non-rebreather with reservoir bag.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">5</span>LMA advantage during suspected cervical spine injury?</div><div class="mopts"><input type="radio" name="air4" id="air4a"><label for="air4a" class="mo cor"><span class="ml">A</span>No head extension needed</label><input type="radio" name="air4" id="air4b"><label for="air4b" class="mo wrg"><span class="ml">B</span>Higher tidal volume</label><input type="radio" name="air4" id="air4c"><label for="air4c" class="mo wrg"><span class="ml">C</span>Allows suctioning</label><input type="radio" name="air4" id="air4d"><label for="air4d" class="mo wrg"><span class="ml">D</span>Protects against aspiration</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ A: Insertion does not require head/neck movement.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">6</span>Gurgling on airway assessment suggests?</div><div class="mopts"><input type="radio" name="air5" id="air5a"><label for="air5a" class="mo wrg"><span class="ml">A</span>Bronchospasm</label><input type="radio" name="air5" id="air5b"><label for="air5b" class="mo wrg"><span class="ml">B</span>Laryngeal obstruction</label><input type="radio" name="air5" id="air5c"><label for="air5c" class="mo wrg"><span class="ml">C</span>Tongue occlusion</label><input type="radio" name="air5" id="air5d"><label for="air5d" class="mo cor"><span class="ml">D</span>Liquid or semisolid material</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ D: Presence of blood, vomit, secretions.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">7</span>Confirm correct tracheal tube placement BEST by?</div><div class="mopts"><input type="radio" name="air6" id="air6a"><label for="air6a" class="mo wrg"><span class="ml">A</span>Symmetrical breath sounds</label><input type="radio" name="air6" id="air6b"><label for="air6b" class="mo cor"><span class="ml">B</span>Capnography (CO₂ detection)</label><input type="radio" name="air6" id="air6c"><label for="air6c" class="mo wrg"><span class="ml">C</span>Equal chest rise</label><input type="radio" name="air6" id="air6d"><label for="air6d" class="mo wrg"><span class="ml">D</span>Chest X-ray</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: End-tidal CO₂ is gold standard.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">8</span>Contraindication to nasopharyngeal airway?</div><div class="mopts"><input type="radio" name="air7" id="air7a"><label for="air7a" class="mo wrg"><span class="ml">A</span>Maxillofacial injury</label><input type="radio" name="air7" id="air7b"><label for="air7b" class="mo cor"><span class="ml">B</span>Basilar skull fracture</label><input type="radio" name="air7" id="air7c"><label for="air7c" class="mo wrg"><span class="ml">C</span>Clenched jaw</label><input type="radio" name="air7" id="air7d"><label for="air7d" class="mo wrg"><span class="ml">D</span>Trismus</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: Risk of intracranial placement.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">9</span>See-saw breathing indicates?</div><div class="mopts"><input type="radio" name="air8" id="air8a"><label for="air8a" class="mo wrg"><span class="ml">A</span>Normal breathing</label><input type="radio" name="air8" id="air8b"><label for="air8b" class="mo wrg"><span class="ml">B</span>Kussmaul breathing</label><input type="radio" name="air8" id="air8c"><label for="air8c" class="mo wrg"><span class="ml">C</span>Mild obstruction</label><input type="radio" name="air8" id="air8d"><label for="air8d" class="mo cor"><span class="ml">D</span>Complete airway obstruction</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ D: Paradoxical chest/abdominal movement.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">10</span>Which size LMA for average adult male?</div><div class="mopts"><input type="radio" name="air9" id="air9a"><label for="air9a" class="mo cor"><span class="ml">A</span>Size 5</label><input type="radio" name="air9" id="air9b"><label for="air9b" class="mo wrg"><span class="ml">B</span>Size 3</label><input type="radio" name="air9" id="air9c"><label for="air9c" class="mo wrg"><span class="ml">C</span>Size 4</label><input type="radio" name="air9" id="air9d"><label for="air9d" class="mo wrg"><span class="ml">D</span>Size 6</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ A: Male size 5, female size 4.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">11</span>Which sound indicates LOWER airway obstruction?</div><div class="mopts"><input type="radio" name="air10" id="air10a"><label for="air10a" class="mo wrg"><span class="ml">A</span>Snoring</label><input type="radio" name="air10" id="air10b"><label for="air10b" class="mo wrg"><span class="ml">B</span>Inspiratory stridor</label><input type="radio" name="air10" id="air10c"><label for="air10c" class="mo wrg"><span class="ml">C</span>Gurgling</label><input type="radio" name="air10" id="air10d"><label for="air10d" class="mo cor"><span class="ml">D</span>Expiratory wheeze</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ D: Expiratory wheeze suggests obstruction distal to larynx.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">12</span>LMA cuff inflation formula?</div><div class="mopts"><input type="radio" name="air11" id="air11a"><label for="air11a" class="mo wrg"><span class="ml">A</span>(size + 1) × 10 ml</label><input type="radio" name="air11" id="air11b"><label for="air11b" class="mo wrg"><span class="ml">B</span>size × 10 ml</label><input type="radio" name="air11" id="air11c"><label for="air11c" class="mo wrg"><span class="ml">C</span>size × 5 ml</label><input type="radio" name="air11" id="air11d"><label for="air11d" class="mo cor"><span class="ml">D</span>(size - 1) × 10 ml</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ D: For size 5: (5-1) × 10 = 40ml.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">13</span>Tracheal intubation tube sizes?</div><div class="mopts"><input type="radio" name="air12" id="air12a"><label for="air12a" class="mo cor"><span class="ml">A</span>Size 8 for male, 7 for female</label><input type="radio" name="air12" id="air12b"><label for="air12b" class="mo wrg"><span class="ml">B</span>Size 7 for male, 8 for female</label><input type="radio" name="air12" id="air12c"><label for="air12c" class="mo wrg"><span class="ml">C</span>Size 7.5 for both</label><input type="radio" name="air12" id="air12d"><label for="air12d" class="mo wrg"><span class="ml">D</span>Size 9 for male, 8 for female</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ A: Standard sizes: 8.0 mm ID for males, 7.0 mm ID for females.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">14</span>Rule for suspected misplaced tracheal tube?</div><div class="mopts"><input type="radio" name="air13" id="air13a"><label for="air13a" class="mo wrg"><span class="ml">A</span>Continue ventilation and observe</label><input type="radio" name="air13" id="air13b"><label for="air13b" class="mo cor"><span class="ml">B</span>'If doubt, get it out and bag-mask ventilate'</label><input type="radio" name="air13" id="air13c"><label for="air13c" class="mo wrg"><span class="ml">C</span>Get chest X-ray first</label><input type="radio" name="air13" id="air13d"><label for="air13d" class="mo wrg"><span class="ml">D</span>Re-intubate immediately</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: Never leave a doubtful tube in place.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">15</span>Causes of difficult intubation include?</div><div class="mopts"><input type="radio" name="air14" id="air14a"><label for="air14a" class="mo wrg"><span class="ml">A</span>Only obesity</label><input type="radio" name="air14" id="air14b"><label for="air14b" class="mo wrg"><span class="ml">B</span>Only male gender</label><input type="radio" name="air14" id="air14c"><label for="air14c" class="mo wrg"><span class="ml">C</span>Only age >60</label><input type="radio" name="air14" id="air14d"><label for="air14d" class="mo cor"><span class="ml">D</span>Short neck, stiff neck, goiter, receding jaw</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ D: Anatomical factors that limit mouth opening or neck extension.</div></details></div>
+</div><label for="dn-air" class="done-btn">✓ Mark as Done</label></div></div></div></div>
+<!-- CHOKING (FBAO) -->
+<input type="checkbox" id="acc-choke" class="acc-r"><label for="acc-choke" class="acc-lbl ac-choke"><span class="sicon">⚠️</span><span class="sname">Choking</span><span class="scount">1 Topic</span><span class="sarr">▾</span></label>
+<div class="acc-body"><div class="topics-wrap"><input type="checkbox" id="dn-choke" class="done-chk"><div class="topic-card ac-choke"><div class="topic-header"><span class="tnum">2</span><span class="ttitle">Foreign Body Airway Obstruction</span></div><div class="topic-body"><div class="tcontent">
+
+<div class="ch"><h3>😮 Choking Overview</h3>
+<ul>
+<li>Physiological response to sudden obstruction of the airway</li>
+<li>FBAO causes asphyxia — terrifying condition, occurs acutely, patient often unable to explain</li>
+<li>Severe cases: rapid loss of consciousness and death if first aid not undertaken quickly</li>
+</ul></div>
+<div class="ch"><h3>📊 Mild vs Severe Obstruction</h3>
+<ul>
+<li><strong>Mild obstruction:</strong>
+  <ul>
+  <li>Patient able to breathe, cough effectively, and speak</li>
+  <li>Children: fully responsive, crying or verbally respond, loud cough, able to take breath before cough</li>
+  </ul>
+</li>
+<li><strong>Severe obstruction:</strong>
+  <ul>
+  <li>Unable to breathe or speak/vocalize</li>
+  <li>Wheezy breath sounds</li>
+  <li>Quiet or silent cough attempts</li>
+  <li>Cyanosis and diminishing conscious level (especially in children)</li>
+  <li><strong>Universal choking sign:</strong> hands clutching the throat</li>
+  </ul>
+</li>
+</ul></div>
+<div class="ch"><h3>🆘 Management</h3>
+<ul>
+<li><strong>Mild:</strong> encourage patient to continue coughing</li>
+<li><strong>Severe (conscious adult):</strong>
+  <ol>
+  <li>Give <strong>5 back blows</strong> (heel of hand between shoulder blades)</li>
+  <li>If unsuccessful → <strong>5 abdominal thrusts</strong> (Heimlich) — above umbilicus, below xiphoid</li>
+  <li>Continue alternating 5 back blows and 5 abdominal thrusts until successful or patient becomes unconscious</li>
+  </ol>
+</li>
+<li><strong>Infant (conscious):</strong> 5 back blows + 5 chest thrusts (avoid abdominal thrusts)</li>
+<li><strong>Unconscious victim:</strong> start CPR 30:2. Before compressions, look in mouth for visible object and remove if seen</li>
+<li><strong>After successful relief:</strong> victim should be seen by a doctor (abdominal thrusts may cause internal injury)</li>
+</ul></div>
+</div><div class="mcq-wrap"><div class="mcq-hdr">📝 10 MCQs <span class="mcq-badge">Choking</span></div>
+<div class="mi"><div class="mq"><span class="mn">1</span>Indication of severe obstruction?</div><div class="mopts"><input type="radio" name="ch0" id="ch0a"><label for="ch0a" class="mo cor"><span class="ml">A</span>Silent cough, cyanosis</label><input type="radio" name="ch0" id="ch0b"><label for="ch0b" class="mo wrg"><span class="ml">B</span>Normal breathing</label><input type="radio" name="ch0" id="ch0c"><label for="ch0c" class="mo wrg"><span class="ml">C</span>Loud cough, able to speak</label><input type="radio" name="ch0" id="ch0d"><label for="ch0d" class="mo wrg"><span class="ml">D</span>Crying</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ A: Ineffective cough, unable to speak.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">2</span>First action for conscious severe choking?</div><div class="mopts"><input type="radio" name="ch1" id="ch1a"><label for="ch1a" class="mo wrg"><span class="ml">A</span>Finger sweep</label><input type="radio" name="ch1" id="ch1b"><label for="ch1b" class="mo wrg"><span class="ml">B</span>Abdominal thrusts</label><input type="radio" name="ch1" id="ch1c"><label for="ch1c" class="mo cor"><span class="ml">C</span>5 back blows</label><input type="radio" name="ch1" id="ch1d"><label for="ch1d" class="mo wrg"><span class="ml">D</span>CPR</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: Start with 5 back blows, then 5 abdominal thrusts.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">3</span>If victim becomes unconscious due to choking?</div><div class="mopts"><input type="radio" name="ch2" id="ch2a"><label for="ch2a" class="mo wrg"><span class="ml">A</span>Heimlich maneuver</label><input type="radio" name="ch2" id="ch2b"><label for="ch2b" class="mo wrg"><span class="ml">B</span>Blind finger sweep</label><input type="radio" name="ch2" id="ch2c"><label for="ch2c" class="mo cor"><span class="ml">C</span>Start CPR 30:2</label><input type="radio" name="ch2" id="ch2d"><label for="ch2d" class="mo wrg"><span class="ml">D</span>Only back blows</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: Begin CPR and check mouth for visible object.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">4</span>How many back blows are given initially?</div><div class="mopts"><input type="radio" name="ch3" id="ch3a"><label for="ch3a" class="mo wrg"><span class="ml">A</span>10</label><input type="radio" name="ch3" id="ch3b"><label for="ch3b" class="mo wrg"><span class="ml">B</span>15</label><input type="radio" name="ch3" id="ch3c"><label for="ch3c" class="mo wrg"><span class="ml">C</span>3</label><input type="radio" name="ch3" id="ch3d"><label for="ch3d" class="mo cor"><span class="ml">D</span>5</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ D: Up to 5 sharp back blows.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">5</span>Abdominal thrusts are applied:</div><div class="mopts"><input type="radio" name="ch4" id="ch4a"><label for="ch4a" class="mo wrg"><span class="ml">A</span>At the clavicle</label><input type="radio" name="ch4" id="ch4b"><label for="ch4b" class="mo wrg"><span class="ml">B</span>On the back</label><input type="radio" name="ch4" id="ch4c"><label for="ch4c" class="mo cor"><span class="ml">C</span>Above the umbilicus, below xiphoid</label><input type="radio" name="ch4" id="ch4d"><label for="ch4d" class="mo wrg"><span class="ml">D</span>Over the lower sternum</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: Just above the navel, below rib cage.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">6</span>After successful choking relief, victim should?</div><div class="mopts"><input type="radio" name="ch5" id="ch5a"><label for="ch5a" class="mo wrg"><span class="ml">A</span>No follow-up needed</label><input type="radio" name="ch5" id="ch5b"><label for="ch5b" class="mo cor"><span class="ml">B</span>Be seen by a doctor (risk of complications)</label><input type="radio" name="ch5" id="ch5c"><label for="ch5c" class="mo wrg"><span class="ml">C</span>Be sent home immediately</label><input type="radio" name="ch5" id="ch5d"><label for="ch5d" class="mo wrg"><span class="ml">D</span>Eat a meal</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: Abdominal thrusts may cause internal injury.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">7</span>What is the universal sign for choking?</div><div class="mopts"><input type="radio" name="ch6" id="ch6a"><label for="ch6a" class="mo wrg"><span class="ml">A</span>Pointing to the chest</label><input type="radio" name="ch6" id="ch6b"><label for="ch6b" class="mo wrg"><span class="ml">B</span>Waving hands</label><input type="radio" name="ch6" id="ch6c"><label for="ch6c" class="mo cor"><span class="ml">C</span>Hands clutching the throat</label><input type="radio" name="ch6" id="ch6d"><label for="ch6d" class="mo wrg"><span class="ml">D</span>Rubbing abdomen</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: Universal choking sign.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">8</span>In infant choking (conscious), you should?</div><div class="mopts"><input type="radio" name="ch7" id="ch7a"><label for="ch7a" class="mo wrg"><span class="ml">A</span>Blind finger sweep</label><input type="radio" name="ch7" id="ch7b"><label for="ch7b" class="mo wrg"><span class="ml">B</span>Heimlich maneuver</label><input type="radio" name="ch7" id="ch7c"><label for="ch7c" class="mo wrg"><span class="ml">C</span>Abdominal thrusts</label><input type="radio" name="ch7" id="ch7d"><label for="ch7d" class="mo cor"><span class="ml">D</span>5 back blows + 5 chest thrusts</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ D: Infants: back blows and chest thrusts (avoid abdominal).</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">9</span>If back blows fail, next step for conscious adult choking?</div><div class="mopts"><input type="radio" name="ch8" id="ch8a"><label for="ch8a" class="mo wrg"><span class="ml">A</span>CPR</label><input type="radio" name="ch8" id="ch8b"><label for="ch8b" class="mo wrg"><span class="ml">B</span>Oxygen</label><input type="radio" name="ch8" id="ch8c"><label for="ch8c" class="mo cor"><span class="ml">C</span>5 abdominal thrusts</label><input type="radio" name="ch8" id="ch8d"><label for="ch8d" class="mo wrg"><span class="ml">D</span>Intubation</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: Alternate back blows and abdominal thrusts.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">10</span>Which is NOT a sign of severe obstruction?</div><div class="mopts"><input type="radio" name="ch9" id="ch9a"><label for="ch9a" class="mo wrg"><span class="ml">A</span>Inability to breathe</label><input type="radio" name="ch9" id="ch9b"><label for="ch9b" class="mo wrg"><span class="ml">B</span>Cyanosis</label><input type="radio" name="ch9" id="ch9c"><label for="ch9c" class="mo cor"><span class="ml">C</span>Loud speaking</label><input type="radio" name="ch9" id="ch9d"><label for="ch9d" class="mo wrg"><span class="ml">D</span>Silent cough</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: In severe obstruction, patient cannot speak.</div></details></div>
+</div><label for="dn-choke" class="done-btn">✓ Mark as Done</label></div></div></div></div>
+<!-- BLS & AED -->
+<input type="checkbox" id="acc-bls" class="acc-r"><label for="acc-bls" class="acc-lbl ac-bls"><span class="sicon">🫀</span><span class="sname">BLS & AED</span><span class="scount">1 Topic</span><span class="sarr">▾</span></label>
+<div class="acc-body"><div class="topics-wrap"><input type="checkbox" id="dn-bls" class="done-chk"><div class="topic-card ac-bls"><div class="topic-header"><span class="tnum">3</span><span class="ttitle">Basic Life Support & Defibrillation</span></div><div class="topic-body"><div class="tcontent">
+
+<div class="ch"><h3>📖 Definitions</h3>
+<ul>
+<li><strong>First aid:</strong> immediate care given to an injured or suddenly ill person</li>
+<li><strong>Cardiac arrest:</strong> sudden cessation of heartbeat and cardiac function — no pulse, no breathing, unconscious</li>
+</ul></div>
+<div class="ch"><h3>🔄 BLS Algorithm (DRSABC-D)</h3>
+<ol>
+<li><strong>D</strong>anger — check for hazards/risks/safety</li>
+<li><strong>R</strong>esponse — shake shoulders, ask "Are you all right?"
+  <ul>
+  <li><strong>If responds:</strong> leave as found, find out what's wrong, reassess regularly</li>
+  <li><strong>If unresponsive:</strong> shout for help</li>
+  </ul>
+</li>
+<li><strong>S</strong>end for help — call emergency services</li>
+<li><strong>A</strong>irway — open airway (head tilt-chin lift or jaw thrust)</li>
+<li><strong>B</strong>reathing — look, listen, feel for NORMAL breathing (max 10 seconds)
+  <ul>
+  <li>Check carotid pulse at the same time</li>
+  <li>Do not confuse agonal breathing with normal breathing</li>
+  </ul>
+</li>
+<li><strong>C</strong>irculation — <strong>3C: Confirm cardiac arrest, Call resuscitation team, Compress CPR</strong></li>
+<li><strong>D</strong>efibrillation — attach AED as soon as available</li>
+</ol></div>
+<div class="ch"><h3>❤️ Chest Compressions</h3>
+<ul>
+<li><strong>Ratio:</strong> 30 compressions : 2 rescue breaths</li>
+<li><strong>Rate:</strong> 100-120 per minute</li>
+<li><strong>Depth:</strong> 5-6 cm (2-2.4 inches)</li>
+<li><strong>Hand placement:</strong> heel of one hand in centre of chest (lower half of sternum), other hand on top, interlock fingers</li>
+<li><strong>Technique:</strong> equal compression:relaxation, allow full chest recoil</li>
+<li><strong>Change operator every 2 minutes</strong> to avoid fatigue</li>
+<li><strong>Do NOT re-check for carotid pulse or signs of life during CPR</strong></li>
+<li><strong>Re-check pulse after 1 minute</strong></li>
+</ul></div>
+<div class="ch"><h3>💨 Rescue Breaths</h3>
+<ul>
+<li>Pinch nose, take normal breath, place lips over mouth</li>
+<li>Blow until chest rises (~1 second)</li>
+<li>Allow chest to fall</li>
+<li>If unwilling/unable to perform rescue breaths: <strong>continue chest compressions only</strong></li>
+<li>With advanced airway in place: give rescue breaths only at rate of <strong>10 per minute</strong></li>
+</ul></div>
+<div class="ch"><h3>⚡ Defibrillation (AED)</h3>
+<ul>
+<li>Turn on AED and follow voice prompts</li>
+<li>Apply pads, shock if advised</li>
+<li><strong>Resume CPR immediately for 2 minutes</strong> after shock</li>
+<li>Minimize pauses between compressions</li>
+</ul></div>
+<div class="ch"><h3>🛑 When to Stop CPR</h3>
+<ul>
+<li>Qualified help arrives and takes over</li>
+<li>Victim starts breathing normally</li>
+<li><strong>Rescuer becomes exhausted</strong></li>
+</ul></div>
+</div><div class="mcq-wrap"><div class="mcq-hdr">📝 15 MCQs <span class="mcq-badge">BLS</span></div>
+<div class="mi"><div class="mq"><span class="mn">1</span>Adult compression depth during CPR?</div><div class="mopts"><input type="radio" name="bls0" id="bls0a"><label for="bls0a" class="mo cor"><span class="ml">A</span>5-6 cm</label><input type="radio" name="bls0" id="bls0b"><label for="bls0b" class="mo wrg"><span class="ml">B</span>2-3 cm</label><input type="radio" name="bls0" id="bls0c"><label for="bls0c" class="mo wrg"><span class="ml">C</span>7-8 cm</label><input type="radio" name="bls0" id="bls0d"><label for="bls0d" class="mo wrg"><span class="ml">D</span>1-2 cm</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ A: 5-6 cm (2-2.4 inches).</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">2</span>BLS compression-to-ventilation ratio for adult?</div><div class="mopts"><input type="radio" name="bls1" id="bls1a"><label for="bls1a" class="mo wrg"><span class="ml">A</span>5:1</label><input type="radio" name="bls1" id="bls1b"><label for="bls1b" class="mo cor"><span class="ml">B</span>30:2</label><input type="radio" name="bls1" id="bls1c"><label for="bls1c" class="mo wrg"><span class="ml">C</span>100:2</label><input type="radio" name="bls1" id="bls1d"><label for="bls1d" class="mo wrg"><span class="ml">D</span>15:2</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: 30 compressions, 2 breaths.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">3</span>Target compression rate per minute?</div><div class="mopts"><input type="radio" name="bls2" id="bls2a"><label for="bls2a" class="mo cor"><span class="ml">A</span>100-120</label><input type="radio" name="bls2" id="bls2b"><label for="bls2b" class="mo wrg"><span class="ml">B</span>50-70</label><input type="radio" name="bls2" id="bls2c"><label for="bls2c" class="mo wrg"><span class="ml">C</span>130-150</label><input type="radio" name="bls2" id="bls2d"><label for="bls2d" class="mo wrg"><span class="ml">D</span>60-80</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ A: 100-120 per minute.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">4</span>Rescue breath duration should be?</div><div class="mopts"><input type="radio" name="bls3" id="bls3a"><label for="bls3a" class="mo cor"><span class="ml">A</span>1 second</label><input type="radio" name="bls3" id="bls3b"><label for="bls3b" class="mo wrg"><span class="ml">B</span>3 seconds</label><input type="radio" name="bls3" id="bls3c"><label for="bls3c" class="mo wrg"><span class="ml">C</span>0.5 seconds</label><input type="radio" name="bls3" id="bls3d"><label for="bls3d" class="mo wrg"><span class="ml">D</span>2 seconds</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ A: 1 second, visible chest rise.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">5</span>When to switch CPR operators?</div><div class="mopts"><input type="radio" name="bls4" id="bls4a"><label for="bls4a" class="mo wrg"><span class="ml">A</span>Every 10 minutes</label><input type="radio" name="bls4" id="bls4b"><label for="bls4b" class="mo wrg"><span class="ml">B</span>Never</label><input type="radio" name="bls4" id="bls4c"><label for="bls4c" class="mo cor"><span class="ml">C</span>Every 2 minutes</label><input type="radio" name="bls4" id="bls4d"><label for="bls4d" class="mo wrg"><span class="ml">D</span>After 30 compressions</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: To avoid fatigue, change every 2 min.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">6</span>Agonal breathing should be treated as?</div><div class="mopts"><input type="radio" name="bls5" id="bls5a"><label for="bls5a" class="mo wrg"><span class="ml">A</span>Normal breathing</label><input type="radio" name="bls5" id="bls5b"><label for="bls5b" class="mo wrg"><span class="ml">B</span>Sign of recovery</label><input type="radio" name="bls5" id="bls5c"><label for="bls5c" class="mo cor"><span class="ml">C</span>Absent breathing (start CPR)</label><input type="radio" name="bls5" id="bls5d"><label for="bls5d" class="mo wrg"><span class="ml">D</span>Wait and watch</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: Agonal gasps are not normal breathing.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">7</span>First step when using AED?</div><div class="mopts"><input type="radio" name="bls6" id="bls6a"><label for="bls6a" class="mo wrg"><span class="ml">A</span>Deliver shock immediately</label><input type="radio" name="bls6" id="bls6b"><label for="bls6b" class="mo wrg"><span class="ml">B</span>Remove pads</label><input type="radio" name="bls6" id="bls6c"><label for="bls6c" class="mo wrg"><span class="ml">C</span>Check pulse</label><input type="radio" name="bls6" id="bls6d"><label for="bls6d" class="mo cor"><span class="ml">D</span>Turn on AED and follow prompts</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ D: Power on, apply pads, follow voice.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">8</span>Hand placement for chest compressions?</div><div class="mopts"><input type="radio" name="bls7" id="bls7a"><label for="bls7a" class="mo wrg"><span class="ml">A</span>Left side of chest</label><input type="radio" name="bls7" id="bls7b"><label for="bls7b" class="mo cor"><span class="ml">B</span>Centre of chest (lower half of sternum)</label><input type="radio" name="bls7" id="bls7c"><label for="bls7c" class="mo wrg"><span class="ml">C</span>Over the xiphoid</label><input type="radio" name="bls7" id="bls7d"><label for="bls7d" class="mo wrg"><span class="ml">D</span>Upper third of sternum</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: Lower half of sternum, between nipples.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">9</span>After AED shock, you should?</div><div class="mopts"><input type="radio" name="bls8" id="bls8a"><label for="bls8a" class="mo cor"><span class="ml">A</span>Resume CPR immediately for 2 min</label><input type="radio" name="bls8" id="bls8b"><label for="bls8b" class="mo wrg"><span class="ml">B</span>Turn off AED</label><input type="radio" name="bls8" id="bls8c"><label for="bls8c" class="mo wrg"><span class="ml">C</span>Check pulse for 30 seconds</label><input type="radio" name="bls8" id="bls8d"><label for="bls8d" class="mo wrg"><span class="ml">D</span>Remove pads</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ A: Immediately resume CPR.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">10</span>How to check for breathing in BLS?</div><div class="mopts"><input type="radio" name="bls9" id="bls9a"><label for="bls9a" class="mo wrg"><span class="ml">A</span>Feel pulse only</label><input type="radio" name="bls9" id="bls9b"><label for="bls9b" class="mo cor"><span class="ml">B</span>Look, listen and feel for up to 10 seconds</label><input type="radio" name="bls9" id="bls9c"><label for="bls9c" class="mo wrg"><span class="ml">C</span>Listen for 3 sec</label><input type="radio" name="bls9" id="bls9d"><label for="bls9d" class="mo wrg"><span class="ml">D</span>Check for chest movement 30 sec</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: Look, listen, feel – max 10 seconds.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">11</span>Regarding pulse check during CPR?</div><div class="mopts"><input type="radio" name="bls10" id="bls10a"><label for="bls10a" class="mo wrg"><span class="ml">A</span>Re-check after 5 cycles</label><input type="radio" name="bls10" id="bls10b"><label for="bls10b" class="mo wrg"><span class="ml">B</span>Re-check every 30 seconds</label><input type="radio" name="bls10" id="bls10c"><label for="bls10c" class="mo wrg"><span class="ml">C</span>Re-check every minute during CPR</label><input type="radio" name="bls10" id="bls10d"><label for="bls10d" class="mo cor"><span class="ml">D</span>Do NOT re-check pulse during CPR</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ D: Do not interrupt compressions to check pulse.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">12</span>If unwilling/unable to give rescue breaths?</div><div class="mopts"><input type="radio" name="bls11" id="bls11a"><label for="bls11a" class="mo wrg"><span class="ml">A</span>Wait for AED</label><input type="radio" name="bls11" id="bls11b"><label for="bls11b" class="mo wrg"><span class="ml">B</span>Stop CPR entirely</label><input type="radio" name="bls11" id="bls11c"><label for="bls11c" class="mo cor"><span class="ml">C</span>Continue chest compressions only</label><input type="radio" name="bls11" id="bls11d"><label for="bls11d" class="mo wrg"><span class="ml">D</span>Give only rescue breaths</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: Compression-only CPR is better than no CPR.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">13</span>When should you stop CPR?</div><div class="mopts"><input type="radio" name="bls12" id="bls12a"><label for="bls12a" class="mo wrg"><span class="ml">A</span>When family arrives</label><input type="radio" name="bls12" id="bls12b"><label for="bls12b" class="mo wrg"><span class="ml">B</span>After 30 minutes always</label><input type="radio" name="bls12" id="bls12c"><label for="bls12c" class="mo cor"><span class="ml">C</span>Rescuer becomes exhausted</label><input type="radio" name="bls12" id="bls12d"><label for="bls12d" class="mo wrg"><span class="ml">D</span>When ambulance is 5 min away</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: Also when qualified help arrives or victim breathes normally.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">14</span>Rescue breaths rate with advanced airway in place?</div><div class="mopts"><input type="radio" name="bls13" id="bls13a"><label for="bls13a" class="mo wrg"><span class="ml">A</span>20 per minute</label><input type="radio" name="bls13" id="bls13b"><label for="bls13b" class="mo wrg"><span class="ml">B</span>30 per minute</label><input type="radio" name="bls13" id="bls13c"><label for="bls13c" class="mo wrg"><span class="ml">C</span>5 per minute</label><input type="radio" name="bls13" id="bls13d"><label for="bls13d" class="mo cor"><span class="ml">D</span>10 per minute</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ D: Continuous compressions with 1 breath every 6 seconds.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">15</span>'Signs of life' in BLS include?</div><div class="mopts"><input type="radio" name="bls14" id="bls14a"><label for="bls14a" class="mo wrg"><span class="ml">A</span>Only eye opening</label><input type="radio" name="bls14" id="bls14b"><label for="bls14b" class="mo cor"><span class="ml">B</span>Conscious, responsive, breathing normally, moving</label><input type="radio" name="bls14" id="bls14c"><label for="bls14c" class="mo wrg"><span class="ml">C</span>Only chest movement</label><input type="radio" name="bls14" id="bls14d"><label for="bls14d" class="mo wrg"><span class="ml">D</span>Only pulse present</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: All these indicate return of spontaneous circulation.</div></details></div>
+</div><label for="dn-bls" class="done-btn">✓ Mark as Done</label></div></div></div></div>
+<!-- COLLAPSED PATIENT & TRANSFER -->
+<input type="checkbox" id="acc-collapse" class="acc-r"><label for="acc-collapse" class="acc-lbl ac-collapse"><span class="sicon">🛡️</span><span class="sname">Collapsed Patient & Transfer</span><span class="scount">1 Topic</span><span class="sarr">▾</span></label>
+<div class="acc-body"><div class="topics-wrap"><input type="checkbox" id="dn-collapse" class="done-chk"><div class="topic-card ac-collapse"><div class="topic-header"><span class="tnum">4</span><span class="ttitle">Recovery Position, Positions & Safe Transfer</span></div><div class="topic-body"><div class="tcontent">
+
+<div class="ch"><h3>😵 Fainting</h3>
+<ul>
+<li>Loss of consciousness caused when blood supply to the brain is momentarily reduced</li>
+</ul></div>
+<div class="ch"><h3>🔄 Management Scheme</h3>
+<ol>
+<li><strong>Safety</strong> — assess danger for you AND patient</li>
+<li><strong>Check response</strong> — shake shoulder, shout in BOTH ears "Can you hear me?"
+  <ul>
+  <li><strong>If response:</strong> put patient in recovery position</li>
+  <li><strong>If no response:</strong> call for help</li>
+  </ul>
+</li>
+<li><strong>Shout for help</strong></li>
+<li><strong>Open airway</strong> — head tilt/chin lift (unless C-spine injury)</li>
+<li><strong>Check breathing</strong> — look (chest movement), listen (mouth), feel (breath on cheek) — <strong>NOT MORE THAN 10 SECONDS</strong></li>
+<li><strong>Check carotid pulse</strong></li>
+<li><strong>If unresponsive + not breathing normally:</strong> call emergency, start CPR</li>
+</ol></div>
+<div class="ch"><h3>📞 Calling Emergency Services (8 Steps)</h3>
+<ol>
+<li>Identify yourself</li>
+<li>The telephone number</li>
+<li>Your place/location</li>
+<li>Number of victims</li>
+<li>The condition of the victims</li>
+<li>What do you want?</li>
+<li>What will you do?</li>
+<li>Ask if he wants any information</li>
+</ol></div>
+<div class="ch"><h3>🛏️ Patient Positions</h3>
+<table>
+<tr><th>Position</th><th>Indication</th></tr>
+<tr><td>Elevate legs 20-30°</td><td>Shock (if no spinal trauma)</td></tr>
+<tr><td>Semi-sitting</td><td>Difficulty breathing, chest trauma, heart failure/MI</td></tr>
+<tr><td>Supine</td><td>Spinal cord trauma, lower limb fractures</td></tr>
+<tr><td>Head elevated</td><td>Head injury (if no spinal cord trauma)</td></tr>
+<tr><td>Recovery position</td><td>Unconscious + breathing + pulse</td></tr>
+</table></div>
+<div class="ch"><h3>🔄 Recovery Position (5 Steps)</h3>
+<ol>
+<li>Kneel beside victim, ensure both legs straight</li>
+<li>Place arm nearest to you at right angle, elbow bent, palm up</li>
+<li>Bring far arm across chest, hold back of hand against victim's cheek nearest to you</li>
+<li>Grasp far leg just above knee, pull it up keeping foot on ground</li>
+<li>Holding hand against cheek, pull on far leg to roll victim towards you. Adjust upper leg (hip and knee bent at right angles). Tilt head back to ensure airway open. Reassess breathing.</li>
+</ol>
+<ul>
+<li>Maintains free airway, prevents tongue blocking, allows fluids to drain</li>
+</ul></div>
+<div class="ch"><h3>🚑 Safe Transfer</h3>
+<ul>
+<li><strong>Aim:</strong> achieve specialized care in different location</li>
+<li><strong>Before transfer (6 points):</strong>
+  <ol>
+  <li>Notify receiving unit</li>
+  <li>Continue all monitors during transfer</li>
+  <li>Secure all cannulas, catheters, tubes and drains</li>
+  <li>Reassess the patient before transfer</li>
+  <li>Ensure portable suction, oxygen, emergency drugs and defibrillator monitor accompany patient</li>
+  <li>Prepare full records of events, drugs, and procedures</li>
+  </ol>
+</li>
+<li><strong>Modes of transport:</strong> chair, trolley on foot, ambulance, helicopter</li>
+</ul></div>
+</div><div class="mcq-wrap"><div class="mcq-hdr">📝 12 MCQs <span class="mcq-badge">Collapsed</span></div>
+<div class="mi"><div class="mq"><span class="mn">1</span>Recovery position is for?</div><div class="mopts"><input type="radio" name="rec0" id="rec0a"><label for="rec0a" class="mo wrg"><span class="ml">A</span>Cardiac arrest</label><input type="radio" name="rec0" id="rec0b"><label for="rec0b" class="mo wrg"><span class="ml">B</span>Head injury</label><input type="radio" name="rec0" id="rec0c"><label for="rec0c" class="mo cor"><span class="ml">C</span>Unconscious + breathing + pulse</label><input type="radio" name="rec0" id="rec0d"><label for="rec0d" class="mo wrg"><span class="ml">D</span>Conscious choking</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: Keeps airway patent.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">2</span>In shock with no spinal injury, position?</div><div class="mopts"><input type="radio" name="rec1" id="rec1a"><label for="rec1a" class="mo wrg"><span class="ml">A</span>Trendelenburg</label><input type="radio" name="rec1" id="rec1b"><label for="rec1b" class="mo cor"><span class="ml">B</span>Legs elevated 20-30°</label><input type="radio" name="rec1" id="rec1c"><label for="rec1c" class="mo wrg"><span class="ml">C</span>Supine flat</label><input type="radio" name="rec1" id="rec1d"><label for="rec1d" class="mo wrg"><span class="ml">D</span>Semi-sitting</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: Improves venous return.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">3</span>Before transferring patient, you should?</div><div class="mopts"><input type="radio" name="rec2" id="rec2a"><label for="rec2a" class="mo wrg"><span class="ml">A</span>Remove all IV lines</label><input type="radio" name="rec2" id="rec2b"><label for="rec2b" class="mo wrg"><span class="ml">B</span>Discontinue monitoring</label><input type="radio" name="rec2" id="rec2c"><label for="rec2c" class="mo wrg"><span class="ml">C</span>Only take ambulance</label><input type="radio" name="rec2" id="rec2d"><label for="rec2d" class="mo cor"><span class="ml">D</span>Notify receiving unit + secure lines</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ D: Notification, monitors, secure tubes.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">4</span>For head injury with no spinal trauma, position?</div><div class="mopts"><input type="radio" name="rec3" id="rec3a"><label for="rec3a" class="mo wrg"><span class="ml">A</span>Prone</label><input type="radio" name="rec3" id="rec3b"><label for="rec3b" class="mo wrg"><span class="ml">B</span>Supine</label><input type="radio" name="rec3" id="rec3c"><label for="rec3c" class="mo cor"><span class="ml">C</span>Head elevated</label><input type="radio" name="rec3" id="rec3d"><label for="rec3d" class="mo wrg"><span class="ml">D</span>Legs elevated</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: Reduces intracranial pressure.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">5</span>What is the first step managing collapsed patient?</div><div class="mopts"><input type="radio" name="rec4" id="rec4a"><label for="rec4a" class="mo wrg"><span class="ml">A</span>Start CPR</label><input type="radio" name="rec4" id="rec4b"><label for="rec4b" class="mo wrg"><span class="ml">B</span>Check breathing</label><input type="radio" name="rec4" id="rec4c"><label for="rec4c" class="mo wrg"><span class="ml">C</span>Give oxygen</label><input type="radio" name="rec4" id="rec4d"><label for="rec4d" class="mo cor"><span class="ml">D</span>Check safety (danger)</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ D: Ensure scene safety for rescuer and patient.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">6</span>Recovery position prevents?</div><div class="mopts"><input type="radio" name="rec5" id="rec5a"><label for="rec5a" class="mo wrg"><span class="ml">A</span>Cardiac arrest</label><input type="radio" name="rec5" id="rec5b"><label for="rec5b" class="mo wrg"><span class="ml">B</span>Bleeding</label><input type="radio" name="rec5" id="rec5c"><label for="rec5c" class="mo wrg"><span class="ml">C</span>Seizures</label><input type="radio" name="rec5" id="rec5d"><label for="rec5d" class="mo cor"><span class="ml">D</span>Tongue obstructing airway</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ D: Also allows drainage of fluids.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">7</span>Semi-sitting position is indicated for?</div><div class="mopts"><input type="radio" name="rec6" id="rec6a"><label for="rec6a" class="mo cor"><span class="ml">A</span>Difficulty breathing / chest trauma</label><input type="radio" name="rec6" id="rec6b"><label for="rec6b" class="mo wrg"><span class="ml">B</span>Leg fracture</label><input type="radio" name="rec6" id="rec6c"><label for="rec6c" class="mo wrg"><span class="ml">C</span>Unconscious</label><input type="radio" name="rec6" id="rec6d"><label for="rec6d" class="mo wrg"><span class="ml">D</span>Shock</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ A: Helps breathing, reduces preload in heart failure.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">8</span>During safe transfer, which equipment must accompany?</div><div class="mopts"><input type="radio" name="rec7" id="rec7a"><label for="rec7a" class="mo cor"><span class="ml">A</span>Portable suction, oxygen, defibrillator</label><input type="radio" name="rec7" id="rec7b"><label for="rec7b" class="mo wrg"><span class="ml">B</span>Patient's belongings</label><input type="radio" name="rec7" id="rec7c"><label for="rec7c" class="mo wrg"><span class="ml">C</span>Food and water</label><input type="radio" name="rec7" id="rec7d"><label for="rec7d" class="mo wrg"><span class="ml">D</span>Only stretcher</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ A: Emergency equipment for deterioration.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">9</span>After rolling patient into recovery position, you should?</div><div class="mopts"><input type="radio" name="rec8" id="rec8a"><label for="rec8a" class="mo wrg"><span class="ml">A</span>Give water</label><input type="radio" name="rec8" id="rec8b"><label for="rec8b" class="mo cor"><span class="ml">B</span>Tilt head back and reassess breathing</label><input type="radio" name="rec8" id="rec8c"><label for="rec8c" class="mo wrg"><span class="ml">C</span>Leave patient alone</label><input type="radio" name="rec8" id="rec8d"><label for="rec8d" class="mo wrg"><span class="ml">D</span>Immediately intubate</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: Ensure airway remains open.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">10</span>When to call emergency services after collapse?</div><div class="mopts"><input type="radio" name="rec9" id="rec9a"><label for="rec9a" class="mo cor"><span class="ml">A</span>If unresponsive and not breathing normally</label><input type="radio" name="rec9" id="rec9b"><label for="rec9b" class="mo wrg"><span class="ml">B</span>Never</label><input type="radio" name="rec9" id="rec9c"><label for="rec9c" class="mo wrg"><span class="ml">C</span>After 10 minutes</label><input type="radio" name="rec9" id="rec9d"><label for="rec9d" class="mo wrg"><span class="ml">D</span>Only if family requests</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ A: Immediately when cardiac arrest suspected.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">11</span>Modes of patient transport include?</div><div class="mopts"><input type="radio" name="rec10" id="rec10a"><label for="rec10a" class="mo cor"><span class="ml">A</span>Chair, trolley, ambulance, helicopter</label><input type="radio" name="rec10" id="rec10b"><label for="rec10b" class="mo wrg"><span class="ml">B</span>Only ambulance</label><input type="radio" name="rec10" id="rec10c"><label for="rec10c" class="mo wrg"><span class="ml">C</span>Only stretcher</label><input type="radio" name="rec10" id="rec10d"><label for="rec10d" class="mo wrg"><span class="ml">D</span>Only wheelchair</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ A: All are valid depending on situation.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">12</span>How many steps in emergency calling protocol?</div><div class="mopts"><input type="radio" name="rec11" id="rec11a"><label for="rec11a" class="mo wrg"><span class="ml">A</span>5 steps</label><input type="radio" name="rec11" id="rec11b"><label for="rec11b" class="mo wrg"><span class="ml">B</span>3 steps</label><input type="radio" name="rec11" id="rec11c"><label for="rec11c" class="mo wrg"><span class="ml">C</span>10 steps</label><input type="radio" name="rec11" id="rec11d"><label for="rec11d" class="mo cor"><span class="ml">D</span>8 steps</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ D: Identify, number, place, victims, condition, needs, actions, information.</div></details></div>
+</div><label for="dn-collapse" class="done-btn">✓ Mark as Done</label></div></div></div></div>
+<!-- HISTORY & GENERAL EXAM -->
+<input type="checkbox" id="acc-hist" class="acc-r"><label for="acc-hist" class="acc-lbl ac-history"><span class="sicon">📋</span><span class="sname">History & General Exam</span><span class="scount">1 Topic</span><span class="sarr">▾</span></label>
+<div class="acc-body"><div class="topics-wrap"><input type="checkbox" id="dn-hist" class="done-chk"><div class="topic-card ac-history"><div class="topic-header"><span class="tnum">5</span><span class="ttitle">Clinical History Taking & Exam</span></div><div class="topic-body"><div class="tcontent">
+
+<div class="ch"><h3>🤝 Communication Skills</h3>
+<ul>
+<li>Knock before entering a room</li>
+<li>Address patient formally first (Miss, Ms., Mrs., Mr.)</li>
+<li>Ensure physical comfort for all, including yourself</li>
+<li>Look at patient; maintain good eye contact if culturally appropriate</li>
+<li>Watch your language — avoid professional jargon</li>
+<li>Do not accept a previous diagnosis as a chief complaint</li>
+<li>Seek clues from patient's verbal behaviors and body language</li>
+<li>Look for hidden concerns underlying chief complaint</li>
+</ul></div>
+<div class="ch"><h3>📚 Useful Sources of Information</h3>
+<ul>
+<li>Relatives/cohabitants</li>
+<li>Close friends/room-mates</li>
+<li>The GP or primary care team</li>
+<li>The pharmacist</li>
+<li>Nursing/residential home staff</li>
+<li>Anyone who witnessed the event</li>
+</ul></div>
+<div class="ch"><h3>📋 Standard History Framework</h3>
+<ol>
+<li><strong>Personal history</strong> — name, age, sex, occupation, marital status, residence, habits, handedness, menstrual history</li>
+<li><strong>Complaint</strong> — patient's own words, short, with duration</li>
+<li><strong>History of present illness</strong> — onset, course, associated symptoms</li>
+<li><strong>Past history</strong> — diseases, operations, transfusions</li>
+<li><strong>Drug history</strong> — type, duration, allergies</li>
+<li><strong>Family history</strong> — similar conditions, consanguinity, common diseases</li>
+</ol></div>
+<div class="ch"><h3>👤 Personal History Details</h3>
+<ul>
+<li><strong>Name:</strong> to be familiar, gain confidence</li>
+<li><strong>Age:</strong> young → congenital heart disease; old → atherosclerosis</li>
+<li><strong>Sex:</strong> female → thyroid, autoimmune; male → coronary heart disease</li>
+<li><strong>Occupation:</strong> farmer → bilharziasis; healthcare → viral hepatitis (B, C)</li>
+<li><strong>Marital status:</strong> single/married/divorced/widow; duration, number of children, age of youngest</li>
+<li><strong>Residence:</strong> born in, live in; endemic areas → parasitic disease</li>
+<li><strong>Habits:</strong> smoking, alcohol</li>
+<li><strong>Handedness:</strong> determines dominant hemisphere</li>
+<li><strong>Example:</strong> "Ayman Mostafa Ibrahim, 45 years old male, works as farmer, married with 2 offspring, from Zagazig, right-handed, cigarette smoker with no other special habits"</li>
+</ul></div>
+<div class="ch"><h3>📝 Complaint & Present Illness</h3>
+<ul>
+<li><strong>Complaint:</strong> as short as possible, duration, no medical terms, patient's own words
+  <ul>
+  <li>Examples: "abdominal distention" (not ascites), "awareness of heartbeat" (not palpitation)</li>
+  </ul>
+</li>
+<li><strong>History of present illness:</strong> use medical terms
+  <ul>
+  <li><strong>Onset:</strong> acute, gradual, insidious</li>
+  <li><strong>Course:</strong> progressive, regressive, stationary</li>
+  <li>Duration, associated symptoms, what increases/decreases</li>
+  <li>Related investigations, related treatment (medical/surgical)</li>
+  <li>Review of other systems</li>
+  </ul>
+</li>
+</ul></div>
+<div class="ch"><h3>📖 Past, Drug & Family History</h3>
+<ul>
+<li><strong>Past history:</strong> diseases (CHD, hepatitis, TB), operations, blood transfusion, similar attacks</li>
+<li><strong>Drug history:</strong> type, duration, drug allergy</li>
+<li><strong>Family history:</strong> similar condition, positive consanguinity, common diseases (HTN, DM)
+  <ul>
+  <li><strong>IF NEGATIVE:</strong> "Family history is of no medical importance"</li>
+  </ul>
+</li>
+</ul></div>
+<div class="ch"><h3>🔍 General Examination Setup</h3>
+<ul>
+<li>Introduce yourself, explain what you'll do, obtain verbal consent</li>
+<li>Ensure privacy to undress</li>
+<li>Make sure you won't be disturbed</li>
+<li>Check clean sheet on examination couch</li>
+<li>Ask if companion should stay</li>
+<li>Check equipment (torch, cotton wool, tendon hammer, stethoscope)</li>
+<li>Patient supine with head and shoulders raised to ~45°</li>
+</ul></div>
+<div class="ch"><h3>🧠 Conscious Level (5 Levels)</h3>
+<table>
+<tr><th>Level</th><th>Description</th></tr>
+<tr><td>1. Alert</td><td>Awake or readily aroused; oriented; fully aware; responds appropriately</td></tr>
+<tr><td>2. Lethargic/Somnolent</td><td>Not fully alert; drifts off to sleep when not stimulated; can be aroused to name when called in normal voice but looks drowsy</td></tr>
+<tr><td>3. Obtunded</td><td>Sleeps most of time; difficult to arouse — needs loud shout or vigorous shake</td></tr>
+<tr><td>4. Stupor/Semi-Coma</td><td>Spontaneously unconscious; responds only to persistent and vigorous shake or pain; has appropriate motor response (withdraws hand to avoid pain)</td></tr>
+<tr><td>5. Coma</td><td>Completely unconscious; no response to pain or any external/internal stimuli</td></tr>
+</table></div>
+<div class="ch"><h3>🎨 Colour Assessment</h3>
+<ul>
+<li>Pallor (anemia/blood loss)</li>
+<li>Central cyanosis (tongue/mucous membranes)</li>
+<li>Peripheral cyanosis (fingertips, earlobes)</li>
+<li>Jaundice</li>
+<li>Abnormal skin pigmentation</li>
+</ul></div>
+<div class="ch"><h3>🫀 System Examination Overview</h3>
+<ul>
+<li>Cardiovascular examination</li>
+<li>Respiratory examination</li>
+<li>Abdominal examination</li>
+<li>Neurological examination</li>
+<li>Head, Neck, Extremities examination</li>
+</ul></div>
+</div><div class="mcq-wrap"><div class="mcq-hdr">📝 15 MCQs <span class="mcq-badge">History</span></div>
+<div class="mi"><div class="mq"><span class="mn">1</span>Handedness recorded for?</div><div class="mopts"><input type="radio" name="hist0" id="hist0a"><label for="hist0a" class="mo wrg"><span class="ml">A</span>Blood pressure</label><input type="radio" name="hist0" id="hist0b"><label for="hist0b" class="mo wrg"><span class="ml">B</span>Occupational hazard</label><input type="radio" name="hist0" id="hist0c"><label for="hist0c" class="mo wrg"><span class="ml">C</span>Social habit</label><input type="radio" name="hist0" id="hist0d"><label for="hist0d" class="mo cor"><span class="ml">D</span>Determine dominant hemisphere</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ D: Neurological assessment.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">2</span>What is included in personal history?</div><div class="mopts"><input type="radio" name="hist1" id="hist1a"><label for="hist1a" class="mo wrg"><span class="ml">A</span>Past surgeries</label><input type="radio" name="hist1" id="hist1b"><label for="hist1b" class="mo cor"><span class="ml">B</span>Age, occupation, residence</label><input type="radio" name="hist1" id="hist1c"><label for="hist1c" class="mo wrg"><span class="ml">C</span>Only blood group</label><input type="radio" name="hist1" id="hist1d"><label for="hist1d" class="mo wrg"><span class="ml">D</span>Only name</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: Demographics, habits, handedness.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">3</span>Complaint should be recorded in?</div><div class="mopts"><input type="radio" name="hist2" id="hist2a"><label for="hist2a" class="mo wrg"><span class="ml">A</span>Medical terminology</label><input type="radio" name="hist2" id="hist2b"><label for="hist2b" class="mo wrg"><span class="ml">B</span>Latin terms</label><input type="radio" name="hist2" id="hist2c"><label for="hist2c" class="mo wrg"><span class="ml">C</span>Diagnosis</label><input type="radio" name="hist2" id="hist2d"><label for="hist2d" class="mo cor"><span class="ml">D</span>Patient's own words</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ D: Use patient's own words, short duration.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">4</span>Past history includes?</div><div class="mopts"><input type="radio" name="hist3" id="hist3a"><label for="hist3a" class="mo wrg"><span class="ml">A</span>Only habits</label><input type="radio" name="hist3" id="hist3b"><label for="hist3b" class="mo wrg"><span class="ml">B</span>Only current medications</label><input type="radio" name="hist3" id="hist3c"><label for="hist3c" class="mo cor"><span class="ml">C</span>Previous diseases and operations</label><input type="radio" name="hist3" id="hist3d"><label for="hist3d" class="mo wrg"><span class="ml">D</span>Family diseases only</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: Past medical, surgical, transfusion history.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">5</span>Drug history must document?</div><div class="mopts"><input type="radio" name="hist4" id="hist4a"><label for="hist4a" class="mo wrg"><span class="ml">A</span>Only over-the-counter drugs</label><input type="radio" name="hist4" id="hist4b"><label for="hist4b" class="mo wrg"><span class="ml">B</span>Only past medications</label><input type="radio" name="hist4" id="hist4c"><label for="hist4c" class="mo cor"><span class="ml">C</span>Allergies and current medications</label><input type="radio" name="hist4" id="hist4d"><label for="hist4d" class="mo wrg"><span class="ml">D</span>Only antibiotics</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: Including allergies, dose, duration.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">6</span>Family history is important for?</div><div class="mopts"><input type="radio" name="hist5" id="hist5a"><label for="hist5a" class="mo cor"><span class="ml">A</span>Hypertension, diabetes, similar conditions</label><input type="radio" name="hist5" id="hist5b"><label for="hist5b" class="mo wrg"><span class="ml">B</span>Only infectious diseases</label><input type="radio" name="hist5" id="hist5c"><label for="hist5c" class="mo wrg"><span class="ml">C</span>Only occupation</label><input type="radio" name="hist5" id="hist5d"><label for="hist5d" class="mo wrg"><span class="ml">D</span>Only trauma</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ A: Genetic predisposition and common diseases.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">7</span>Conscious level 'obtunded' means?</div><div class="mopts"><input type="radio" name="hist6" id="hist6a"><label for="hist6a" class="mo wrg"><span class="ml">A</span>Sleeping easily aroused</label><input type="radio" name="hist6" id="hist6b"><label for="hist6b" class="mo cor"><span class="ml">B</span>Difficult to arouse, needs loud shout</label><input type="radio" name="hist6" id="hist6c"><label for="hist6c" class="mo wrg"><span class="ml">C</span>No response to pain</label><input type="radio" name="hist6" id="hist6d"><label for="hist6d" class="mo wrg"><span class="ml">D</span>Fully awake</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: Obtunded = reduced alertness, difficult to arouse.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">8</span>Central cyanosis is best assessed at?</div><div class="mopts"><input type="radio" name="hist7" id="hist7a"><label for="hist7a" class="mo wrg"><span class="ml">A</span>Earlobes</label><input type="radio" name="hist7" id="hist7b"><label for="hist7b" class="mo wrg"><span class="ml">B</span>Fingertips</label><input type="radio" name="hist7" id="hist7c"><label for="hist7c" class="mo cor"><span class="ml">C</span>Tongue / mucous membranes</label><input type="radio" name="hist7" id="hist7d"><label for="hist7d" class="mo wrg"><span class="ml">D</span>Nail beds</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: Central cyanosis involves warm mucous membranes.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">9</span>What does 'lethargic' indicate?</div><div class="mopts"><input type="radio" name="hist8" id="hist8a"><label for="hist8a" class="mo wrg"><span class="ml">A</span>Completely unconscious</label><input type="radio" name="hist8" id="hist8b"><label for="hist8b" class="mo wrg"><span class="ml">B</span>Only responds to pain</label><input type="radio" name="hist8" id="hist8c"><label for="hist8c" class="mo cor"><span class="ml">C</span>Drifts off to sleep, easily aroused</label><input type="radio" name="hist8" id="hist8d"><label for="hist8d" class="mo wrg"><span class="ml">D</span>Fully oriented</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: Lethargic = somnolent, can be aroused.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">10</span>In general examination, 'pallor' suggests?</div><div class="mopts"><input type="radio" name="hist9" id="hist9a"><label for="hist9a" class="mo wrg"><span class="ml">A</span>Polycythemia</label><input type="radio" name="hist9" id="hist9b"><label for="hist9b" class="mo wrg"><span class="ml">B</span>Jaundice</label><input type="radio" name="hist9" id="hist9c"><label for="hist9c" class="mo wrg"><span class="ml">C</span>Cyanosis</label><input type="radio" name="hist9" id="hist9d"><label for="hist9d" class="mo cor"><span class="ml">D</span>Anemia / blood loss</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ D: Pallor = pale skin/mucosa, anemia.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">11</span>Occupation-disease associations include?</div><div class="mopts"><input type="radio" name="hist10" id="hist10a"><label for="hist10a" class="mo cor"><span class="ml">A</span>Farmer → bilharziasis, healthcare → hepatitis</label><input type="radio" name="hist10" id="hist10b"><label for="hist10b" class="mo wrg"><span class="ml">B</span>Only age-related diseases</label><input type="radio" name="hist10" id="hist10c"><label for="hist10c" class="mo wrg"><span class="ml">C</span>Only stress-related diseases</label><input type="radio" name="hist10" id="hist10d"><label for="hist10d" class="mo wrg"><span class="ml">D</span>Only genetic diseases</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ A: Environmental and exposure-related risks.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">12</span>Standard phrase for negative family history?</div><div class="mopts"><input type="radio" name="hist11" id="hist11a"><label for="hist11a" class="mo wrg"><span class="ml">A</span>'Family history is negative'</label><input type="radio" name="hist11" id="hist11b"><label for="hist11b" class="mo cor"><span class="ml">B</span>'Family history is of no medical importance'</label><input type="radio" name="hist11" id="hist11c"><label for="hist11c" class="mo wrg"><span class="ml">C</span>'No family history'</label><input type="radio" name="hist11" id="hist11d"><label for="hist11d" class="mo wrg"><span class="ml">D</span>'Family history denied'</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: This is the proper medical documentation phrase.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">13</span>Types of onset in present illness?</div><div class="mopts"><input type="radio" name="hist12" id="hist12a"><label for="hist12a" class="mo wrg"><span class="ml">A</span>Only chronic</label><input type="radio" name="hist12" id="hist12b"><label for="hist12b" class="mo wrg"><span class="ml">B</span>Only acute</label><input type="radio" name="hist12" id="hist12c"><label for="hist12c" class="mo wrg"><span class="ml">C</span>Mild, moderate, severe</label><input type="radio" name="hist12" id="hist12d"><label for="hist12d" class="mo cor"><span class="ml">D</span>Acute, gradual, insidious</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ D: These describe how symptoms began.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">14</span>First step in general examination?</div><div class="mopts"><input type="radio" name="hist13" id="hist13a"><label for="hist13a" class="mo wrg"><span class="ml">A</span>Start examination immediately</label><input type="radio" name="hist13" id="hist13b"><label for="hist13b" class="mo wrg"><span class="ml">B</span>Call the consultant first</label><input type="radio" name="hist13" id="hist13c"><label for="hist13c" class="mo cor"><span class="ml">C</span>Introduce yourself and obtain consent</label><input type="radio" name="hist13" id="hist13d"><label for="hist13d" class="mo wrg"><span class="ml">D</span>Ask about payment first</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: Professional courtesy and patient rights.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">15</span>Stupor/semi-coma is defined as?</div><div class="mopts"><input type="radio" name="hist14" id="hist14a"><label for="hist14a" class="mo wrg"><span class="ml">A</span>Drifts off but easily aroused</label><input type="radio" name="hist14" id="hist14b"><label for="hist14b" class="mo wrg"><span class="ml">B</span>Sleeps most of time, needs loud shout</label><input type="radio" name="hist14" id="hist14c"><label for="hist14c" class="mo cor"><span class="ml">C</span>Spontaneously unconscious, responds only to pain</label><input type="radio" name="hist14" id="hist14d"><label for="hist14d" class="mo wrg"><span class="ml">D</span>Fully awake and oriented</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: Appropriate motor response to pain (withdraws).</div></details></div>
+</div><label for="dn-hist" class="done-btn">✓ Mark as Done</label></div></div></div></div>
+<!-- VITAL SIGNS -->
+<input type="checkbox" id="acc-vitals" class="acc-r"><label for="acc-vitals" class="acc-lbl ac-vitals"><span class="sicon">❤️‍🔥</span><span class="sname">Vital Signs</span><span class="scount">1 Topic</span><span class="sarr">▾</span></label>
+<div class="acc-body"><div class="topics-wrap"><input type="checkbox" id="dn-vitals" class="done-chk"><div class="topic-card ac-vitals"><div class="topic-header"><span class="tnum">6</span><span class="ttitle">Pulse, BP, Respiration, Temperature</span></div><div class="topic-body"><div class="tcontent">
+
+<div class="ch"><h3>⏰ When to Assess Vital Signs</h3>
+<ol>
+<li>On admission — to obtain baseline data</li>
+<li>When patient has change in health status or reports symptoms (chest pain, fainting)</li>
+<li>According to nursing or medical order</li>
+<li>Before and after administration of certain medications affecting RR or BP</li>
+<li>Before and after surgery or invasive diagnostic procedures</li>
+<li>Before and after any nursing intervention affecting vitals (e.g., ambulation)</li>
+</ol></div>
+<div class="ch"><h3>💓 Pulse</h3>
+<ul>
+<li><strong>Do NOT use thumb</strong> to feel pulses — you may mistake your own pulse for the patient's weak pulse</li>
+<li><strong>Peripheral pulse:</strong> foot, neck (e.g., radial, brachial, carotid)</li>
+<li><strong>Apical pulse (central):</strong> at apex of heart</li>
+<li><strong>Pulse deficit</strong> = apical rate - peripheral rate (normally zero; seen in atrial fibrillation)</li>
+<li><strong>Rate:</strong> 60-90 bpm resting. Bradycardia &lt;60, Tachycardia &gt;100</li>
+<li><strong>Rhythm:</strong> normal = regular; abnormal = irregular</li>
+<li><strong>Volume (Pulse Pressure)</strong> = Systolic - Diastolic. Average 30-60 mmHg. Abnormal: small or big volume</li>
+</ul></div>
+<div class="ch"><h3>👐 Pulse Sites & Technique</h3>
+<ul>
+<li><strong>Radial:</strong> pads of index/middle/ring fingers over right radial artery. Count 30 sec × 2. <strong>Palpate both radial pulses simultaneously</strong> for volume difference</li>
+<li><strong>Brachial:</strong> medial side of antecubital fossa, just medial to tendinous insertion of biceps</li>
+<li><strong>Carotid:</strong> find larynx, move 2cm laterally, press backwards medial to sternomastoid. <strong>Do NOT compress both carotids at once</strong> — especially in frail and elderly</li>
+</ul></div>
+<div class="ch"><h3>🩺 Blood Pressure</h3>
+<ul>
+<li>Measure in <strong>both arms</strong> — higher reading closer to central aortic pressure</li>
+<li><strong>Rest patient 5 minutes</strong> before measurement</li>
+<li>Arm at heart level, no tight clothing</li>
+<li>Standard cuff: 12.5cm width, 30-35cm length. Bladder should be ~80% of arm length, 40% of width</li>
+<li><strong>Palpatory method first:</strong> inflate until pulse impalpable = rough systolic estimate</li>
+<li>Inflate 30mmHg more, then auscultate with diaphragm over brachial artery</li>
+<li>Deflate slowly: 2-3 mmHg/s</li>
+</ul>
+<h4>5 Korotkoff Sounds:</h4>
+<ol>
+<li><strong>Phase I:</strong> Sounds start to appear → <strong>Record Systolic BP</strong></li>
+<li><strong>Phase II:</strong> Sounds muffle</li>
+<li><strong>Phase III:</strong> Sounds sharp</li>
+<li><strong>Phase IV:</strong> Sounds muffle (muffling)</li>
+<li><strong>Phase V:</strong> Sounds disappear → <strong>Record Diastolic BP</strong></li>
+</ol>
+<h4>British Hypertension Society Classification:</h4>
+<table>
+<tr><th>Category</th><th>Systolic</th><th>Diastolic</th></tr>
+<tr><td>Optimal</td><td>&lt;120</td><td>&lt;80</td></tr>
+<tr><td>Normal</td><td>&lt;130</td><td>&lt;85</td></tr>
+<tr><td>High Normal</td><td>130-139</td><td>85-89</td></tr>
+</table>
+<h4>Common Problems in BP Measurement:</h4>
+<ol>
+<li><strong>Different in each arm:</strong> &gt;10mmHg difference suggests subclavian artery stenosis — record highest</li>
+<li><strong>Wrong cuff size:</strong> standard adult cuff suits arm circumference 22-26cm. In obese patients, use large adult or thigh cuff</li>
+<li><strong>Auscultatory gap:</strong> sounds disappear between systolic and diastolic (up to 20% of elderly hypertensives). Avoid by palpating systolic first</li>
+<li><strong>Arm at wrong level:</strong> ~5mmHg change per 7cm elevation difference</li>
+<li><strong>Terminal digit preference:</strong> record true reading, don't round to 0 or 5</li>
+<li><strong>Postural change:</strong> check after standing 2 min. Drop ≥20mmHg systolic = postural hypotension</li>
+</ol></div>
+<div class="ch"><h3>🫁 Respiration</h3>
+<ul>
+<li><strong>Costal (thoracic):</strong> chest movement up/down — commonly used for males</li>
+<li><strong>Diaphragmatic (abdominal):</strong> abdomen movement — commonly used for females</li>
+<li><strong>Rate:</strong> 14-20/min. Measure full minute if irregular, 30 sec if regular</li>
+<li><strong>Rhythm:</strong> regularity of expiration and inspiration. Normal = automatic & effortless</li>
+<li><strong>Depth:</strong> normal, deep (large volume), or shallow (small volume)</li>
+</ul></div>
+<div class="ch"><h3>🌡️ Temperature</h3>
+<ul>
+<li><strong>Core temperature:</strong> internal organs, remains constant (36.8-37.2°C oral)</li>
+<li><strong>Surface temperature:</strong> skin, variable, doesn't indicate internal temperature</li>
+<li><strong>Fever:</strong> morning &gt;37.2°C or evening &gt;37.7°C</li>
+<li><strong>Oral:</strong> most common, leave 3-5 min. Wait 10-15 min after hot/cold food or smoking</li>
+<li><strong>Rectal:</strong> most reliable, core temp, &gt;0.5°C higher than oral. Hold 3-5 min. <strong>Contraindicated in diarrhea and anal fissure</strong></li>
+<li><strong>Axillary:</strong> safe for infants, 0.5°C less than oral</li>
+</ul></div>
+</div><div class="mcq-wrap"><div class="mcq-hdr">📝 15 MCQs <span class="mcq-badge">Vital</span></div>
+<div class="mi"><div class="mq"><span class="mn">1</span>Normal adult resting pulse range?</div><div class="mopts"><input type="radio" name="vt0" id="vt0a"><label for="vt0a" class="mo wrg"><span class="ml">A</span>40-60 bpm</label><input type="radio" name="vt0" id="vt0b"><label for="vt0b" class="mo wrg"><span class="ml">B</span>100-120 bpm</label><input type="radio" name="vt0" id="vt0c"><label for="vt0c" class="mo cor"><span class="ml">C</span>60-90 bpm</label><input type="radio" name="vt0" id="vt0d"><label for="vt0d" class="mo wrg"><span class="ml">D</span>20-40 bpm</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: 60-90 bpm.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">2</span>Korotkoff phase I corresponds to?</div><div class="mopts"><input type="radio" name="vt1" id="vt1a"><label for="vt1a" class="mo wrg"><span class="ml">A</span>Diastolic BP</label><input type="radio" name="vt1" id="vt1b"><label for="vt1b" class="mo cor"><span class="ml">B</span>Systolic BP</label><input type="radio" name="vt1" id="vt1c"><label for="vt1c" class="mo wrg"><span class="ml">C</span>Mean arterial pressure</label><input type="radio" name="vt1" id="vt1d"><label for="vt1d" class="mo wrg"><span class="ml">D</span>Pulse pressure</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: First appearance of tapping sound = systolic.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">3</span>Normal adult respiratory rate?</div><div class="mopts"><input type="radio" name="vt2" id="vt2a"><label for="vt2a" class="mo wrg"><span class="ml">A</span>6-12/min</label><input type="radio" name="vt2" id="vt2b"><label for="vt2b" class="mo wrg"><span class="ml">B</span>40-50/min</label><input type="radio" name="vt2" id="vt2c"><label for="vt2c" class="mo wrg"><span class="ml">C</span>25-30/min</label><input type="radio" name="vt2" id="vt2d"><label for="vt2d" class="mo cor"><span class="ml">D</span>14-20/min</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ D: 14-20 breaths/minute.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">4</span>Oral temperature normal range?</div><div class="mopts"><input type="radio" name="vt3" id="vt3a"><label for="vt3a" class="mo wrg"><span class="ml">A</span>35.0-36.0°C</label><input type="radio" name="vt3" id="vt3b"><label for="vt3b" class="mo wrg"><span class="ml">B</span>37.5-38.5°C</label><input type="radio" name="vt3" id="vt3c"><label for="vt3c" class="mo wrg"><span class="ml">C</span>38.0-39.0°C</label><input type="radio" name="vt3" id="vt3d"><label for="vt3d" class="mo cor"><span class="ml">D</span>36.8-37.2°C</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ D: 36.8-37.2°C (98.2-99°F).</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">5</span>Pulse deficit is difference between?</div><div class="mopts"><input type="radio" name="vt4" id="vt4a"><label for="vt4a" class="mo cor"><span class="ml">A</span>Apical and radial pulse rate</label><input type="radio" name="vt4" id="vt4b"><label for="vt4b" class="mo wrg"><span class="ml">B</span>Systolic and diastolic</label><input type="radio" name="vt4" id="vt4c"><label for="vt4c" class="mo wrg"><span class="ml">C</span>Radial and carotid</label><input type="radio" name="vt4" id="vt4d"><label for="vt4d" class="mo wrg"><span class="ml">D</span>Heart rate and respiratory rate</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ A: Seen in atrial fibrillation.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">6</span>Postural hypotension defined as drop in systolic BP ≥?</div><div class="mopts"><input type="radio" name="vt5" id="vt5a"><label for="vt5a" class="mo wrg"><span class="ml">A</span>5 mmHg</label><input type="radio" name="vt5" id="vt5b"><label for="vt5b" class="mo cor"><span class="ml">B</span>20 mmHg</label><input type="radio" name="vt5" id="vt5c"><label for="vt5c" class="mo wrg"><span class="ml">C</span>30 mmHg</label><input type="radio" name="vt5" id="vt5d"><label for="vt5d" class="mo wrg"><span class="ml">D</span>10 mmHg</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: ≥20 mmHg systolic or ≥10 mmHg diastolic.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">7</span>Which pulse site used for BP measurement?</div><div class="mopts"><input type="radio" name="vt6" id="vt6a"><label for="vt6a" class="mo wrg"><span class="ml">A</span>Femoral artery</label><input type="radio" name="vt6" id="vt6b"><label for="vt6b" class="mo cor"><span class="ml">B</span>Brachial artery</label><input type="radio" name="vt6" id="vt6c"><label for="vt6c" class="mo wrg"><span class="ml">C</span>Carotid artery</label><input type="radio" name="vt6" id="vt6d"><label for="vt6d" class="mo wrg"><span class="ml">D</span>Radial artery</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: Auscultate brachial artery.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">8</span>When is axillary temperature recommended?</div><div class="mopts"><input type="radio" name="vt7" id="vt7a"><label for="vt7a" class="mo cor"><span class="ml">A</span>Infants and children</label><input type="radio" name="vt7" id="vt7b"><label for="vt7b" class="mo wrg"><span class="ml">B</span>Patients with diarrhea</label><input type="radio" name="vt7" id="vt7c"><label for="vt7c" class="mo wrg"><span class="ml">C</span>Adults with normal health</label><input type="radio" name="vt7" id="vt7d"><label for="vt7d" class="mo wrg"><span class="ml">D</span>Unconscious only</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ A: Safe, non-invasive for infants.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">9</span>Which Korotkoff phase indicates diastolic (adults)?</div><div class="mopts"><input type="radio" name="vt8" id="vt8a"><label for="vt8a" class="mo cor"><span class="ml">A</span>Phase V (disappearance)</label><input type="radio" name="vt8" id="vt8b"><label for="vt8b" class="mo wrg"><span class="ml">B</span>Phase IV (muffling)</label><input type="radio" name="vt8" id="vt8c"><label for="vt8c" class="mo wrg"><span class="ml">C</span>Phase II</label><input type="radio" name="vt8" id="vt8d"><label for="vt8d" class="mo wrg"><span class="ml">D</span>Phase III</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ A: Phase V = last sound disappears.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">10</span>Fever is defined as morning temp >?</div><div class="mopts"><input type="radio" name="vt9" id="vt9a"><label for="vt9a" class="mo wrg"><span class="ml">A</span>36.5°C</label><input type="radio" name="vt9" id="vt9b"><label for="vt9b" class="mo wrg"><span class="ml">B</span>39.0°C</label><input type="radio" name="vt9" id="vt9c"><label for="vt9c" class="mo cor"><span class="ml">C</span>37.2°C</label><input type="radio" name="vt9" id="vt9d"><label for="vt9d" class="mo wrg"><span class="ml">D</span>38.5°C</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: Morning >37.2°C or evening >37.7°C.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">11</span>When checking patient's pulse?</div><div class="mopts"><input type="radio" name="vt10" id="vt10a"><label for="vt10a" class="mo wrg"><span class="ml">A</span>Use palm</label><input type="radio" name="vt10" id="vt10b"><label for="vt10b" class="mo wrg"><span class="ml">B</span>Use only index finger</label><input type="radio" name="vt10" id="vt10c"><label for="vt10c" class="mo cor"><span class="ml">C</span>Do NOT use thumb</label><input type="radio" name="vt10" id="vt10d"><label for="vt10d" class="mo wrg"><span class="ml">D</span>Always use thumb</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: You may feel your own pulse in the thumb.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">12</span>Average pulse pressure range?</div><div class="mopts"><input type="radio" name="vt11" id="vt11a"><label for="vt11a" class="mo wrg"><span class="ml">A</span>10-20 mmHg</label><input type="radio" name="vt11" id="vt11b"><label for="vt11b" class="mo wrg"><span class="ml">B</span>100-120 mmHg</label><input type="radio" name="vt11" id="vt11c"><label for="vt11c" class="mo cor"><span class="ml">C</span>30-60 mmHg</label><input type="radio" name="vt11" id="vt11d"><label for="vt11d" class="mo wrg"><span class="ml">D</span>70-90 mmHg</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: PP = Systolic - Diastolic.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">13</span>Rectal temperature is contraindicated in?</div><div class="mopts"><input type="radio" name="vt12" id="vt12a"><label for="vt12a" class="mo wrg"><span class="ml">A</span>Only fever</label><input type="radio" name="vt12" id="vt12b"><label for="vt12b" class="mo cor"><span class="ml">B</span>Diarrhea and anal fissure</label><input type="radio" name="vt12" id="vt12c"><label for="vt12c" class="mo wrg"><span class="ml">C</span>Only infants</label><input type="radio" name="vt12" id="vt12d"><label for="vt12d" class="mo wrg"><span class="ml">D</span>Only elderly</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: Risk of perforation or inaccurate reading.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">14</span>Wait time after hot/cold food before oral temp?</div><div class="mopts"><input type="radio" name="vt13" id="vt13a"><label for="vt13a" class="mo wrg"><span class="ml">A</span>Immediately</label><input type="radio" name="vt13" id="vt13b"><label for="vt13b" class="mo wrg"><span class="ml">B</span>30 seconds</label><input type="radio" name="vt13" id="vt13c"><label for="vt13c" class="mo wrg"><span class="ml">C</span>1 minute</label><input type="radio" name="vt13" id="vt13d"><label for="vt13d" class="mo cor"><span class="ml">D</span>10-15 minutes</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ D: To avoid false readings.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">15</span>Evening fever threshold?</div><div class="mopts"><input type="radio" name="vt14" id="vt14a"><label for="vt14a" class="mo wrg"><span class="ml">A</span>Anytime >38.0°C</label><input type="radio" name="vt14" id="vt14b"><label for="vt14b" class="mo wrg"><span class="ml">B</span>Morning >37.7°C</label><input type="radio" name="vt14" id="vt14c"><label for="vt14c" class="mo cor"><span class="ml">C</span>Evening >37.7°C</label><input type="radio" name="vt14" id="vt14d"><label for="vt14d" class="mo wrg"><span class="ml">D</span>Evening >37.2°C</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: Diurnal variation in body temperature.</div></details></div>
+</div><label for="dn-vitals" class="done-btn">✓ Mark as Done</label></div></div></div></div>
+<!-- INJECTION TECHNIQUES -->
+<input type="checkbox" id="acc-inj" class="acc-r"><label for="acc-inj" class="acc-lbl ac-inject"><span class="sicon">💉</span><span class="sname">Injection Techniques</span><span class="scount">1 Topic</span><span class="sarr">▾</span></label>
+<div class="acc-body"><div class="topics-wrap"><input type="checkbox" id="dn-inj" class="done-chk"><div class="topic-card ac-inject"><div class="topic-header"><span class="tnum">7</span><span class="ttitle">ID, SC, IM, IV, IO & Z-track</span></div><div class="topic-body"><div class="tcontent">
+
+<div class="ch"><h3>💉 Safe Injection Practices</h3>
+<ul>
+<li>Set of steps to perform injections in optimally safe manner for patients, healthcare workers, and others</li>
+<li>Prevent transmission: patient→worker, worker→patient, patient→patient</li>
+<li><strong>Safe Injection = No Infection</strong></li>
+<li><strong>4 Steps:</strong>
+  <ol>
+  <li><strong>Safe production:</strong> sterile medications from manufacturer</li>
+  <li><strong>Safe preparation:</strong> prepare in clean area</li>
+  <li><strong>Safe administration:</strong> follow standard precautions</li>
+  <li><strong>Safe disposal:</strong> minimize risks</li>
+  </ol>
+</li>
+</ul></div>
+<div class="ch"><h3>⚠️ Potential Complications</h3>
+<ul>
+<li>Infection, incorrect location, pain</li>
+<li><strong>Pain factors:</strong> the needle, chemical composition, technique, speed of injection, volume of drug</li>
+<li>Anaphylaxis, nerve damage, hemorrhage, hitting blood vessel</li>
+<li>Sterile abscess, lipodystrophy</li>
+</ul></div>
+<div class="ch"><h3>🧰 Equipment & Documentation</h3>
+<ul>
+<li><strong>Equipment:</strong> medication order, alcohol swabs, sharps disposal container, medication, gloves, syringe and needle of appropriate size</li>
+<li><strong>Documentation:</strong> time, drug name, drug dosage in mg, route, patient response</li>
+</ul></div>
+<div class="ch"><h3>💊 Intradermal (ID)</h3>
+<ul>
+<li>Injected into dermis, just below epidermis</li>
+<li><strong>Longest absorption time</strong> of all parenteral routes</li>
+<li>Angle: 5-15°, Volume: &lt;0.5 mL</li>
+<li>Sites: inner forearm, upper back, upper chest</li>
+<li>Uses: TB screening, allergy testing, local anesthesia, Botox</li>
+</ul></div>
+<div class="ch"><h3>💉 Subcutaneous (SC)</h3>
+<ul>
+<li>Injected into fatty layer beneath dermis</li>
+<li>Volume: ≤1 mL, Angle: 45° (or up to 90° if fat layer thick and needle short)</li>
+<li>Blood supply less than muscle → slower absorption than IM</li>
+<li><strong>Absorption rates by site:</strong> abdomen (fastest) → upper arm (intermediate) → thigh/buttocks (slowest)</li>
+<li>Uses: insulin, heparin, testosterone</li>
+<li>Sites: abdomen (avoid 1-2" around umbilicus), upper arm, thigh, buttocks</li>
+</ul></div>
+<div class="ch"><h3>💪 Intramuscular (IM)</h3>
+<ul>
+<li><strong>Indications:</strong> noncompliant, uncooperative, unable other routes, don't tolerate oral (dysphagia, profound vomiting, malabsorption)</li>
+<li><strong>Contraindications:</strong> active infection/cellulitis/dermatitis at site, allergy to drug, thrombocytopenia/coagulopathy, hypovolemic shock, myopathies/muscular atrophy</li>
+<li><strong>Angle:</strong> 72-90°</li>
+<li><strong>Z-track technique:</strong> ensures medication stays in muscle, prevents tracking back into subcutaneous tissue</li>
+<li><strong>Safe sites:</strong> ventrogluteal, vastus lateralis, deltoid. <strong>Avoid dorsogluteal</strong> (sciatic nerve risk)</li>
+<li><strong>Complications (9):</strong>
+  <ol>
+  <li>Persistent pain at site</li>
+  <li>Muscle fibrosis and contracture</li>
+  <li>Abscess</li>
+  <li>Gangrene</li>
+  <li>Nerve injury — sciatic in gluteal, femoral in vastus lateralis</li>
+  <li>Periostitis, osteomyelitis</li>
+  <li>HIV/hepatitis transmission</li>
+  <li>Glass particles from vials</li>
+  <li>Vascular injury</li>
+  </ol>
+</li>
+</ul></div>
+<div class="ch"><h3>💧 Intravenous (IV)</h3>
+<ul>
+<li>Fastest route. Uses syringe/catheter or infusion pump/gravity drip</li>
+<li>Uses: antimicrobials, anticonvulsants, diuretics, steroids, analgesics</li>
+<li><strong>Complications:</strong> burning/stinging/redness if leak, pulmonary edema (fluid overload), air embolism</li>
+<li><strong>Air embolism symptoms:</strong> shortness of breath, increased heart rate, shoulder pain, light-headedness, confusion</li>
+<li><strong>Note:</strong> some meds can be given multiple ways (epinephrine IM or SC, epoetin IV or SC, Botox IM/ID/intravesical)</li>
+</ul></div>
+<div class="ch"><h3>🦴 Intraosseous (IO)</h3>
+<ul>
+<li><strong>Indications:</strong> emergency when IV access impossible — cardiac arrest, shock, status epilepticus, burns, edema, obesity</li>
+<li>Site: tibia (most common)</li>
+<li><strong>Contraindications:</strong> fracture of tibia/femur, infection at site, previous orthopedic procedure, knee replacement, tumor near site, peripheral vascular disease, excessive tissue at insertion site</li>
+</ul></div>
+<div class="ch"><h3>📐 Injection Angles Summary</h3>
+<table>
+<tr><th>Type</th><th>Angle</th></tr>
+<tr><td>Intradermal (ID)</td><td>5-15°</td></tr>
+<tr><td>Subcutaneous (SC)</td><td>45° (or up to 90°)</td></tr>
+<tr><td>Intramuscular (IM)</td><td>72-90°</td></tr>
+<tr><td>Intravenous (IV)</td><td>15-30°</td></tr>
+<tr><td>Intraosseous (IO)</td><td>90°</td></tr>
+</table></div>
+<div class="ch"><h3>🔬 Other Injection Types</h3>
+<ul>
+<li>Intra-articular — into a joint</li>
+<li>Intraosseous — into bone marrow</li>
+<li>Intradetrusor — into bladder wall muscle</li>
+<li>Intraocular (intravitreal) — into eye</li>
+<li>Intraperitoneal — within abdominal cavity</li>
+<li>Intracardiac — into heart muscle/ventricles</li>
+</ul></div>
+</div><div class="mcq-wrap"><div class="mcq-hdr">📝 15 MCQs <span class="mcq-badge">Injection</span></div>
+<div class="mi"><div class="mq"><span class="mn">1</span>Z-track technique is used for which injection?</div><div class="mopts"><input type="radio" name="inj0" id="inj0a"><label for="inj0a" class="mo wrg"><span class="ml">A</span>ID</label><input type="radio" name="inj0" id="inj0b"><label for="inj0b" class="mo cor"><span class="ml">B</span>IM</label><input type="radio" name="inj0" id="inj0c"><label for="inj0c" class="mo wrg"><span class="ml">C</span>IV</label><input type="radio" name="inj0" id="inj0d"><label for="inj0d" class="mo wrg"><span class="ml">D</span>SC</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: Prevents medication leakage into subcutaneous tissue.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">2</span>Intradermal injection angle?</div><div class="mopts"><input type="radio" name="inj1" id="inj1a"><label for="inj1a" class="mo wrg"><span class="ml">A</span>25 degrees</label><input type="radio" name="inj1" id="inj1b"><label for="inj1b" class="mo cor"><span class="ml">B</span>5-15 degrees</label><input type="radio" name="inj1" id="inj1c"><label for="inj1c" class="mo wrg"><span class="ml">C</span>90 degrees</label><input type="radio" name="inj1" id="inj1d"><label for="inj1d" class="mo wrg"><span class="ml">D</span>45 degrees</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: Just below epidermis.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">3</span>Which site has fastest absorption for SC injection?</div><div class="mopts"><input type="radio" name="inj2" id="inj2a"><label for="inj2a" class="mo wrg"><span class="ml">A</span>Buttocks</label><input type="radio" name="inj2" id="inj2b"><label for="inj2b" class="mo wrg"><span class="ml">B</span>Thigh</label><input type="radio" name="inj2" id="inj2c"><label for="inj2c" class="mo wrg"><span class="ml">C</span>Upper arm</label><input type="radio" name="inj2" id="inj2d"><label for="inj2d" class="mo cor"><span class="ml">D</span>Abdomen</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ D: Abdomen most rapid absorption.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">4</span>Maximum volume for subcutaneous injection?</div><div class="mopts"><input type="radio" name="inj3" id="inj3a"><label for="inj3a" class="mo wrg"><span class="ml">A</span>5 mL</label><input type="radio" name="inj3" id="inj3b"><label for="inj3b" class="mo wrg"><span class="ml">B</span>2 mL</label><input type="radio" name="inj3" id="inj3c"><label for="inj3c" class="mo cor"><span class="ml">C</span>1 mL</label><input type="radio" name="inj3" id="inj3d"><label for="inj3d" class="mo wrg"><span class="ml">D</span>0.5 mL</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: Usually ≤1 mL.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">5</span>Which IM site avoids sciatic nerve injury?</div><div class="mopts"><input type="radio" name="inj4" id="inj4a"><label for="inj4a" class="mo cor"><span class="ml">A</span>Ventrogluteal</label><input type="radio" name="inj4" id="inj4b"><label for="inj4b" class="mo wrg"><span class="ml">B</span>Deltoid</label><input type="radio" name="inj4" id="inj4c"><label for="inj4c" class="mo wrg"><span class="ml">C</span>Vastus lateralis</label><input type="radio" name="inj4" id="inj4d"><label for="inj4d" class="mo wrg"><span class="ml">D</span>Dorsogluteal</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ A: Ventrogluteal is safer, dorsogluteal risks sciatic nerve.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">6</span>Intraosseous access is indicated for?</div><div class="mopts"><input type="radio" name="inj5" id="inj5a"><label for="inj5a" class="mo cor"><span class="ml">A</span>Emergency when IV access impossible</label><input type="radio" name="inj5" id="inj5b"><label for="inj5b" class="mo wrg"><span class="ml">B</span>Subcutaneous fluids</label><input type="radio" name="inj5" id="inj5c"><label for="inj5c" class="mo wrg"><span class="ml">C</span>Long term antibiotics</label><input type="radio" name="inj5" id="inj5d"><label for="inj5d" class="mo wrg"><span class="ml">D</span>Routine medication</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ A: Cardiac arrest, shock, difficult venous access.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">7</span>Common complication of IV injection?</div><div class="mopts"><input type="radio" name="inj6" id="inj6a"><label for="inj6a" class="mo wrg"><span class="ml">A</span>Lipodystrophy</label><input type="radio" name="inj6" id="inj6b"><label for="inj6b" class="mo cor"><span class="ml">B</span>Air embolism, infiltration</label><input type="radio" name="inj6" id="inj6c"><label for="inj6c" class="mo wrg"><span class="ml">C</span>Nerve damage (most)</label><input type="radio" name="inj6" id="inj6d"><label for="inj6d" class="mo wrg"><span class="ml">D</span>Muscle fibrosis</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: Infiltration, phlebitis, air embolism.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">8</span>Which injection forms a bleb/wheal?</div><div class="mopts"><input type="radio" name="inj7" id="inj7a"><label for="inj7a" class="mo wrg"><span class="ml">A</span>Intramuscular</label><input type="radio" name="inj7" id="inj7b"><label for="inj7b" class="mo wrg"><span class="ml">B</span>Intravenous</label><input type="radio" name="inj7" id="inj7c"><label for="inj7c" class="mo wrg"><span class="ml">C</span>Subcutaneous</label><input type="radio" name="inj7" id="inj7d"><label for="inj7d" class="mo cor"><span class="ml">D</span>Intradermal</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ D: ID injection produces small wheal.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">9</span>Contraindication for IO access?</div><div class="mopts"><input type="radio" name="inj8" id="inj8a"><label for="inj8a" class="mo wrg"><span class="ml">A</span>Hypotension</label><input type="radio" name="inj8" id="inj8b"><label for="inj8b" class="mo wrg"><span class="ml">B</span>Obesity</label><input type="radio" name="inj8" id="inj8c"><label for="inj8c" class="mo wrg"><span class="ml">C</span>Cardiac arrest</label><input type="radio" name="inj8" id="inj8d"><label for="inj8d" class="mo cor"><span class="ml">D</span>Fracture of tibia</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ D: Fracture, infection at site, previous orthopedic surgery.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">10</span>Z-track technique prevents?</div><div class="mopts"><input type="radio" name="inj9" id="inj9a"><label for="inj9a" class="mo wrg"><span class="ml">A</span>Bleeding</label><input type="radio" name="inj9" id="inj9b"><label for="inj9b" class="mo wrg"><span class="ml">B</span>Pain</label><input type="radio" name="inj9" id="inj9c"><label for="inj9c" class="mo cor"><span class="ml">C</span>Leakage to subcutaneous tissue</label><input type="radio" name="inj9" id="inj9d"><label for="inj9d" class="mo wrg"><span class="ml">D</span>Infection</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: Keeps medication in muscle.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">11</span>IM indication for patients who cannot take oral meds?</div><div class="mopts"><input type="radio" name="inj10" id="inj10a"><label for="inj10a" class="mo wrg"><span class="ml">A</span>Only pain</label><input type="radio" name="inj10" id="inj10b"><label for="inj10b" class="mo wrg"><span class="ml">B</span>Only fever</label><input type="radio" name="inj10" id="inj10c"><label for="inj10c" class="mo wrg"><span class="ml">C</span>Only anxiety</label><input type="radio" name="inj10" id="inj10d"><label for="inj10d" class="mo cor"><span class="ml">D</span>Dysphagia, vomiting, malabsorption</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ D: GI intolerance or malabsorption syndromes.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">12</span>IM contraindication related to bleeding risk?</div><div class="mopts"><input type="radio" name="inj11" id="inj11a"><label for="inj11a" class="mo wrg"><span class="ml">A</span>Only asthma</label><input type="radio" name="inj11" id="inj11b"><label for="inj11b" class="mo wrg"><span class="ml">B</span>Only hypertension</label><input type="radio" name="inj11" id="inj11c"><label for="inj11c" class="mo cor"><span class="ml">C</span>Thrombocytopenia and coagulopathy</label><input type="radio" name="inj11" id="inj11d"><label for="inj11d" class="mo wrg"><span class="ml">D</span>Only diabetes</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: Risk of hematoma and uncontrolled bleeding.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">13</span>Symptoms of air embolism?</div><div class="mopts"><input type="radio" name="inj12" id="inj12a"><label for="inj12a" class="mo wrg"><span class="ml">A</span>Only chest pain</label><input type="radio" name="inj12" id="inj12b"><label for="inj12b" class="mo cor"><span class="ml">B</span>Shortness of breath, shoulder pain, confusion</label><input type="radio" name="inj12" id="inj12c"><label for="inj12c" class="mo wrg"><span class="ml">C</span>Only rash</label><input type="radio" name="inj12" id="inj12d"><label for="inj12d" class="mo wrg"><span class="ml">D</span>Only fever</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: Life-threatening emergency requiring immediate action.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">14</span>Four steps of safe injection practices?</div><div class="mopts"><input type="radio" name="inj13" id="inj13a"><label for="inj13a" class="mo wrg"><span class="ml">A</span>Only hand washing</label><input type="radio" name="inj13" id="inj13b"><label for="inj13b" class="mo cor"><span class="ml">B</span>Safe production, preparation, administration, disposal</label><input type="radio" name="inj13" id="inj13c"><label for="inj13c" class="mo wrg"><span class="ml">C</span>Only sharps disposal</label><input type="radio" name="inj13" id="inj13d"><label for="inj13d" class="mo wrg"><span class="ml">D</span>Only glove use</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: Complete chain of safety from manufacture to disposal.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">15</span>Required documentation for medication administration?</div><div class="mopts"><input type="radio" name="inj14" id="inj14a"><label for="inj14a" class="mo wrg"><span class="ml">A</span>Only time</label><input type="radio" name="inj14" id="inj14b"><label for="inj14b" class="mo cor"><span class="ml">B</span>Time, drug name, dosage in mg, route, response</label><input type="radio" name="inj14" id="inj14c"><label for="inj14c" class="mo wrg"><span class="ml">C</span>Only route</label><input type="radio" name="inj14" id="inj14d"><label for="inj14d" class="mo wrg"><span class="ml">D</span>Only drug name</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: Complete record for patient safety and legal protection.</div></details></div>
+</div><label for="dn-inj" class="done-btn">✓ Mark as Done</label></div></div></div></div>
+<!-- QUICK REVISION TABLES -->
+<input type="checkbox" id="acc-rev" class="acc-r"><label for="acc-rev" class="acc-lbl ac-revision"><span class="sicon">📊</span><span class="sname">Quick Revision Tables</span><span class="scount">1 Topic</span><span class="sarr">▾</span></label>
+<div class="acc-body"><div class="topics-wrap"><input type="checkbox" id="dn-rev" class="done-chk"><div class="topic-card ac-revision"><div class="topic-header"><span class="tnum">R</span><span class="ttitle">Rapid Review – Summary Tables</span></div><div class="topic-body"><div class="tcontent">
+
+<div class="ch"><h3>🆘 Airway & Choking Quick Table</h3>
+<table>
+<tr><th>Concept</th><th>Key Info</th></tr>
+<tr><td>Complete obstruction sign</td><td>See-saw breathing, silent cough</td></tr>
+<tr><td>Jaw thrust indication</td><td>Suspected C-spine injury</td></tr>
+<tr><td>OPA size estimation</td><td>Incisors to angle of mandible</td></tr>
+<tr><td>NPA contraindication</td><td>Basilar skull fracture</td></tr>
+<tr><td>NPA side effects</td><td>Bleeding 30%, laryngeal spasm</td></tr>
+<tr><td>Choking (conscious)</td><td>5 back blows → 5 abdominal thrusts</td></tr>
+<tr><td>LMA size (M/F)</td><td>Male 5 / Female 4</td></tr>
+<tr><td>LMA cuff inflation</td><td>(size - 1) × 10 ml</td></tr>
+<tr><td>Confirm intubation</td><td>Capnography (ETCO₂) — gold standard</td></tr>
+<tr><td>Intubation tube sizes</td><td>Size 8 male, 7 female</td></tr>
+<tr><td>Difficult intubation causes</td><td>Short neck, goiter, receding jaw, etc.</td></tr>
+<tr><td>Cricothyroidotomy indication</td><td>"Cannot intubate, cannot ventilate"</td></tr>
+</table></div>
+<div class="ch"><h3>🫀 BLS & Collapsed Patient</h3>
+<table>
+<tr><th>Parameter</th><th>Value</th></tr>
+<tr><td>Compression : Ventilation</td><td>30:2 (adult)</td></tr>
+<tr><td>Compression depth</td><td>5-6 cm</td></tr>
+<tr><td>Compression rate</td><td>100-120/min</td></tr>
+<tr><td>Rescue breath duration</td><td>1 second, chest rise</td></tr>
+<tr><td>Change operator</td><td>Every 2 minutes</td></tr>
+<tr><td>Do NOT re-check pulse</td><td>During CPR</td></tr>
+<tr><td>Recovery position</td><td>Unconscious + breathing + pulse</td></tr>
+<tr><td>Shock position (no trauma)</td><td>Legs elevated 20-30°</td></tr>
+<tr><td>Semi-sitting</td><td>Dyspnea / chest trauma / MI</td></tr>
+<tr><td>Head elevated</td><td>Head injury (no spinal trauma)</td></tr>
+<tr><td>Emergency call steps</td><td>8 steps (identify to information)</td></tr>
+<tr><td>Transfer modes</td><td>Chair, trolley, ambulance, helicopter</td></tr>
+</table></div>
+<div class="ch"><h3>📊 Vital Signs Normal Ranges</h3>
+<table>
+<tr><th>Vital sign</th><th>Normal adult</th></tr>
+<tr><td>Heart rate</td><td>60-90 bpm</td></tr>
+<tr><td>Respiratory rate</td><td>14-20/min</td></tr>
+<tr><td>Oral temperature</td><td>36.8-37.2°C</td></tr>
+<tr><td>Evening fever threshold</td><td>>37.7°C</td></tr>
+<tr><td>Systolic BP</td><td>&lt;130 mmHg</td></tr>
+<tr><td>Diastolic BP</td><td>&lt;85 mmHg</td></tr>
+<tr><td>Pulse pressure</td><td>30-60 mmHg</td></tr>
+<tr><td>Postural hypotension</td><td>Drop ≥20 mmHg systolic</td></tr>
+<tr><td>Korotkoff I</td><td>Systolic (first sound)</td></tr>
+<tr><td>Korotkoff V</td><td>Diastolic (disappearance)</td></tr>
+</table></div>
+<div class="ch"><h3>💉 Injection Techniques</h3>
+<table>
+<tr><th>Route</th><th>Angle</th><th>Volume</th><th>Example</th></tr>
+<tr><td>Intradermal (ID)</td><td>5-15°</td><td>&lt;0.5 mL</td><td>TB test, allergy</td></tr>
+<tr><td>Subcutaneous (SC)</td><td>45° (or 90°)</td><td>≤1 mL</td><td>Insulin, heparin</td></tr>
+<tr><td>IM (Z-track)</td><td>72-90°</td><td>≤3-5 mL</td><td>Vaccines, antibiotics</td></tr>
+<tr><td>IV</td><td>15-30°</td><td>variable</td><td>Emergency drugs</td></tr>
+<tr><td>IO (emergency)</td><td>90°</td><td>—</td><td>Tibia, sternum</td></tr>
+<tr><td colspan="4">IM safe sites: ventrogluteal, vastus lateralis, deltoid. Avoid dorsogluteal (sciatic nerve)</td></tr>
+</table></div>
+<div class="ch"><h3>🧾 History Taking — Must Cover</h3>
+<ul>
+<li>Personal history (name, age, occupation, habits, handedness)</li>
+<li>Complaint (patient's words, short, no medical terms)</li>
+<li>History of present illness (onset: acute/gradual/insidious; course: progressive/regressive/stationary)</li>
+<li>Past history (diseases, surgery, transfusions)</li>
+<li>Drug history (allergies, current meds)</li>
+<li>Family history (consanguinity, similar, HTN/DM). If negative: "of no medical importance"</li>
+</ul></div>
+<div class="ch"><h3>🧠 Conscious Level (5 Levels)</h3>
+<table>
+<tr><th>Level</th><th>Key Feature</th></tr>
+<tr><td>Alert</td><td>Awake, oriented, appropriate response</td></tr>
+<tr><td>Lethargic/Somnolent</td><td>Drifts off, easily aroused</td></tr>
+<tr><td>Obtunded</td><td>Sleeps mostly, needs loud shout/shake</td></tr>
+<tr><td>Stupor/Semi-Coma</td><td>Unconscious, responds only to pain</td></tr>
+<tr><td>Coma</td><td>No response to any stimuli</td></tr>
+</table></div>
+
+</div><div class="mcq-wrap"><div class="mcq-hdr">📝 15 MCQs <span class="mcq-badge">Quick</span></div>
+<div class="mi"><div class="mq"><span class="mn">1</span>Normal adult heart rate range?</div><div class="mopts"><input type="radio" name="qr0" id="qr0a"><label for="qr0a" class="mo cor"><span class="ml">A</span>60-90</label><input type="radio" name="qr0" id="qr0b"><label for="qr0b" class="mo wrg"><span class="ml">B</span>40-60</label><input type="radio" name="qr0" id="qr0c"><label for="qr0c" class="mo wrg"><span class="ml">C</span>20-40</label><input type="radio" name="qr0" id="qr0d"><label for="qr0d" class="mo wrg"><span class="ml">D</span>100-120</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ A: 60-90 bpm.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">2</span>Which position for shock without spinal injury?</div><div class="mopts"><input type="radio" name="qr1" id="qr1a"><label for="qr1a" class="mo wrg"><span class="ml">A</span>Semi-sitting</label><input type="radio" name="qr1" id="qr1b"><label for="qr1b" class="mo wrg"><span class="ml">B</span>Head elevated</label><input type="radio" name="qr1" id="qr1c"><label for="qr1c" class="mo cor"><span class="ml">C</span>Legs elevated 20-30°</label><input type="radio" name="qr1" id="qr1d"><label for="qr1d" class="mo wrg"><span class="ml">D</span>Supine</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: Improves venous return.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">3</span>Adult compression depth in CPR?</div><div class="mopts"><input type="radio" name="qr2" id="qr2a"><label for="qr2a" class="mo wrg"><span class="ml">A</span>7-8 cm</label><input type="radio" name="qr2" id="qr2b"><label for="qr2b" class="mo cor"><span class="ml">B</span>5-6 cm</label><input type="radio" name="qr2" id="qr2c"><label for="qr2c" class="mo wrg"><span class="ml">C</span>2-3 cm</label><input type="radio" name="qr2" id="qr2d"><label for="qr2d" class="mo wrg"><span class="ml">D</span><2 cm</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: 5-6 cm.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">4</span>ID injection angle?</div><div class="mopts"><input type="radio" name="qr3" id="qr3a"><label for="qr3a" class="mo wrg"><span class="ml">A</span>90°</label><input type="radio" name="qr3" id="qr3b"><label for="qr3b" class="mo wrg"><span class="ml">B</span>25°</label><input type="radio" name="qr3" id="qr3c"><label for="qr3c" class="mo wrg"><span class="ml">C</span>45°</label><input type="radio" name="qr3" id="qr3d"><label for="qr3d" class="mo cor"><span class="ml">D</span>5-15°</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ D: Intradermal = shallow.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">5</span>Z-track technique prevents?</div><div class="mopts"><input type="radio" name="qr4" id="qr4a"><label for="qr4a" class="mo wrg"><span class="ml">A</span>Haematoma</label><input type="radio" name="qr4" id="qr4b"><label for="qr4b" class="mo wrg"><span class="ml">B</span>Infection</label><input type="radio" name="qr4" id="qr4c"><label for="qr4c" class="mo cor"><span class="ml">C</span>Leakage to subcutaneous tissue</label><input type="radio" name="qr4" id="qr4d"><label for="qr4d" class="mo wrg"><span class="ml">D</span>Pain</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: Keeps medication in muscle.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">6</span>Normal oral temperature?</div><div class="mopts"><input type="radio" name="qr5" id="qr5a"><label for="qr5a" class="mo wrg"><span class="ml">A</span>35.5-36.5°C</label><input type="radio" name="qr5" id="qr5b"><label for="qr5b" class="mo cor"><span class="ml">B</span>36.8-37.2°C</label><input type="radio" name="qr5" id="qr5c"><label for="qr5c" class="mo wrg"><span class="ml">C</span>37.5-38.0°C</label><input type="radio" name="qr5" id="qr5d"><label for="qr5d" class="mo wrg"><span class="ml">D</span>38.5-39.0°C</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: 36.8-37.2°C.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">7</span>First action for conscious severe choking?</div><div class="mopts"><input type="radio" name="qr6" id="qr6a"><label for="qr6a" class="mo wrg"><span class="ml">A</span>Abdominal thrusts</label><input type="radio" name="qr6" id="qr6b"><label for="qr6b" class="mo wrg"><span class="ml">B</span>CPR</label><input type="radio" name="qr6" id="qr6c"><label for="qr6c" class="mo wrg"><span class="ml">C</span>Finger sweep</label><input type="radio" name="qr6" id="qr6d"><label for="qr6d" class="mo cor"><span class="ml">D</span>5 back blows</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ D: Start with 5 back blows.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">8</span>Which Korotkoff phase = systolic BP?</div><div class="mopts"><input type="radio" name="qr7" id="qr7a"><label for="qr7a" class="mo wrg"><span class="ml">A</span>Phase IV</label><input type="radio" name="qr7" id="qr7b"><label for="qr7b" class="mo wrg"><span class="ml">B</span>Phase V</label><input type="radio" name="qr7" id="qr7c"><label for="qr7c" class="mo wrg"><span class="ml">C</span>Phase II</label><input type="radio" name="qr7" id="qr7d"><label for="qr7d" class="mo cor"><span class="ml">D</span>Phase I</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ D: First appearance of tapping sound.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">9</span>For head injury without spinal trauma, position?</div><div class="mopts"><input type="radio" name="qr8" id="qr8a"><label for="qr8a" class="mo wrg"><span class="ml">A</span>Legs elevated</label><input type="radio" name="qr8" id="qr8b"><label for="qr8b" class="mo wrg"><span class="ml">B</span>Supine</label><input type="radio" name="qr8" id="qr8c"><label for="qr8c" class="mo cor"><span class="ml">C</span>Head elevated</label><input type="radio" name="qr8" id="qr8d"><label for="qr8d" class="mo wrg"><span class="ml">D</span>Recovery</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: Reduces ICP.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">10</span>Which IM site avoids sciatic nerve?</div><div class="mopts"><input type="radio" name="qr9" id="qr9a"><label for="qr9a" class="mo wrg"><span class="ml">A</span>Vastus lateralis</label><input type="radio" name="qr9" id="qr9b"><label for="qr9b" class="mo cor"><span class="ml">B</span>Ventrogluteal</label><input type="radio" name="qr9" id="qr9c"><label for="qr9c" class="mo wrg"><span class="ml">C</span>Dorsogluteal</label><input type="radio" name="qr9" id="qr9d"><label for="qr9d" class="mo wrg"><span class="ml">D</span>Deltoid</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: Ventrogluteal is safest.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">11</span>LMA cuff inflation formula?</div><div class="mopts"><input type="radio" name="qr10" id="qr10a"><label for="qr10a" class="mo wrg"><span class="ml">A</span>size × 5 ml</label><input type="radio" name="qr10" id="qr10b"><label for="qr10b" class="mo wrg"><span class="ml">B</span>size × 10 ml</label><input type="radio" name="qr10" id="qr10c"><label for="qr10c" class="mo cor"><span class="ml">C</span>(size - 1) × 10 ml</label><input type="radio" name="qr10" id="qr10d"><label for="qr10d" class="mo wrg"><span class="ml">D</span>(size + 1) × 10 ml</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: Size 5 → 40 ml.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">12</span>Tracheal tube size for adult male?</div><div class="mopts"><input type="radio" name="qr11" id="qr11a"><label for="qr11a" class="mo wrg"><span class="ml">A</span>Size 6</label><input type="radio" name="qr11" id="qr11b"><label for="qr11b" class="mo wrg"><span class="ml">B</span>Size 9</label><input type="radio" name="qr11" id="qr11c"><label for="qr11c" class="mo wrg"><span class="ml">C</span>Size 7</label><input type="radio" name="qr11" id="qr11d"><label for="qr11d" class="mo cor"><span class="ml">D</span>Size 8</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ D: Size 8 male, 7 female.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">13</span>NPA contraindication?</div><div class="mopts"><input type="radio" name="qr12" id="qr12a"><label for="qr12a" class="mo wrg"><span class="ml">A</span>Clenched jaw</label><input type="radio" name="qr12" id="qr12b"><label for="qr12b" class="mo wrg"><span class="ml">B</span>Maxillofacial injury</label><input type="radio" name="qr12" id="qr12c"><label for="qr12c" class="mo cor"><span class="ml">C</span>Basilar skull fracture</label><input type="radio" name="qr12" id="qr12d"><label for="qr12d" class="mo wrg"><span class="ml">D</span>Trismus</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: Risk of intracranial placement.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">14</span>Evening fever threshold?</div><div class="mopts"><input type="radio" name="qr13" id="qr13a"><label for="qr13a" class="mo wrg"><span class="ml">A</span>>38.5°C</label><input type="radio" name="qr13" id="qr13b"><label for="qr13b" class="mo cor"><span class="ml">B</span>>37.7°C</label><input type="radio" name="qr13" id="qr13c"><label for="qr13c" class="mo wrg"><span class="ml">C</span>>39.0°C</label><input type="radio" name="qr13" id="qr13d"><label for="qr13d" class="mo wrg"><span class="ml">D</span>>37.2°C</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: Diurnal variation.</div></details></div>
+<div class="mi"><div class="mq"><span class="mn">15</span>Do NOT use which finger for pulse check?</div><div class="mopts"><input type="radio" name="qr14" id="qr14a"><label for="qr14a" class="mo cor"><span class="ml">A</span>Thumb</label><input type="radio" name="qr14" id="qr14b"><label for="qr14b" class="mo wrg"><span class="ml">B</span>Ring</label><input type="radio" name="qr14" id="qr14c"><label for="qr14c" class="mo wrg"><span class="ml">C</span>Middle</label><input type="radio" name="qr14" id="qr14d"><label for="qr14d" class="mo wrg"><span class="ml">D</span>Index</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ A: May feel your own pulse.</div></details></div>
+</div><label for="dn-rev" class="done-btn">✓ Mark as Done</label></div></div></div></div>
+
+<!-- PREVIOUS EXAMS QUESTIONS -->
+<input type="checkbox" id="acc-prevex" class="acc-r"><label for="acc-prevex" class="acc-lbl ac-prevex"><span class="sicon">📝</span><span class="sname">Previous Exams Questions</span><span class="scount">68 MCQs</span><span class="sarr">▾</span></label>
+<div class="acc-body"><div class="topics-wrap"><input type="checkbox" id="dn-prevex" class="done-chk"><div class="topic-card ac-prevex"><div class="topic-header"><span class="tnum">★</span><span class="ttitle">Previous Exams — 68 Questions</span></div><div class="topic-body"><div class="tcontent">
+<div class="ch"><h3>📌 Note</h3><ul><li>All questions are from Professional Practice II previous exams<br>⏳ ⁠Time to test!
+</li></ul></div>
+</div><div class="mcq-wrap"><div class="mcq-hdr">📝 68 MCQs <span class="mcq-badge">Prev. Exams</span></div>
+
+<div class="mi"><div class="mq"><span class="mn">1</span>The appropriate size of an oro-pharyngeal airway device is determined by:</div><div class="mopts"><input type="radio" name="pe0" id="pe0a"><label for="pe0a" class="mo cor"><span class="ml">A</span>Distance between the angle of the mouth and the lobule of the ear.</label><input type="radio" name="pe0" id="pe0b"><label for="pe0b" class="mo wrg"><span class="ml">B</span>Size of the little finger of the patient.</label><input type="radio" name="pe0" id="pe0c"><label for="pe0c" class="mo wrg"><span class="ml">C</span>Size of the nostril of the patient.</label><input type="radio" name="pe0" id="pe0d"><label for="pe0d" class="mo wrg"><span class="ml">D</span>Mouth opening of the patient.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ A: Distance between angle of mouth and lobule of the ear.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">2</span>When a cervical spine fracture is suspected, and there is an airway obstruction, we take the following basic technique to open the airway:</div><div class="mopts"><input type="radio" name="pe1" id="pe1a"><label for="pe1a" class="mo wrg"><span class="ml">A</span>Head tilt &amp; chin lift.</label><input type="radio" name="pe1" id="pe1b"><label for="pe1b" class="mo cor"><span class="ml">B</span>Jaw thrust.</label><input type="radio" name="pe1" id="pe1c"><label for="pe1c" class="mo wrg"><span class="ml">C</span>Tracheal intubation.</label><input type="radio" name="pe1" id="pe1d"><label for="pe1d" class="mo wrg"><span class="ml">D</span>Cervical spine support.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: Jaw thrust — does not move the cervical spine.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">3</span>Which of the following conditions makes the insertion of a nasopharyngeal airway device contraindicated?</div><div class="mopts"><input type="radio" name="pe2" id="pe2a"><label for="pe2a" class="mo wrg"><span class="ml">A</span>Clenched jaw.</label><input type="radio" name="pe2" id="pe2b"><label for="pe2b" class="mo cor"><span class="ml">B</span>Fracture base of the skull.</label><input type="radio" name="pe2" id="pe2c"><label for="pe2c" class="mo wrg"><span class="ml">C</span>Maxillofacial fracture.</label><input type="radio" name="pe2" id="pe2d"><label for="pe2d" class="mo wrg"><span class="ml">D</span>Conscious patient.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: Fracture base of skull — risk of intracranial placement.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">4</span>As regards Laryngeal Mask Airway (LMA) insertion, which of the following is false:</div><div class="mopts"><input type="radio" name="pe3" id="pe3a"><label for="pe3a" class="mo cor"><span class="ml">A</span>Can be tolerated by a conscious patient.</label><input type="radio" name="pe3" id="pe3b"><label for="pe3b" class="mo wrg"><span class="ml">B</span>It is a device of choice in a suspected cervical spine fracture.</label><input type="radio" name="pe3" id="pe3c"><label for="pe3c" class="mo wrg"><span class="ml">C</span>Can be used if the tracheal tube fails.</label><input type="radio" name="pe3" id="pe3d"><label for="pe3d" class="mo wrg"><span class="ml">D</span>Its insertion does not require head extension.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ A (FALSE): LMA cannot be tolerated by a conscious patient — requires deep unconsciousness.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">5</span>What is the purpose of placing an unconscious (has pulse and breath) patient in the recovery position?</div><div class="mopts"><input type="radio" name="pe4" id="pe4a"><label for="pe4a" class="mo wrg"><span class="ml">A</span>To improve circulation.</label><input type="radio" name="pe4" id="pe4b"><label for="pe4b" class="mo cor"><span class="ml">B</span>To prevent choking by maintaining airway patency.</label><input type="radio" name="pe4" id="pe4c"><label for="pe4c" class="mo wrg"><span class="ml">C</span>To lower blood pressure.</label><input type="radio" name="pe4" id="pe4d"><label for="pe4d" class="mo wrg"><span class="ml">D</span>To allow easier CPR.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: Prevents choking by maintaining airway patency.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">6</span>What is the first step in managing a conscious adult with mild airway obstruction?</div><div class="mopts"><input type="radio" name="pe5" id="pe5a"><label for="pe5a" class="mo wrg"><span class="ml">A</span>Begin back blows.</label><input type="radio" name="pe5" id="pe5b"><label for="pe5b" class="mo wrg"><span class="ml">B</span>Start abdominal thrusts.</label><input type="radio" name="pe5" id="pe5c"><label for="pe5c" class="mo cor"><span class="ml">C</span>Encourage the patient to keep coughing.</label><input type="radio" name="pe5" id="pe5d"><label for="pe5d" class="mo wrg"><span class="ml">D</span>Call emergency services immediately.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: Encourage coughing — mild obstruction, patient can speak/cough.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">7</span>Which of the following is a classic sign of cardiac arrest?</div><div class="mopts"><input type="radio" name="pe6" id="pe6a"><label for="pe6a" class="mo wrg"><span class="ml">A</span>High blood pressure and rapid breathing.</label><input type="radio" name="pe6" id="pe6b"><label for="pe6b" class="mo cor"><span class="ml">B</span>No pulse and no breathing in an unconscious patient.</label><input type="radio" name="pe6" id="pe6c"><label for="pe6c" class="mo wrg"><span class="ml">C</span>Fast irregular heartbeat.</label><input type="radio" name="pe6" id="pe6d"><label for="pe6d" class="mo wrg"><span class="ml">D</span>Normal breathing with snoring.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: No pulse and no breathing in an unconscious patient.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">8</span>What is the correct method to assess breathing in an unconscious patient?</div><div class="mopts"><input type="radio" name="pe7" id="pe7a"><label for="pe7a" class="mo wrg"><span class="ml">A</span>Look for chest rise only.</label><input type="radio" name="pe7" id="pe7b"><label for="pe7b" class="mo wrg"><span class="ml">B</span>Listen only for breath sounds.</label><input type="radio" name="pe7" id="pe7c"><label for="pe7c" class="mo cor"><span class="ml">C</span>Look, listen, and feel for 10 seconds.</label><input type="radio" name="pe7" id="pe7d"><label for="pe7d" class="mo wrg"><span class="ml">D</span>Count the respiratory rate for 30 seconds.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: Look, listen, and feel for no more than 10 seconds.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">9</span>What is the recommended rate of chest compressions during CPR?</div><div class="mopts"><input type="radio" name="pe8" id="pe8a"><label for="pe8a" class="mo wrg"><span class="ml">A</span>80-100 per minute.</label><input type="radio" name="pe8" id="pe8b"><label for="pe8b" class="mo cor"><span class="ml">B</span>100-120 per minute.</label><input type="radio" name="pe8" id="pe8c"><label for="pe8c" class="mo wrg"><span class="ml">C</span>60-80 per minute.</label><input type="radio" name="pe8" id="pe8d"><label for="pe8d" class="mo wrg"><span class="ml">D</span>130-150 per minute.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: 100-120 compressions per minute.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">10</span>What is the correct chest compression depth for an adult during CPR?</div><div class="mopts"><input type="radio" name="pe9" id="pe9a"><label for="pe9a" class="mo wrg"><span class="ml">A</span>2-3 cm.</label><input type="radio" name="pe9" id="pe9b"><label for="pe9b" class="mo wrg"><span class="ml">B</span>3-4 cm.</label><input type="radio" name="pe9" id="pe9c"><label for="pe9c" class="mo cor"><span class="ml">C</span>5-6 cm.</label><input type="radio" name="pe9" id="pe9d"><label for="pe9d" class="mo wrg"><span class="ml">D</span>6-7 cm.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: 5-6 cm depth for adult CPR.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">11</span>In which case would semi-sitting position be preferred?</div><div class="mopts"><input type="radio" name="pe10" id="pe10a"><label for="pe10a" class="mo wrg"><span class="ml">A</span>Head trauma with spinal injury.</label><input type="radio" name="pe10" id="pe10b"><label for="pe10b" class="mo wrg"><span class="ml">B</span>Suspected femur fracture.</label><input type="radio" name="pe10" id="pe10c"><label for="pe10c" class="mo cor"><span class="ml">C</span>Difficulty in breathing or chest trauma.</label><input type="radio" name="pe10" id="pe10d"><label for="pe10d" class="mo wrg"><span class="ml">D</span>Seizure activity.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: Semi-sitting position for difficulty breathing or chest trauma.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">12</span>The correct compression-to-ventilation ratio in adult CPR is:</div><div class="mopts"><input type="radio" name="pe11" id="pe11a"><label for="pe11a" class="mo wrg"><span class="ml">A</span>15:2.</label><input type="radio" name="pe11" id="pe11b"><label for="pe11b" class="mo wrg"><span class="ml">B</span>20:2.</label><input type="radio" name="pe11" id="pe11c"><label for="pe11c" class="mo cor"><span class="ml">C</span>30:2.</label><input type="radio" name="pe11" id="pe11d"><label for="pe11d" class="mo wrg"><span class="ml">D</span>5:1.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: 30:2 ratio in adult CPR.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">13</span>In case of choking in a pregnant or too obese patient, it is better to do:</div><div class="mopts"><input type="radio" name="pe12" id="pe12a"><label for="pe12a" class="mo wrg"><span class="ml">A</span>Abdominal thrust.</label><input type="radio" name="pe12" id="pe12b"><label for="pe12b" class="mo cor"><span class="ml">B</span>Chest thrust.</label><input type="radio" name="pe12" id="pe12c"><label for="pe12c" class="mo wrg"><span class="ml">C</span>Jaw thrust.</label><input type="radio" name="pe12" id="pe12d"><label for="pe12d" class="mo wrg"><span class="ml">D</span>Recovery position.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: Chest thrust for pregnant or obese patients.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">14</span>Rectal temperature is ... the oral temperature.</div><div class="mopts"><input type="radio" name="pe13" id="pe13a"><label for="pe13a" class="mo cor"><span class="ml">A</span>0.5 °C higher than.</label><input type="radio" name="pe13" id="pe13b"><label for="pe13b" class="mo wrg"><span class="ml">B</span>Equal to.</label><input type="radio" name="pe13" id="pe13c"><label for="pe13c" class="mo wrg"><span class="ml">C</span>0.5 °C less than.</label><input type="radio" name="pe13" id="pe13d"><label for="pe13d" class="mo wrg"><span class="ml">D</span>None of the above.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ A: Rectal temperature is 0.5 °C higher than oral.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">15</span>During taking BP at upper arm, chest piece of stethoscope will be placed on which artery?</div><div class="mopts"><input type="radio" name="pe14" id="pe14a"><label for="pe14a" class="mo wrg"><span class="ml">A</span>Axillary.</label><input type="radio" name="pe14" id="pe14b"><label for="pe14b" class="mo cor"><span class="ml">B</span>Brachial.</label><input type="radio" name="pe14" id="pe14c"><label for="pe14c" class="mo wrg"><span class="ml">C</span>Popliteal.</label><input type="radio" name="pe14" id="pe14d"><label for="pe14d" class="mo wrg"><span class="ml">D</span>Radial.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: Brachial artery — in the antecubital fossa.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">16</span>According to British Hypertension Society classification of BP levels, when the Blood pressure is 135/87 mmHg this is termed:</div><div class="mopts"><input type="radio" name="pe15" id="pe15a"><label for="pe15a" class="mo wrg"><span class="ml">A</span>Optimal.</label><input type="radio" name="pe15" id="pe15b"><label for="pe15b" class="mo wrg"><span class="ml">B</span>Normal.</label><input type="radio" name="pe15" id="pe15c"><label for="pe15c" class="mo cor"><span class="ml">C</span>High normal.</label><input type="radio" name="pe15" id="pe15d"><label for="pe15d" class="mo wrg"><span class="ml">D</span>Hypertension.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: High normal (130-139 / 85-89 mmHg).</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">17</span>The normal healthy adult respiratory rate is:</div><div class="mopts"><input type="radio" name="pe16" id="pe16a"><label for="pe16a" class="mo wrg"><span class="ml">A</span>4-10.</label><input type="radio" name="pe16" id="pe16b"><label for="pe16b" class="mo wrg"><span class="ml">B</span>6-12.</label><input type="radio" name="pe16" id="pe16c"><label for="pe16c" class="mo cor"><span class="ml">C</span>14-20.</label><input type="radio" name="pe16" id="pe16d"><label for="pe16d" class="mo wrg"><span class="ml">D</span>20-24.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: 14-20 breaths per minute.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">18</span>What does a difference in BP &gt; 10 mmHg between arms suggest?</div><div class="mopts"><input type="radio" name="pe17" id="pe17a"><label for="pe17a" class="mo wrg"><span class="ml">A</span>Measurement error.</label><input type="radio" name="pe17" id="pe17b"><label for="pe17b" class="mo cor"><span class="ml">B</span>Subclavian artery disease.</label><input type="radio" name="pe17" id="pe17c"><label for="pe17c" class="mo wrg"><span class="ml">C</span>Postural hypotension.</label><input type="radio" name="pe17" id="pe17d"><label for="pe17d" class="mo wrg"><span class="ml">D</span>Terminal digit preference.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: Subclavian artery disease.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">19</span>What is the normal average pulse pressure?</div><div class="mopts"><input type="radio" name="pe18" id="pe18a"><label for="pe18a" class="mo wrg"><span class="ml">A</span>0-10 mmHg.</label><input type="radio" name="pe18" id="pe18b"><label for="pe18b" class="mo wrg"><span class="ml">B</span>70-90 mmHg.</label><input type="radio" name="pe18" id="pe18c"><label for="pe18c" class="mo cor"><span class="ml">C</span>30-60 mmHg.</label><input type="radio" name="pe18" id="pe18d"><label for="pe18d" class="mo wrg"><span class="ml">D</span>10-20 mmHg.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: Normal pulse pressure is 30-60 mmHg.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">20</span>All of the following are contraindications of Intraosseous Vascular Access EXCEPT:</div><div class="mopts"><input type="radio" name="pe19" id="pe19a"><label for="pe19a" class="mo wrg"><span class="ml">A</span>Previous orthopedic procedure.</label><input type="radio" name="pe19" id="pe19b"><label for="pe19b" class="mo wrg"><span class="ml">B</span>Fracture of the tibia or femur.</label><input type="radio" name="pe19" id="pe19c"><label for="pe19c" class="mo cor"><span class="ml">C</span>Life-threatening status epilepticus.</label><input type="radio" name="pe19" id="pe19d"><label for="pe19d" class="mo wrg"><span class="ml">D</span>Infection at insertion site.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: Status epilepticus is an INDICATION (not contraindication) for IO access.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">21</span>The most common uses for Intra-dermal route include all of the following EXCEPT:</div><div class="mopts"><input type="radio" name="pe20" id="pe20a"><label for="pe20a" class="mo wrg"><span class="ml">A</span>Allergy testing.</label><input type="radio" name="pe20" id="pe20b"><label for="pe20b" class="mo cor"><span class="ml">B</span>Chemotherapy administration.</label><input type="radio" name="pe20" id="pe20c"><label for="pe20c" class="mo wrg"><span class="ml">C</span>Local anesthesia.</label><input type="radio" name="pe20" id="pe20d"><label for="pe20d" class="mo wrg"><span class="ml">D</span>TB screening.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: Chemotherapy is NOT given intradermally.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">22</span>Which of the following can falsely affect an oral temperature reading?</div><div class="mopts"><input type="radio" name="pe21" id="pe21a"><label for="pe21a" class="mo cor"><span class="ml">A</span>Eating hot food or drinking recently.</label><input type="radio" name="pe21" id="pe21b"><label for="pe21b" class="mo wrg"><span class="ml">B</span>Talking too much.</label><input type="radio" name="pe21" id="pe21c"><label for="pe21c" class="mo wrg"><span class="ml">C</span>Sitting for long time.</label><input type="radio" name="pe21" id="pe21d"><label for="pe21d" class="mo wrg"><span class="ml">D</span>Measuring blood pressure.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ A: Eating or drinking hot/cold items can falsely alter oral temperature.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">23</span>The axillary temperature is usually how much lower than the oral temperature?</div><div class="mopts"><input type="radio" name="pe22" id="pe22a"><label for="pe22a" class="mo wrg"><span class="ml">A</span>0.2 °C.</label><input type="radio" name="pe22" id="pe22b"><label for="pe22b" class="mo cor"><span class="ml">B</span>0.5 °C.</label><input type="radio" name="pe22" id="pe22c"><label for="pe22c" class="mo wrg"><span class="ml">C</span>1.0 °C.</label><input type="radio" name="pe22" id="pe22d"><label for="pe22d" class="mo wrg"><span class="ml">D</span>1.5 °C.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: Axillary is 0.5 °C lower than oral temperature.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">24</span>What is a possible complication of IV injection?</div><div class="mopts"><input type="radio" name="pe23" id="pe23a"><label for="pe23a" class="mo wrg"><span class="ml">A</span>Lipodystrophy.</label><input type="radio" name="pe23" id="pe23b"><label for="pe23b" class="mo wrg"><span class="ml">B</span>Muscle contracture.</label><input type="radio" name="pe23" id="pe23c"><label for="pe23c" class="mo cor"><span class="ml">C</span>Air embolism.</label><input type="radio" name="pe23" id="pe23d"><label for="pe23d" class="mo wrg"><span class="ml">D</span>Osteomyelitis.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: Air embolism is a complication of IV injection.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">25</span>Contraindication of intraosseous access includes all EXCEPT:</div><div class="mopts"><input type="radio" name="pe24" id="pe24a"><label for="pe24a" class="mo wrg"><span class="ml">A</span>Burn injury.</label><input type="radio" name="pe24" id="pe24b"><label for="pe24b" class="mo wrg"><span class="ml">B</span>Fractured tibia.</label><input type="radio" name="pe24" id="pe24c"><label for="pe24c" class="mo wrg"><span class="ml">C</span>Active infection at site.</label><input type="radio" name="pe24" id="pe24d"><label for="pe24d" class="mo cor"><span class="ml">D</span>Pulmonary edema.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ D: Pulmonary edema is NOT a contraindication for IO access.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">26</span>If an Automated External Defibrillator (AED) advises a shock, what should you do?</div><div class="mopts"><input type="radio" name="pe25" id="pe25a"><label for="pe25a" class="mo wrg"><span class="ml">A</span>Continue compressions during shock delivery.</label><input type="radio" name="pe25" id="pe25b"><label for="pe25b" class="mo cor"><span class="ml">B</span>Stop compressions and clear the victim.</label><input type="radio" name="pe25" id="pe25c"><label for="pe25c" class="mo wrg"><span class="ml">C</span>Remove the AED pads.</label><input type="radio" name="pe25" id="pe25d"><label for="pe25d" class="mo wrg"><span class="ml">D</span>Wait 5 minutes before delivering the shock.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: Stop compressions, ensure nobody is touching the victim, then deliver shock.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">27</span>What is the correct hand placement for adult chest compressions?</div><div class="mopts"><input type="radio" name="pe26" id="pe26a"><label for="pe26a" class="mo wrg"><span class="ml">A</span>Two fingers in the center of the chest.</label><input type="radio" name="pe26" id="pe26b"><label for="pe26b" class="mo wrg"><span class="ml">B</span>One hand on the lower sternum.</label><input type="radio" name="pe26" id="pe26c"><label for="pe26c" class="mo wrg"><span class="ml">C</span>Heel of one hand on the upper chest.</label><input type="radio" name="pe26" id="pe26d"><label for="pe26d" class="mo cor"><span class="ml">D</span>Heel of one hand on top of the other in the center of the chest.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ D: Heel of one hand on top of the other, center of the chest (lower half of sternum).</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">28</span>A conscious choking infant should first be treated with:</div><div class="mopts"><input type="radio" name="pe27" id="pe27a"><label for="pe27a" class="mo wrg"><span class="ml">A</span>Abdominal thrusts.</label><input type="radio" name="pe27" id="pe27b"><label for="pe27b" class="mo wrg"><span class="ml">B</span>5 chest compressions.</label><input type="radio" name="pe27" id="pe27c"><label for="pe27c" class="mo cor"><span class="ml">C</span>5 back slaps followed by 5 chest thrusts.</label><input type="radio" name="pe27" id="pe27d"><label for="pe27d" class="mo wrg"><span class="ml">D</span>Rescue breaths.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: 5 back slaps then 5 chest thrusts for a choking infant.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">29</span>Which of the following is NOT recommended in treating a choking person?</div><div class="mopts"><input type="radio" name="pe28" id="pe28a"><label for="pe28a" class="mo wrg"><span class="ml">A</span>Encouraging coughing if the person can speak.</label><input type="radio" name="pe28" id="pe28b"><label for="pe28b" class="mo cor"><span class="ml">B</span>Blind finger sweep in an unconscious patient.</label><input type="radio" name="pe28" id="pe28c"><label for="pe28c" class="mo wrg"><span class="ml">C</span>Starting CPR if they become unresponsive.</label><input type="radio" name="pe28" id="pe28d"><label for="pe28d" class="mo wrg"><span class="ml">D</span>Calling for help.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: Blind finger sweep is NOT recommended — may push object deeper.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">30</span>A patient with diabetes treated with insulin asks about the most rapid area to absorb subcutaneous insulin. What is your answer?</div><div class="mopts"><input type="radio" name="pe29" id="pe29a"><label for="pe29a" class="mo wrg"><span class="ml">A</span>The thigh.</label><input type="radio" name="pe29" id="pe29b"><label for="pe29b" class="mo cor"><span class="ml">B</span>The abdomen.</label><input type="radio" name="pe29" id="pe29c"><label for="pe29c" class="mo wrg"><span class="ml">C</span>The upper arms.</label><input type="radio" name="pe29" id="pe29d"><label for="pe29d" class="mo wrg"><span class="ml">D</span>The upper buttocks.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: Abdomen has the fastest SC absorption rate.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">31</span>A patient presented to the ER complaining of nerve injury after the administration of an injection. What is the most probable route of such injection?</div><div class="mopts"><input type="radio" name="pe30" id="pe30a"><label for="pe30a" class="mo wrg"><span class="ml">A</span>The Intravenous injection.</label><input type="radio" name="pe30" id="pe30b"><label for="pe30b" class="mo wrg"><span class="ml">B</span>The Subcutaneous injection.</label><input type="radio" name="pe30" id="pe30c"><label for="pe30c" class="mo wrg"><span class="ml">C</span>The Intradermal injection.</label><input type="radio" name="pe30" id="pe30d"><label for="pe30d" class="mo cor"><span class="ml">D</span>The Intramuscular injection.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ D: IM injection — risk of sciatic nerve injury (dorsogluteal site) or femoral nerve (vastus lateralis).</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">32</span>What is responsible for generating BP?</div><div class="mopts"><input type="radio" name="pe31" id="pe31a"><label for="pe31a" class="mo wrg"><span class="ml">A</span>Contraction of atria.</label><input type="radio" name="pe31" id="pe31b"><label for="pe31b" class="mo cor"><span class="ml">B</span>Contraction of ventricles.</label><input type="radio" name="pe31" id="pe31c"><label for="pe31c" class="mo wrg"><span class="ml">C</span>Relaxation of atria.</label><input type="radio" name="pe31" id="pe31d"><label for="pe31d" class="mo wrg"><span class="ml">D</span>Relaxation of ventricles.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: Ventricular contraction (systole) generates blood pressure.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">33</span>What is the best initial step before performing a general physical examination?</div><div class="mopts"><input type="radio" name="pe32" id="pe32a"><label for="pe32a" class="mo wrg"><span class="ml">A</span>Start auscultating directly.</label><input type="radio" name="pe32" id="pe32b"><label for="pe32b" class="mo wrg"><span class="ml">B</span>Ask about past surgeries.</label><input type="radio" name="pe32" id="pe32c"><label for="pe32c" class="mo cor"><span class="ml">C</span>Explain the procedure and take consent.</label><input type="radio" name="pe32" id="pe32d"><label for="pe32d" class="mo wrg"><span class="ml">D</span>Take the patient's weight.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: Explain the procedure and obtain informed consent first.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">34</span>Which of the following is not part of the basic personal history?</div><div class="mopts"><input type="radio" name="pe33" id="pe33a"><label for="pe33a" class="mo wrg"><span class="ml">A</span>Occupation.</label><input type="radio" name="pe33" id="pe33b"><label for="pe33b" class="mo wrg"><span class="ml">B</span>Handedness.</label><input type="radio" name="pe33" id="pe33c"><label for="pe33c" class="mo cor"><span class="ml">C</span>Drug allergies.</label><input type="radio" name="pe33" id="pe33d"><label for="pe33d" class="mo wrg"><span class="ml">D</span>Marital status.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: Drug allergies are part of drug history, not personal history.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">35</span>When is a fever diagnosed based on oral temperature?</div><div class="mopts"><input type="radio" name="pe34" id="pe34a"><label for="pe34a" class="mo wrg"><span class="ml">A</span>&gt;36.8°C at night.</label><input type="radio" name="pe34" id="pe34b"><label for="pe34b" class="mo cor"><span class="ml">B</span>&gt;37.2°C in the morning or &gt;37.7°C in the evening.</label><input type="radio" name="pe34" id="pe34c"><label for="pe34c" class="mo wrg"><span class="ml">C</span>&gt;38°C any time.</label><input type="radio" name="pe34" id="pe34d"><label for="pe34d" class="mo wrg"><span class="ml">D</span>&gt;37°C any time.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: Fever = &gt;37.2°C in morning or &gt;37.7°C in evening (diurnal variation).</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">36</span>What is the first step before performing any airway maneuver in a collapsed patient?</div><div class="mopts"><input type="radio" name="pe35" id="pe35a"><label for="pe35a" class="mo wrg"><span class="ml">A</span>Begin chest compressions.</label><input type="radio" name="pe35" id="pe35b"><label for="pe35b" class="mo wrg"><span class="ml">B</span>Insert an airway device.</label><input type="radio" name="pe35" id="pe35c"><label for="pe35c" class="mo cor"><span class="ml">C</span>Check scene safety and patient's responsiveness.</label><input type="radio" name="pe35" id="pe35d"><label for="pe35d" class="mo wrg"><span class="ml">D</span>Deliver rescue breaths.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: Always ensure scene safety and check responsiveness first.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">37</span>What is the correct rate of chest compressions during CPR in adults?</div><div class="mopts"><input type="radio" name="pe36" id="pe36a"><label for="pe36a" class="mo wrg"><span class="ml">A</span>60-80 compressions per minute.</label><input type="radio" name="pe36" id="pe36b"><label for="pe36b" class="mo wrg"><span class="ml">B</span>80-100 compressions per minute.</label><input type="radio" name="pe36" id="pe36c"><label for="pe36c" class="mo cor"><span class="ml">C</span>100-120 compressions per minute.</label><input type="radio" name="pe36" id="pe36d"><label for="pe36d" class="mo wrg"><span class="ml">D</span>Over 140 compressions per minute.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: 100-120 compressions per minute.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">38</span>Which of the following is not part of the BLS sequence?</div><div class="mopts"><input type="radio" name="pe37" id="pe37a"><label for="pe37a" class="mo wrg"><span class="ml">A</span>Compressions.</label><input type="radio" name="pe37" id="pe37b"><label for="pe37b" class="mo wrg"><span class="ml">B</span>Airway.</label><input type="radio" name="pe37" id="pe37c"><label for="pe37c" class="mo wrg"><span class="ml">C</span>Defibrillation.</label><input type="radio" name="pe37" id="pe37d"><label for="pe37d" class="mo cor"><span class="ml">D</span>Intubation.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ D: Intubation is an advanced airway maneuver — NOT part of basic BLS sequence.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">39</span>During measuring blood pressure at upper arm, chest piece of stethoscope will be placed on which artery?</div><div class="mopts"><input type="radio" name="pe38" id="pe38a"><label for="pe38a" class="mo wrg"><span class="ml">A</span>Axillary artery.</label><input type="radio" name="pe38" id="pe38b"><label for="pe38b" class="mo cor"><span class="ml">B</span>Brachial artery.</label><input type="radio" name="pe38" id="pe38c"><label for="pe38c" class="mo wrg"><span class="ml">C</span>Popliteal artery.</label><input type="radio" name="pe38" id="pe38d"><label for="pe38d" class="mo wrg"><span class="ml">D</span>Radial artery.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: Brachial artery in the antecubital fossa.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">40</span>Safe disposal — a step of safe injection technique — aims to:</div><div class="mopts"><input type="radio" name="pe39" id="pe39a"><label for="pe39a" class="mo wrg"><span class="ml">A</span>Follow standard precautions.</label><input type="radio" name="pe39" id="pe39b"><label for="pe39b" class="mo cor"><span class="ml">B</span>Minimize risks to the patient and health care worker.</label><input type="radio" name="pe39" id="pe39c"><label for="pe39c" class="mo wrg"><span class="ml">C</span>Use sterile medications from the manufacturer.</label><input type="radio" name="pe39" id="pe39d"><label for="pe39d" class="mo wrg"><span class="ml">D</span>Prepare in a clean area.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: Safe disposal minimizes needle-stick and contamination risks.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">41</span>According to the British Hypertension Society classification of BP levels, when the Blood pressure is 135/87 mmHg, this is termed:</div><div class="mopts"><input type="radio" name="pe40" id="pe40a"><label for="pe40a" class="mo wrg"><span class="ml">A</span>Optimal.</label><input type="radio" name="pe40" id="pe40b"><label for="pe40b" class="mo wrg"><span class="ml">B</span>Normal.</label><input type="radio" name="pe40" id="pe40c"><label for="pe40c" class="mo cor"><span class="ml">C</span>High normal.</label><input type="radio" name="pe40" id="pe40d"><label for="pe40d" class="mo wrg"><span class="ml">D</span>Hypertension.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: High normal (130-139 / 85-89 mmHg).</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">42</span>How many phases of Korotkoff sounds are heard during blood pressure measurement?</div><div class="mopts"><input type="radio" name="pe41" id="pe41a"><label for="pe41a" class="mo wrg"><span class="ml">A</span>2.</label><input type="radio" name="pe41" id="pe41b"><label for="pe41b" class="mo wrg"><span class="ml">B</span>3.</label><input type="radio" name="pe41" id="pe41c"><label for="pe41c" class="mo wrg"><span class="ml">C</span>4.</label><input type="radio" name="pe41" id="pe41d"><label for="pe41d" class="mo cor"><span class="ml">D</span>5.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ D: Five phases of Korotkoff sounds (I = systolic, V = diastolic).</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">43</span>Previous operations, blood transfusion and diseases as coronary heart disease, hepatitis &amp; tuberculosis are considered:</div><div class="mopts"><input type="radio" name="pe42" id="pe42a"><label for="pe42a" class="mo wrg"><span class="ml">A</span>Family history.</label><input type="radio" name="pe42" id="pe42b"><label for="pe42b" class="mo cor"><span class="ml">B</span>Past history.</label><input type="radio" name="pe42" id="pe42c"><label for="pe42c" class="mo wrg"><span class="ml">C</span>Personal history.</label><input type="radio" name="pe42" id="pe42d"><label for="pe42d" class="mo wrg"><span class="ml">D</span>History of present illness.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: Past history — previous illnesses, operations, transfusions.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">44</span>The fastest way to inject a medication is:</div><div class="mopts"><input type="radio" name="pe43" id="pe43a"><label for="pe43a" class="mo cor"><span class="ml">A</span>Intravenous.</label><input type="radio" name="pe43" id="pe43b"><label for="pe43b" class="mo wrg"><span class="ml">B</span>Intramuscular.</label><input type="radio" name="pe43" id="pe43c"><label for="pe43c" class="mo wrg"><span class="ml">C</span>Subcutaneous.</label><input type="radio" name="pe43" id="pe43d"><label for="pe43d" class="mo wrg"><span class="ml">D</span>Intradermal.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ A: IV — directly into bloodstream, fastest route.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">45</span>What is the recommended rate of chest compressions per minute?</div><div class="mopts"><input type="radio" name="pe44" id="pe44a"><label for="pe44a" class="mo wrg"><span class="ml">A</span>60-80.</label><input type="radio" name="pe44" id="pe44b"><label for="pe44b" class="mo wrg"><span class="ml">B</span>80-100.</label><input type="radio" name="pe44" id="pe44c"><label for="pe44c" class="mo cor"><span class="ml">C</span>100-120.</label><input type="radio" name="pe44" id="pe44d"><label for="pe44d" class="mo wrg"><span class="ml">D</span>120-150.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: 100-120 compressions per minute.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">46</span>What is the AED's role during a cardiac arrest situation?</div><div class="mopts"><input type="radio" name="pe45" id="pe45a"><label for="pe45a" class="mo wrg"><span class="ml">A</span>It replaces the need for CPR.</label><input type="radio" name="pe45" id="pe45b"><label for="pe45b" class="mo wrg"><span class="ml">B</span>It provides oxygen during CPR.</label><input type="radio" name="pe45" id="pe45c"><label for="pe45c" class="mo cor"><span class="ml">C</span>It analyzes the heart rhythm and gives shocks if needed.</label><input type="radio" name="pe45" id="pe45d"><label for="pe45d" class="mo wrg"><span class="ml">D</span>It keeps the heart beating until help arrives.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: AED analyzes rhythm and delivers electrical shock for shockable rhythms.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">47</span>A patient asked you — what is the normal resting heart rate in adults? Your answer is:</div><div class="mopts"><input type="radio" name="pe46" id="pe46a"><label for="pe46a" class="mo wrg"><span class="ml">A</span>120-140 Beats/minute.</label><input type="radio" name="pe46" id="pe46b"><label for="pe46b" class="mo wrg"><span class="ml">B</span>100-110 Beats/minute.</label><input type="radio" name="pe46" id="pe46c"><label for="pe46c" class="mo wrg"><span class="ml">C</span>30-50 Beats/minute.</label><input type="radio" name="pe46" id="pe46d"><label for="pe46d" class="mo cor"><span class="ml">D</span>60-90 Beats/minute.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ D: Normal resting heart rate 60-90 bpm.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">48</span>What is the primary purpose of the jaw thrust maneuver?</div><div class="mopts"><input type="radio" name="pe47" id="pe47a"><label for="pe47a" class="mo wrg"><span class="ml">A</span>To stop oral bleeding.</label><input type="radio" name="pe47" id="pe47b"><label for="pe47b" class="mo cor"><span class="ml">B</span>To relieve airway obstruction without moving the cervical spine.</label><input type="radio" name="pe47" id="pe47c"><label for="pe47c" class="mo wrg"><span class="ml">C</span>To stimulate consciousness in an unconscious patient.</label><input type="radio" name="pe47" id="pe47d"><label for="pe47d" class="mo wrg"><span class="ml">D</span>To assist in delivering rescue breaths.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: Relieves airway obstruction without cervical spine movement.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">49</span>What is the first step in performing the head-tilt, chin-lift maneuver?</div><div class="mopts"><input type="radio" name="pe48" id="pe48a"><label for="pe48a" class="mo wrg"><span class="ml">A</span>Insert an airway device.</label><input type="radio" name="pe48" id="pe48b"><label for="pe48b" class="mo wrg"><span class="ml">B</span>Check for breathing.</label><input type="radio" name="pe48" id="pe48c"><label for="pe48c" class="mo cor"><span class="ml">C</span>Place one hand on the forehead and gently tilt the head back.</label><input type="radio" name="pe48" id="pe48d"><label for="pe48d" class="mo wrg"><span class="ml">D</span>Perform chest compressions.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: First step — place hand on forehead and tilt head back.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">50</span>An adult is choking on a piece of meat but conscious and coughing forcefully. What should you do?</div><div class="mopts"><input type="radio" name="pe49" id="pe49a"><label for="pe49a" class="mo wrg"><span class="ml">A</span>Heimlich maneuver.</label><input type="radio" name="pe49" id="pe49b"><label for="pe49b" class="mo cor"><span class="ml">B</span>Encourage him to continue coughing.</label><input type="radio" name="pe49" id="pe49c"><label for="pe49c" class="mo wrg"><span class="ml">C</span>Perform a check at the back of the throat.</label><input type="radio" name="pe49" id="pe49d"><label for="pe49d" class="mo wrg"><span class="ml">D</span>Auscultate his chest.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: Forceful cough = mild obstruction — encourage coughing.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">51</span>What is the safest way to transport a patient with a suspected fractured leg?</div><div class="mopts"><input type="radio" name="pe50" id="pe50a"><label for="pe50a" class="mo wrg"><span class="ml">A</span>Let them walk slowly.</label><input type="radio" name="pe50" id="pe50b"><label for="pe50b" class="mo wrg"><span class="ml">B</span>Use a blanket drag.</label><input type="radio" name="pe50" id="pe50c"><label for="pe50c" class="mo cor"><span class="ml">C</span>Immobilize the limb before moving.</label><input type="radio" name="pe50" id="pe50d"><label for="pe50d" class="mo wrg"><span class="ml">D</span>Carry them on your back.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: Immobilize the fractured limb before any movement.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">52</span>The ideal position during cardiac compression is:</div><div class="mopts"><input type="radio" name="pe51" id="pe51a"><label for="pe51a" class="mo wrg"><span class="ml">A</span>Head up position.</label><input type="radio" name="pe51" id="pe51b"><label for="pe51b" class="mo wrg"><span class="ml">B</span>Trendelenburg position.</label><input type="radio" name="pe51" id="pe51c"><label for="pe51c" class="mo wrg"><span class="ml">C</span>Recovery position.</label><input type="radio" name="pe51" id="pe51d"><label for="pe51d" class="mo cor"><span class="ml">D</span>Supine position.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ D: Supine (flat on back) on a firm surface for effective compressions.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">53</span>What is the correct compression to ventilation ratio for adult CPR in a single rescuer situation?</div><div class="mopts"><input type="radio" name="pe52" id="pe52a"><label for="pe52a" class="mo wrg"><span class="ml">A</span>15:2.</label><input type="radio" name="pe52" id="pe52b"><label for="pe52b" class="mo cor"><span class="ml">B</span>30:2.</label><input type="radio" name="pe52" id="pe52c"><label for="pe52c" class="mo wrg"><span class="ml">C</span>5:1.</label><input type="radio" name="pe52" id="pe52d"><label for="pe52d" class="mo wrg"><span class="ml">D</span>20:2.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: 30:2 for single rescuer adult CPR.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">54</span>How deep should chest compressions be for an adult?</div><div class="mopts"><input type="radio" name="pe53" id="pe53a"><label for="pe53a" class="mo wrg"><span class="ml">A</span>At least 1 inch (2.5 cm).</label><input type="radio" name="pe53" id="pe53b"><label for="pe53b" class="mo cor"><span class="ml">B</span>At least 2 inches (5 cm).</label><input type="radio" name="pe53" id="pe53c"><label for="pe53c" class="mo wrg"><span class="ml">C</span>At least 3 inches (7.5 cm).</label><input type="radio" name="pe53" id="pe53d"><label for="pe53d" class="mo wrg"><span class="ml">D</span>Any depth is acceptable.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: At least 2 inches (5 cm), ideally 5-6 cm.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">55</span>After the AED has delivered the shock you should:</div><div class="mopts"><input type="radio" name="pe54" id="pe54a"><label for="pe54a" class="mo cor"><span class="ml">A</span>Continue CPR beginning with compression.</label><input type="radio" name="pe54" id="pe54b"><label for="pe54b" class="mo wrg"><span class="ml">B</span>Wait patiently for the AED to reanalyze.</label><input type="radio" name="pe54" id="pe54c"><label for="pe54c" class="mo wrg"><span class="ml">C</span>Turn off the AED.</label><input type="radio" name="pe54" id="pe54d"><label for="pe54d" class="mo wrg"><span class="ml">D</span>Give 2 breaths.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ A: Immediately resume CPR beginning with chest compressions after shock delivery.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">56</span>The size of Laryngeal mask airway for adult female is:</div><div class="mopts"><input type="radio" name="pe55" id="pe55a"><label for="pe55a" class="mo wrg"><span class="ml">A</span>3.</label><input type="radio" name="pe55" id="pe55b"><label for="pe55b" class="mo cor"><span class="ml">B</span>4.</label><input type="radio" name="pe55" id="pe55c"><label for="pe55c" class="mo wrg"><span class="ml">C</span>5.</label><input type="radio" name="pe55" id="pe55d"><label for="pe55d" class="mo wrg"><span class="ml">D</span>6.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: LMA size 4 for adult female, size 5 for adult male.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">57</span>When is the jaw thrust maneuver preferred over the head tilt-chin lift?</div><div class="mopts"><input type="radio" name="pe56" id="pe56a"><label for="pe56a" class="mo wrg"><span class="ml">A</span>In all unconscious patients.</label><input type="radio" name="pe56" id="pe56b"><label for="pe56b" class="mo wrg"><span class="ml">B</span>When the patient is having a seizure.</label><input type="radio" name="pe56" id="pe56c"><label for="pe56c" class="mo cor"><span class="ml">C</span>When there is a suspected cervical spine injury.</label><input type="radio" name="pe56" id="pe56d"><label for="pe56d" class="mo wrg"><span class="ml">D</span>In cases of severe facial trauma only.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: Jaw thrust preferred when cervical spine injury is suspected.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">58</span>The suitable size of oropharyngeal airway with a length corresponding the distance between:</div><div class="mopts"><input type="radio" name="pe57" id="pe57a"><label for="pe57a" class="mo wrg"><span class="ml">A</span>Patient's incisors and angle of the mouth.</label><input type="radio" name="pe57" id="pe57b"><label for="pe57b" class="mo wrg"><span class="ml">B</span>Angle of the mouth and angle of the jaw.</label><input type="radio" name="pe57" id="pe57c"><label for="pe57c" class="mo cor"><span class="ml">C</span>Patient's incisors and lobule of the ear.</label><input type="radio" name="pe57" id="pe57d"><label for="pe57d" class="mo wrg"><span class="ml">D</span>Patient's incisors and angle of the jaw.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: From incisors to lobule of the ear (or angle of jaw/mouth to ear lobule).</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">59</span>In case of choking in pregnant women you do:</div><div class="mopts"><input type="radio" name="pe58" id="pe58a"><label for="pe58a" class="mo wrg"><span class="ml">A</span>Jaw thrust.</label><input type="radio" name="pe58" id="pe58b"><label for="pe58b" class="mo wrg"><span class="ml">B</span>Abdominal thrust.</label><input type="radio" name="pe58" id="pe58c"><label for="pe58c" class="mo cor"><span class="ml">C</span>Chest thrust.</label><input type="radio" name="pe58" id="pe58d"><label for="pe58d" class="mo wrg"><span class="ml">D</span>Head tilt chin lift.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: Chest thrust for pregnant (and obese) patients instead of abdominal thrust.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">60</span>After placing someone in the recovery position, what should you do next?</div><div class="mopts"><input type="radio" name="pe59" id="pe59a"><label for="pe59a" class="mo wrg"><span class="ml">A</span>Leave them and walk away.</label><input type="radio" name="pe59" id="pe59b"><label for="pe59b" class="mo cor"><span class="ml">B</span>Continuously reassess breathing and pulse.</label><input type="radio" name="pe59" id="pe59c"><label for="pe59c" class="mo wrg"><span class="ml">C</span>Immediately perform CPR.</label><input type="radio" name="pe59" id="pe59d"><label for="pe59d" class="mo wrg"><span class="ml">D</span>Give them water.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: Continuously monitor breathing and pulse while awaiting help.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">61</span>What is the main purpose of aspiration before injection?</div><div class="mopts"><input type="radio" name="pe60" id="pe60a"><label for="pe60a" class="mo wrg"><span class="ml">A</span>To mix the drug.</label><input type="radio" name="pe60" id="pe60b"><label for="pe60b" class="mo cor"><span class="ml">B</span>To check if needle entered a blood vessel.</label><input type="radio" name="pe60" id="pe60c"><label for="pe60c" class="mo wrg"><span class="ml">C</span>To sterilize the area.</label><input type="radio" name="pe60" id="pe60d"><label for="pe60d" class="mo wrg"><span class="ml">D</span>To reduce pain.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: Aspiration checks for blood return to confirm needle is not in a vessel.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">62</span>We avoid the Auscultatory gap during blood pressure measurement by using:</div><div class="mopts"><input type="radio" name="pe61" id="pe61a"><label for="pe61a" class="mo wrg"><span class="ml">A</span>Appropriate arm level.</label><input type="radio" name="pe61" id="pe61b"><label for="pe61b" class="mo wrg"><span class="ml">B</span>Appropriate cuff size.</label><input type="radio" name="pe61" id="pe61c"><label for="pe61c" class="mo cor"><span class="ml">C</span>Palpatory method.</label><input type="radio" name="pe61" id="pe61d"><label for="pe61d" class="mo wrg"><span class="ml">D</span>Auscultatory method.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: Palpatory method first to estimate systolic BP avoids the auscultatory gap.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">63</span>Vital signs include all of the following EXCEPT:</div><div class="mopts"><input type="radio" name="pe62" id="pe62a"><label for="pe62a" class="mo wrg"><span class="ml">A</span>Pulse.</label><input type="radio" name="pe62" id="pe62b"><label for="pe62b" class="mo wrg"><span class="ml">B</span>Blood pressure.</label><input type="radio" name="pe62" id="pe62c"><label for="pe62c" class="mo cor"><span class="ml">C</span>Conscious level.</label><input type="radio" name="pe62" id="pe62d"><label for="pe62d" class="mo wrg"><span class="ml">D</span>Respiratory rate.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ C: Conscious level is assessed in general examination, not a classic vital sign.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">64</span>The Personal history includes all of the following EXCEPT:</div><div class="mopts"><input type="radio" name="pe63" id="pe63a"><label for="pe63a" class="mo wrg"><span class="ml">A</span>Name.</label><input type="radio" name="pe63" id="pe63b"><label for="pe63b" class="mo cor"><span class="ml">B</span>Operation.</label><input type="radio" name="pe63" id="pe63c"><label for="pe63c" class="mo wrg"><span class="ml">C</span>Occupation.</label><input type="radio" name="pe63" id="pe63d"><label for="pe63d" class="mo wrg"><span class="ml">D</span>Residence.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: Operation belongs to past history, not personal history.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">65</span>You measured the blood pressure of a patient that was 150/95 mmHg. What is the pulse pressure of this patient?</div><div class="mopts"><input type="radio" name="pe64" id="pe64a"><label for="pe64a" class="mo cor"><span class="ml">A</span>55 mmHg.</label><input type="radio" name="pe64" id="pe64b"><label for="pe64b" class="mo wrg"><span class="ml">B</span>95 mmHg.</label><input type="radio" name="pe64" id="pe64c"><label for="pe64c" class="mo wrg"><span class="ml">C</span>150 mmHg.</label><input type="radio" name="pe64" id="pe64d"><label for="pe64d" class="mo wrg"><span class="ml">D</span>245 mmHg.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ A: Pulse pressure = Systolic − Diastolic = 150 − 95 = 55 mmHg.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">66</span>Rectal Temperature is ........ the oral temperature.</div><div class="mopts"><input type="radio" name="pe65" id="pe65a"><label for="pe65a" class="mo cor"><span class="ml">A</span>0.5 °C higher than.</label><input type="radio" name="pe65" id="pe65b"><label for="pe65b" class="mo wrg"><span class="ml">B</span>Equal to.</label><input type="radio" name="pe65" id="pe65c"><label for="pe65c" class="mo wrg"><span class="ml">C</span>0.5 less.</label><input type="radio" name="pe65" id="pe65d"><label for="pe65d" class="mo wrg"><span class="ml">D</span>None of the above.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ A: Rectal temperature is 0.5 °C higher than oral.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">67</span>Postural hypotension is diagnosed when the standing blood pressure is less than the sitting blood pressure by:</div><div class="mopts"><input type="radio" name="pe66" id="pe66a"><label for="pe66a" class="mo wrg"><span class="ml">A</span>≥15 mmHg.</label><input type="radio" name="pe66" id="pe66b"><label for="pe66b" class="mo wrg"><span class="ml">B</span>≥5 mmHg.</label><input type="radio" name="pe66" id="pe66c"><label for="pe66c" class="mo wrg"><span class="ml">C</span>≥10 mmHg.</label><input type="radio" name="pe66" id="pe66d"><label for="pe66d" class="mo cor"><span class="ml">D</span>≥20 mmHg.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ D: Postural hypotension = drop of ≥20 mmHg systolic on standing.</div></details></div>
+
+<div class="mi"><div class="mq"><span class="mn">68</span>A patient with diabetes treated with insulin asks about the most rapid area to absorb subcutaneous insulin. What is your answer?</div><div class="mopts"><input type="radio" name="pe67" id="pe67a"><label for="pe67a" class="mo wrg"><span class="ml">A</span>The thigh.</label><input type="radio" name="pe67" id="pe67b"><label for="pe67b" class="mo cor"><span class="ml">B</span>The abdomen.</label><input type="radio" name="pe67" id="pe67c"><label for="pe67c" class="mo wrg"><span class="ml">C</span>The upper arms.</label><input type="radio" name="pe67" id="pe67d"><label for="pe67d" class="mo wrg"><span class="ml">D</span>The upper buttocks.</label></div><details class="mexp"><summary>Show Answer</summary><div class="mxb">✅ B: Abdomen has fastest SC absorption rate.</div></details></div>
+
+</div><label for="dn-prevex" class="done-btn">✓ Mark as Done</label></div></div></div></div>
+
+<div class="footer">
+Not all heroes wear capes<br/>Some make summaries<br/>
+<span style="font-size:14px;color:#5a7d9a">Made with ❤️ by Ahmed Lasheen</span>
+</div>
+</body>
+</head></html>

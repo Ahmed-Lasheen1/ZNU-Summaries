@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GIT End Module Summary</title>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: linear-gradient(135deg, #0a0f1e 0%, #0d1a2e 50%, #0a1628 100%);
+      color: #fff;
+      font-family: 'Segoe UI', sans-serif;
+      min-height: 100vh;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+const { useState, useEffect } = React;
+// ===================== SHARED COMPONENTS =====================
+const Box = ({ color, title, children, icon }) => (
+  <div style={{
+    background: `linear-gradient(135deg, ${color}15, ${color}08)`,
+    border: `2px solid ${color}40`,
+    borderRadius: 14, padding: "16px 20px", marginBottom: 14,
+    position: "relative", overflow: "hidden"
+  }}>
+    <div style={{
+      position: "absolute", top: 0, right: 0, width: 50, height: 50,
+      background: `${color}10`, borderRadius: "0 14px 0 50px",
+      display: "flex", alignItems: "flex-start", justifyContent: "flex-end",
+      padding: "6px 8px", fontSize: 18
+    }}>{icon}</div>
+    {title && <div style={{ fontWeight: 800, color, fontSize: 14, marginBottom: 8 }}>{title}</div>}
+    <div style={{ fontSize: 13, lineHeight: 1.9, color: "#e0e0e0", paddingRight: 30 }}>{children}</div>
+  </div>
+);
+
+const SectionTitle = ({ children, color = "#7eb8ff" }) => (
+  <div style={{
+    fontSize: 16, fontWeight: 800, color,
+    borderBottom: `2px solid ${color}40`,
+    paddingBottom: 6, marginBottom: 14, marginTop: 20,
+    display: "flex", alignItems: "center", gap: 8
+  }}>{children}</div>
+);
+
+const Table = ({ headers, rows, colors }) => (
+  <div style={{ overflowX: "auto", marginBottom: 14 }}>
+    <table style={{ width: "100%", borderCollapse: "separate", borderSpacing: "0 4px", fontSize: 12 }}>
+      <thead>
+        <tr>{headers.map((h, i) => (
+          <th key={i} style={{
+            background: "#1e2a3a", color: "#7eb8ff", padding: "8px 12px", fontWeight: 700, textAlign: "right",
+            borderRadius: i === 0 ? "8px 0 0 8px" : i === headers.length - 1 ? "0 8px 8px 0" : 0,
+          }}>{h}</th>
+        ))}</tr>
+      </thead>
+      <tbody>{rows.map((row, ri) => (
+        <tr key={ri}>{row.map((cell, ci) => (
+          <td key={ci} style={{
+            background: colors ? `${colors[ri % colors.length]}15` : "#1a2535",
+            border: `1px solid ${colors ? colors[ri % colors.length] : "#2a3a50"}30`,
+            padding: "8px 12px", color: "#d0d8e8", textAlign: "right", whiteSpace: "pre-line",
+            borderRadius: ci === 0 ? "8px 0 0 8px" : ci === row.length - 1 ? "0 8px 8px 0" : 0,
+          }}>{cell}</td>
+        ))}</tr>
+      ))}</tbody>
+    </table>
+  </div>
+);
+
+const Badge = ({ text, color }) => (
+  <span style={{
+    background: `${color}25`, color, border: `1px solid ${color}50`,
+    borderRadius: 20, padding: "2px 10px", fontSize: 11,
+    fontWeight: 700, marginLeft: 6, display: "inline-block"
+  }}>{text}</span>
+);
+
+const Step = ({ n, title, detail, color }) => (
+  <div style={{ display: "grid", gridTemplateColumns: "36px 1fr", gap: 10, marginBottom: 8 }}>
+    <div style={{
+      background: `linear-gradient(180deg, ${color}, ${color}88)`,
+      borderRadius: 8, display: "flex", alignItems: "center",
+      justifyContent: "center", fontWeight: 900, color: "#fff", fontSize: 14, minHeight: 36
+    }}>{n}</div>
+    <div style={{ background: `${color}12`, border: `1px solid ${color}40`, borderRadius: 10, padding: 10 }}>
+      <div style={{ fontWeight: 700, color, fontSize: 12, marginBottom: 3 }}>{title}</div>
+      <div style={{ fontSize: 11, color: "#d0d8e8", whiteSpace: "pre-line" }}>{detail}</div>
+    </div>
+  </div>
+);
+
+// ===================== BIOCHEMISTRY CONTENT =====================
+const biochemTopics = [
+  { id: 0, label: "🍬 Carbohydrates" },
+  { id: 1, label: "⚡ Glycolysis" },
+  { id: 2, label: "🔄 TCA Cycle" },
+  { id: 3, label: "🏭 Gluconeogenesis" },
+  { id: 4, label: "📦 Glycogen" },
+  { id: 5, label: "🥩 Lipids & Proteins" },
+  { id: 6, label: "🧪 Nitrogen" },
+];
+
+function CarbohydratesContent() {
+  return (
+    <div>
+      <Box color="#4ade80" title="🎯 الهدف من Digestion of Carbohydrates" icon="🍬">
+        الهدف هو <strong style={{color:"#4ade80"}}>hydrolysis</strong> بتاع الـ glycosidic bonds وتحويل كل الـ carbohydrates لـ <strong style={{color:"#4ade80"}}>monosaccharides</strong> (glucose, galactose, fructose)
+      </Box>
+      <SectionTitle color="#4ade80">📍 مراحل الهضم</SectionTitle>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10, marginBottom: 14 }}>
+        {[
+          { place: "👄 Mouth", enzyme: "Salivary Amylase", color: "#60a5fa", details: ["من: Salivary glands","pH: 6.7","Activated by: Cl⁻ ions","Acts on: α 1-4 bonds in COOKED starch فقط"] },
+          { place: "🔴 Stomach", enzyme: "STOP!", color: "#f87171", details: ["الـ salivary amylase بتبطل شغل هنا","بسبب الـ high acidity","⛔ مفيش هضم للكربوهيدرات في المعدة"] },
+          { place: "🟢 Small Intestine", enzyme: "Pancreatic Amylase", color: "#a78bfa", details: ["من: Pancreas","pH: 7.1","Activated by: Cl⁻ ions","Acts on: cooked AND uncooked starch","ينتج: Maltose + Isomaltose"] },
+        ].map((s, i) => (
+          <div key={i} style={{ background: `${s.color}15`, border: `2px solid ${s.color}40`, borderRadius: 12, padding: 14 }}>
+            <div style={{ fontWeight: 800, color: s.color, fontSize: 15, marginBottom: 6 }}>{s.place}</div>
+            <div style={{ color: "#fff", fontWeight: 700, fontSize: 13, marginBottom: 8 }}>{s.enzyme}</div>
+            {s.details.map((d, di) => <div key={di} style={{ fontSize: 11, color: "#b0bec5", marginBottom: 3 }}>• {d}</div>)}
+          </div>
+        ))}
+      </div>
+      <Box color="#f59e0b" title="🧫 Disaccharidases — Brush Border" icon="🔬">
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8, marginTop: 10 }}>
+          {[
+            { name: "Lactase", action: "Lactose → Glucose + Galactose", color: "#f59e0b" },
+            { name: "Maltase", action: "Maltose → 2 Glucose", color: "#10b981" },
+            { name: "Sucrase", action: "Sucrose → Glucose + Fructose", color: "#8b5cf6" },
+          ].map((e, i) => (
+            <div key={i} style={{ background: `${e.color}20`, border: `1px solid ${e.color}50`, borderRadius: 10, padding: 10, textAlign: "center" }}>
+              <div style={{ fontWeight: 800, color: e.color, fontSize: 14 }}>{e.name}</div>
+              <div style={{ fontSize: 11, color: "#ccc", marginTop: 4 }}>{e.action}</div>
+            </div>
+          ))}
+        </div>
+      </Box>
+      <SectionTitle color="#60a5fa">📥 Absorption of Carbohydrates</SectionTitle>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+        <Box color="#60a5fa" icon="📍"><strong style={{color:"#60a5fa"}}>Site:</strong> mainly Jejunum | <strong style={{color:"#60a5fa"}}>Route:</strong> Portal circulation</Box>
+        <Box color="#f472b6" title="🚀 SGLT-1 Active Transport" icon="⚡">Glucose + Galactose بـ Na⁺-dependent transporter | Fructose بـ GLUT-5 (passive)</Box>
+      </div>
+      <SectionTitle color="#f59e0b">🚦 Glucose Transporters</SectionTitle>
+      <Table headers={["Transporter","Location","Function"]}
+        rows={[["SGLT-1","Small intestine + Renal tubules","Active transport"],["SGLT-2","Proximal convoluted tubules","90% renal reabsorption"],["GLUT-2","Liver, Pancreatic-β cells","High Km — rapid uptake"],["GLUT-4","Heart, Adipose, Muscle","Insulin-sensitive — low Km"],["GLUT-5","Small intestine","Passive fructose transport"]]}
+        colors={["#60a5fa","#4ade80","#f59e0b","#f472b6","#34d399"]} />
+      <Box color="#f87171" title="⚠️ Lactase Deficiency" icon="🥛">
+        <strong>السبب:</strong> نقص الـ lactase enzyme<br/>
+        <strong>الأعراض:</strong> Distention, cramps, osmotic diarrhea<br/>
+        <strong>العلاج:</strong> lactose-free diet + yoghurt
+      </Box>
+    </div>
+  );
+}
+
+function GlycolysisContent() {
+  return (
+    <div>
+      <Box color="#f59e0b" title="📖 تعريف Glycolysis" icon="⚡">
+        Glucose (6C) → Pyruvate (3C) | <strong>مكانها:</strong> Cytoplasm | مع O₂ → Pyruvic acid | بدون O₂ → Lactic acid
+      </Box>
+      <SectionTitle color="#f59e0b">Phase 1 — Energy Investment (Steps 1-5)</SectionTitle>
+      {[
+        { n:1, from:"Glucose", to:"Glucose-6-phosphate", enz:"Hexokinase/Glucokinase", note:"تستهلك 1 ATP | غير عكسية | يحبس glucose جوه الخلية", color:"#f87171" },
+        { n:2, from:"G6P", to:"Fructose-6-phosphate", enz:"Phosphohexose Isomerase", note:"Isomerization — عكسية", color:"#fb923c" },
+        { n:3, from:"F6P", to:"Fructose-1,6-bisphosphate", enz:"PFK-1 (Mg²⁺)", note:"تستهلك 1 ATP | غير عكسية | أهم step في الـ regulation!", color:"#f59e0b" },
+        { n:4, from:"F-1,6-BP", to:"G3P + DHAP", enz:"Aldolase", note:"الجزيء الـ 6C اتشق لـ 2 جزيء 3C — عكسية", color:"#84cc16" },
+        { n:5, from:"DHAP", to:"G3P", enz:"Phosphotriose Isomerase", note:"بعد كده كل حاجة × 2 — عكسية", color:"#22c55e" },
+      ].map(s => (
+        <div key={s.n} style={{ display:"grid", gridTemplateColumns:"36px 1fr", gap:10, marginBottom:8 }}>
+          <div style={{ background:`linear-gradient(180deg,${s.color},${s.color}88)`, borderRadius:8, display:"flex", alignItems:"center", justifyContent:"center", fontWeight:900, color:"#fff", fontSize:14 }}>{s.n}</div>
+          <div style={{ background:`${s.color}12`, border:`1px solid ${s.color}40`, borderRadius:10, padding:10 }}>
+            <div style={{ fontSize:11, color:"#e2e8f0" }}><span style={{color:"#94a3b8"}}>{s.from}</span> <span style={{color:s.color}}>→</span> <span style={{color:"#fff",fontWeight:600}}>{s.to}</span></div>
+            <div style={{ fontSize:11, color:"#94a3b8", marginTop:3 }}>Enzyme: {s.enz}</div>
+            <div style={{ fontSize:11, color:"#fbbf24", marginTop:3 }}>💡 {s.note}</div>
+          </div>
+        </div>
+      ))}
+      <SectionTitle color="#60a5fa">Phase 2 — Energy Generation (Steps 6-10)</SectionTitle>
+      {[
+        { n:6, from:"G3P", to:"1,3-BPG", enz:"G3P Dehydrogenase", note:"NADH+H⁺ | phosphorylation بـ inorganic Pi", color:"#60a5fa" },
+        { n:7, from:"1,3-BPG", to:"3-PG", enz:"Phosphoglycerate Kinase", note:"Substrate-level phosphorylation → 2 ATP (×2) ✅", color:"#7c3aed" },
+        { n:8, from:"3-PG", to:"2-PG", enz:"Phosphoglycerate Mutase", note:"نقل الـ phosphate من C3 لـ C2", color:"#a78bfa" },
+        { n:9, from:"2-PG", to:"PEP", enz:"Enolase (Mg²⁺)", note:"⚠️ Fluoride بيعطل الـ enolase!", color:"#06b6d4" },
+        { n:10, from:"PEP", to:"Pyruvate", enz:"Pyruvate Kinase", note:"Substrate-level phosphorylation → 2 ATP (×2) ✅ | غير عكسية", color:"#f59e0b" },
+      ].map(s => (
+        <div key={s.n} style={{ display:"grid", gridTemplateColumns:"36px 1fr", gap:10, marginBottom:8 }}>
+          <div style={{ background:`linear-gradient(180deg,${s.color},${s.color}88)`, borderRadius:8, display:"flex", alignItems:"center", justifyContent:"center", fontWeight:900, color:"#fff", fontSize:14 }}>{s.n}</div>
+          <div style={{ background:`${s.color}12`, border:`1px solid ${s.color}40`, borderRadius:10, padding:10 }}>
+            <div style={{ fontSize:11, color:"#e2e8f0" }}><span style={{color:"#94a3b8"}}>{s.from}</span> <span style={{color:s.color}}>→</span> <span style={{color:"#fff",fontWeight:600}}>{s.to}</span></div>
+            <div style={{ fontSize:11, color:"#94a3b8", marginTop:3 }}>Enzyme: {s.enz}</div>
+            <div style={{ fontSize:11, color:"#fbbf24", marginTop:3 }}>💡 {s.note}</div>
+          </div>
+        </div>
+      ))}
+      <SectionTitle color="#4ade80">🔢 حساب الطاقة</SectionTitle>
+      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10 }}>
+        <Box color="#4ade80" title="✅ Aerobic Glycolysis" icon="💨">4 ATP − 2 ATP = 2 ATP net + 2 NADH → 6 ATP = <strong style={{color:"#4ade80"}}>Total: 8 ATP</strong></Box>
+        <Box color="#f59e0b" title="⚠️ Anaerobic Glycolysis" icon="🏃">4 ATP − 2 ATP = <strong style={{color:"#f59e0b"}}>2 ATP net فقط</strong> | Pyruvate → Lactic acid</Box>
+      </div>
+      <SectionTitle color="#94a3b8">🎛️ Regulation — الـ 3 Key Enzymes</SectionTitle>
+      <Box color="#7c3aed" icon="🔑">
+        1️⃣ <strong>Glucokinase/Hexokinase</strong> | 2️⃣ <strong>PFK-1</strong> (الأهم!) | 3️⃣ <strong>Pyruvate Kinase</strong><br/>
+        Insulin → يحفز الكل | Glucagon → يعطل الكل | ATP ↑ → يعطل PFK-1 | AMP ↑ → يحفز PFK-1
+      </Box>
+    </div>
+  );
+}
+
+function TCAContent() {
+  return (
+    <div>
+      <Box color="#f59e0b" title="🎯 TCA Cycle" icon="🔄">
+        Final common pathway لأكسدة carbs, fats, proteins | <strong>مكانها:</strong> Mitochondrial matrix | Entry: Acetyl-CoA (2C)
+      </Box>
+      <Box color="#f472b6" title="🔗 Pyruvate → Acetyl-CoA (PDH Complex)" icon="🔗">
+        يحتاج: TPP, FAD, CoA, NAD⁺, Lipoic acid | ينتج: Acetyl-CoA + CO₂ + NADH<br/>
+        PDH active لما يكون dephosphorylated | يُعطَّل بـ ATP, NADH, Acetyl-CoA
+      </Box>
+      <SectionTitle color="#f59e0b">🔄 الـ 8 Steps</SectionTitle>
+      {[
+        { n:1, name:"Citrate Synthase", eq:"Acetyl-CoA + OAA → Citrate", prod:"", color:"#f59e0b" },
+        { n:2, name:"Aconitase", eq:"Citrate → Isocitrate (via cis-Aconitate)", prod:"", color:"#fb923c" },
+        { n:3, name:"Isocitrate DH", eq:"Isocitrate → α-Ketoglutarate", prod:"NADH + CO₂", color:"#f87171" },
+        { n:4, name:"α-KG DH Complex", eq:"α-KG → Succinyl-CoA", prod:"NADH + CO₂", color:"#ec4899" },
+        { n:5, name:"Succinyl-CoA Synthetase", eq:"Succinyl-CoA → Succinate", prod:"GTP ⭐", color:"#a78bfa" },
+        { n:6, name:"Succinate DH (Complex II)", eq:"Succinate → Fumarate", prod:"FADH₂", color:"#8b5cf6" },
+        { n:7, name:"Fumarase", eq:"Fumarate → L-Malate", prod:"", color:"#60a5fa" },
+        { n:8, name:"Malate DH", eq:"L-Malate → Oxaloacetate", prod:"NADH", color:"#06b6d4" },
+      ].map(s => (
+        <div key={s.n} style={{ display:"grid", gridTemplateColumns:"36px 1fr", gap:10, marginBottom:8 }}>
+          <div style={{ background:`linear-gradient(180deg,${s.color},${s.color}88)`, borderRadius:8, display:"flex", alignItems:"center", justifyContent:"center", fontWeight:900, color:"#fff", fontSize:14 }}>{s.n}</div>
+          <div style={{ background:`${s.color}12`, border:`1px solid ${s.color}40`, borderRadius:10, padding:10 }}>
+            <div style={{ fontWeight:700, color:s.color, fontSize:12 }}>{s.name}</div>
+            <div style={{ fontSize:11, color:"#d0d8e8", marginTop:3 }}>{s.eq}</div>
+            {s.prod && <div style={{ fontSize:11, color:"#4ade80", marginTop:3, fontWeight:700 }}>✅ {s.prod}</div>}
+          </div>
+        </div>
+      ))}
+      <SectionTitle color="#4ade80">📊 Per Acetyl-CoA</SectionTitle>
+      <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:8 }}>
+        {[{l:"3 NADH",c:"#f59e0b",s:"→ 9 ATP"},{l:"1 FADH₂",c:"#60a5fa",s:"→ 2 ATP"},{l:"1 GTP",c:"#4ade80",s:"= 1 ATP"},{l:"= 12 ATP",c:"#f472b6",s:"total"}].map((x,i)=>(
+          <div key={i} style={{ background:`${x.c}15`, border:`2px solid ${x.c}50`, borderRadius:12, padding:12, textAlign:"center" }}>
+            <div style={{ fontWeight:900, color:x.c, fontSize:16 }}>{x.l}</div>
+            <div style={{ fontSize:11, color:"#94a3b8", marginTop:4 }}>{x.s}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function GluconeogenesisContent() {
+  return (
+    <div>
+      <Box color="#34d399" title="📖 Gluconeogenesis" icon="🏭">
+        تصنيع glucose من non-carbohydrate sources | <strong>مكانه:</strong> Liver (90%) + Kidney (10%)<br/>
+        العضلات مش بتعمل gluconeogenesis — lacking glucose-6-phosphatase
+      </Box>
+      <SectionTitle color="#34d399">🔀 الـ 3 Bypasses</SectionTitle>
+      {[
+        { n:"Bypass I", title:"عكس Pyruvate Kinase — Dicarboxylic Acid Shuttle", steps:["Pyruvate → OAA | Enzyme: Pyruvate Carboxylase | Cofactor: Biotin | يحتاج ATP","OAA → PEP | Enzyme: PEPCK | يحتاج GTP"], color:"#f87171" },
+        { n:"Bypass II", title:"عكس PFK-1 — Fructose 1,6-bisphosphatase", steps:["Fructose-1,6-bisphosphate + H₂O → Fructose-6-phosphate + Pi"], color:"#fb923c" },
+        { n:"Bypass III", title:"عكس Hexokinase — Glucose-6-phosphatase", steps:["G6P + H₂O → Glucose + Pi","موجودة في Liver و Kidney فقط — مش في Brain أو Muscle"], color:"#f59e0b" },
+      ].map(b => (
+        <div key={b.n} style={{ background:`${b.color}10`, border:`2px solid ${b.color}40`, borderRadius:14, padding:14, marginBottom:12 }}>
+          <div style={{ fontWeight:800, color:b.color, fontSize:14, marginBottom:6 }}>{b.n}: {b.title}</div>
+          {b.steps.map((s,si) => <div key={si} style={{ fontSize:12, color:"#d0d8e8", marginBottom:4 }}>• {s}</div>)}
+        </div>
+      ))}
+      <SectionTitle color="#a78bfa">🧱 Sources</SectionTitle>
+      <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:8 }}>
+        {[{src:"Lactate",p:"→ Pyruvate → Glucose",c:"#f87171"},{src:"Glycerol",p:"→ DHAP → Glucose",c:"#fb923c"},{src:"Amino Acids",p:"→ Pyruvate/OAA → Glucose",c:"#4ade80"},{src:"Odd Fatty Acids",p:"→ Succinyl-CoA → Glucose",c:"#60a5fa"}].map((s,i)=>(
+          <div key={i} style={{ background:`${s.c}15`, border:`1px solid ${s.c}40`, borderRadius:10, padding:10 }}>
+            <div style={{ fontWeight:700, color:s.c, fontSize:12, marginBottom:6 }}>{s.src}</div>
+            <div style={{ fontSize:10, color:"#94a3b8" }}>{s.p}</div>
+          </div>
+        ))}
+      </div>
+      <Box color="#f472b6" title="🔁 Cori Cycle & Alanine Cycle" icon="🔄">
+        <strong style={{color:"#f472b6"}}>Cori:</strong> Muscle → Lactate → Liver → Glucose → Muscle (2 ATP produced, 6 ATP consumed)<br/>
+        <strong style={{color:"#a78bfa"}}>Alanine Cycle:</strong> Muscle: Pyruvate → Alanine → Liver → Pyruvate → Glucose
+      </Box>
+    </div>
+  );
+}
+
+function GlycogenContent() {
+  return (
+    <div>
+      <Box color="#f59e0b" title="📖 Glycogen" icon="📦">
+        Storage form للـ glucose | α(1→4) bonds + α(1→6) عند التفرع<br/>
+        Liver (120 gm) + Muscle (300 gm)
+      </Box>
+      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10, marginBottom:14 }}>
+        <Box color="#60a5fa" title="🏥 Liver Glycogen" icon="🔵">
+          يحافظ على blood glucose | عنده glucose-6-phosphatase<br/>ينقص في الصيام | يخلص بعد 10-18 ساعة
+        </Box>
+        <Box color="#f472b6" title="💪 Muscle Glycogen" icon="🔴">
+          مصدر طاقة للعضلة فقط | مفيش G6P phosphatase<br/>ينقص مع exercise | Glucagon لا يؤثر عليه
+        </Box>
+      </div>
+      <SectionTitle color="#4ade80">➕ Glycogenesis</SectionTitle>
+      <Box color="#4ade80" icon="🏗️">
+        Glucose → G6P → G1P → UDP-glucose → Glycogenin (primer) → Glycogen synthase يبني α(1→4) chains → Branching enzyme يضيف α(1→6) branches
+      </Box>
+      <SectionTitle color="#f87171">➖ Glycogenolysis</SectionTitle>
+      <Box color="#f87171" icon="💥">
+        Glycogen phosphorylase تكسر α(1→4) → G1P | Debranching enzyme يزيل الـ branches<br/>
+        Liver: G1P → G6P → Glucose → الدم | Muscle: G1P → G6P → Glycolysis
+      </Box>
+      <SectionTitle color="#f87171">🏥 Glycogen Storage Diseases</SectionTitle>
+      <Table headers={["المرض","Enzyme المعيب","المظاهر"]}
+        rows={[["Von Gierke's (Type I)","Glucose-6-phosphatase","Fasting hypoglycemia, Hepatomegaly, Lactic acidosis"],["Cori's (Type III)","Debranching enzyme","Mild hypoglycemia, Hepatomegaly"],["McArdle's (Type V)","Muscle Phosphorylase","Muscle cramps, Low blood lactate after exercise"]]}
+        colors={["#f87171","#fb923c","#fbbf24"]} />
+    </div>
+  );
+}
+
+function LipidsProteinsContent() {
+  return (
+    <div>
+      <SectionTitle color="#f472b6">🥩 Lipids Digestion</SectionTitle>
+      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10, marginBottom:14 }}>
+        <Box color="#f59e0b" title="في المعدة" icon="🔵">Lingual Lipase + Gastric Lipase | على TAG قصير ومتوسط السلسلة</Box>
+        <Box color="#60a5fa" title="في Small Intestine" icon="🟢">
+          Bile salts → emulsification | Pancreatic Lipase → TAG → 2-MG + 2 FFAs<br/>
+          Co-lipase تساعد | Cholesterol Esterase | Phospholipase A2
+        </Box>
+      </div>
+      <Box color="#34d399" title="📥 Absorption" icon="📥">
+        Short/Medium chain FA → Portal circulation<br/>
+        Long chain FA → Micelles → Chylomicrons → Lymphatics → Thoracic duct → Blood<br/>
+        Lipoprotein Lipase (LPL): يكسر TAG في الـ Chylomicrons — يتنشط بـ Heparin + Insulin + Apo-C₂
+      </Box>
+      <SectionTitle color="#60a5fa">🥩 Proteins Digestion</SectionTitle>
+      <Table headers={["مكان","Enzyme","نوع","يهضم"]}
+        rows={[["Stomach","Pepsin (pH 1-2)","Endopeptidase","Aromatic AAs (Phe & Tyr)"],["Stomach","Rennin (pH 4)","خاص بالرضع","Casein → milk clot"],["Pancreas","Trypsin (pH 8)","Endopeptidase","Basic AAs (Arg & Lys)"],["Pancreas","Chemotrypsin","Endopeptidase","Aromatic AAs"],["Pancreas","Carboxypeptidase","Exopeptidase","Free COOH end"],["Small Int.","Aminopeptidase","Exopeptidase","Free NH₂ end"]]}
+        colors={["#f59e0b","#60a5fa","#4ade80","#f472b6","#a78bfa","#34d399"]} />
+    </div>
+  );
+}
+
+function NitrogenContent() {
+  return (
+    <div>
+      <Box color="#60a5fa" title="⚖️ Nitrogen Balance" icon="🧪">
+        <strong>Equilibrium:</strong> Intake = Output (البالغ الصحي)<br/>
+        <strong style={{color:"#4ade80"}}>Positive (+):</strong> Intake {'>'} Output — Anabolism (حمل، نمو، تعافي)<br/>
+        <strong style={{color:"#f87171"}}>Negative (−):</strong> Output {'>'} Intake — Catabolism (سكري، حروق، جوع)
+      </Box>
+      <SectionTitle color="#f59e0b">💧 Deamination — 3 Types</SectionTitle>
+      {[
+        { n:1, name:"Oxidative Deamination", det:"إزالة NH₂ مع أكسدة | مكانها Liver + Kidney\nL-Glutamate DH الأهم (NAD، نشطة جداً، في كل الجسم)", color:"#f87171" },
+        { n:2, name:"Transamination ⭐", det:"نقل NH₂ من amino acid لـ keto acid | Coenzyme: Vit B₆ (PLP)\nGPT/ALT: Glutamate + Pyruvate ⇌ Alanine + α-KG → ↑ في Liver disease\nGOT/AST: Glutamate + OAA ⇌ Aspartate + α-KG → ↑ في Liver + MI", color:"#f59e0b" },
+        { n:3, name:"Transdeamination ⭐⭐ الأهم في الجسم!", det:"Transamination + Oxidative Deamination مع بعض\nكل الـ AAs → Glutamate بالـ Transamination أولاً → L-Glutamate DH تحرر NH₃", color:"#a78bfa" },
+      ].map(s => <Step key={s.n} n={s.n} title={s.name} detail={s.det} color={s.color} />)}
+      <Box color="#f472b6" title="🔚 مصير الـ NH₃" icon="🚽">
+        NH₃ سام → يتحول لـ <strong style={{color:"#f472b6"}}>Urea في الـ Liver (Urea Cycle)</strong> → يطلع في البول
+      </Box>
+    </div>
+  );
+}
+
+const biochemContents = [CarbohydratesContent, GlycolysisContent, TCAContent, GluconeogenesisContent, GlycogenContent, LipidsProteinsContent, NitrogenContent];
+
+function BiochemApp() {
+  const [active, setActive] = useState(0);
+  const Content = biochemContents[active];
+  return (
+    <div>
+      <div style={{ display:"flex", gap:6, flexWrap:"wrap", justifyContent:"center", marginBottom:16 }}>
+        {biochemTopics.map(t => (
+          <button key={t.id} onClick={() => setActive(t.id)} style={{
+            background: active===t.id ? "linear-gradient(135deg,#3b82f6,#1d4ed8)" : "rgba(255,255,255,0.05)",
+            border: active===t.id ? "2px solid #60a5fa" : "2px solid rgba(255,255,255,0.1)",
+            borderRadius:10, padding:"7px 14px", color: active===t.id ? "#fff" : "#94a3b8",
+            cursor:"pointer", fontSize:11, fontWeight:700, fontFamily:"inherit", whiteSpace:"nowrap",
+            boxShadow: active===t.id ? "0 4px 15px rgba(59,130,246,0.4)" : "none", transition:"all 0.2s"
+          }}>{t.label}</button>
+        ))}
+      </div>
+      <Content />
+    </div>
+  );
+}
+
+// ===================== ANATOMY CONTENT =====================
+const anatTopics = [
+  { id:0, label:"🦷 Submandibular Gland" },
+  { id:1, label:"🔲 Inguinal Canal & Hernia" },
+  { id:2, label:"🫁 Esophagus" },
+  { id:3, label:"🫃 Stomach" },
+  { id:4, label:"🔄 Duodenum" },
+  { id:5, label:"🫀 Pancreas" },
+];
+
+function AnatSalivary() {
+  return (
+    <div>
+      <Box color="#f59e0b" title="⚠️ التحديد: Nerve Supply of Submandibular Gland ONLY" icon="🎯">
+        ركز بس على الـ <strong style={{color:"#f59e0b"}}>Nerve Supply</strong>
+      </Box>
+      <Box color="#4ade80" title="1️⃣ Sensory" icon="👁️">من الـ <strong style={{color:"#4ade80"}}>Lingual Nerve</strong></Box>
+      <Box color="#f59e0b" title="2️⃣ Sympathetic" icon="⚡">
+        من الـ <strong style={{color:"#f59e0b"}}>Plexus around the Facial Artery</strong><br/>
+        <span style={{fontSize:11,color:"#94a3b8"}}>(Sublingual = plexus around lingual artery)</span>
+      </Box>
+      <Box color="#f472b6" title="3️⃣ Parasympathetic (خطوة خطوة)" icon="🔗">
+        <div style={{display:"flex",flexDirection:"column",gap:6,marginTop:4}}>
+          {[
+            {n:1,text:"من: Superior Salivary Nucleus في الـ Pons",c:"#f472b6"},
+            {n:2,text:"مع: Facial Nerve (CN VII)",c:"#e879f9"},
+            {n:3,text:"مع: Chorda Tympani branch منه",c:"#d946ef"},
+            {n:4,text:"Chorda Tympani تنضم للـ Lingual Nerve في الـ Infratemporal Fossa",c:"#c026d3"},
+            {n:5,text:"Preganglionic fibers تتوقف عند: Submandibular Ganglion",c:"#a21caf"},
+            {n:6,text:"Postganglionic fibers توصل مباشرة للـ Submandibular + Sublingual Glands",c:"#86198f"},
+          ].map(s=>(
+            <div key={s.n} style={{display:"flex",gap:10,background:`${s.c}15`,border:`1px solid ${s.c}40`,borderRadius:8,padding:"6px 10px"}}>
+              <div style={{background:s.c,color:"#fff",borderRadius:"50%",width:22,height:22,display:"flex",alignItems:"center",justifyContent:"center",fontWeight:900,fontSize:11,flexShrink:0}}>{s.n}</div>
+              <div style={{fontSize:12,color:"#e0e0e0"}}>{s.text}</div>
+            </div>
+          ))}
+        </div>
+      </Box>
+      <Box color="#a78bfa" title="🔵 Submandibular Ganglion" icon="🔵">
+        <strong>نوعه:</strong> Parasympathetic | <strong>مكانه:</strong> على Hyoglossus muscle — معلق من الـ Lingual nerve<br/>
+        <strong>3 Roots:</strong> Sensory (Lingual n.) + Sympathetic (plexus) + Parasympathetic (Chorda tympani)<br/>
+        <strong>Branches:</strong> Submandibular + Sublingual glands
+      </Box>
+      <Box color="#f87171" title="🧠 Trick!" icon="💡">
+        <strong style={{color:"#f87171"}}>Facial n. → Chorda Tympani → Lingual n. → Submandibular Ganglion → الغدة</strong>
+      </Box>
+    </div>
+  );
+}
+
+function AnatInguinal() {
+  return (
+    <div>
+      <Box color="#60a5fa" title="📖 Inguinal Canal" icon="🔲">
+        Oblique intermuscular passage طوله ~4 cm فوق medial ½ من inguinal ligament<br/>
+        من Deep inguinal ring ← للـ Superficial inguinal ring
+      </Box>
+      <SectionTitle color="#60a5fa">🏗️ Boundaries</SectionTitle>
+      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10, marginBottom:14 }}>
+        {[
+          {wall:"🔵 Anterior Wall",color:"#60a5fa",layers:["Skin + Superficial fascia (كل الامتداد)","External oblique aponeurosis (كل الامتداد)","Internal oblique fibers (lateral 1/3 فقط)"]},
+          {wall:"🔴 Posterior Wall",color:"#f87171",layers:["Fascia transversalis (كل الامتداد)","Conjoint tendon (medial 2/3)","Reflected part of inguinal lig. (medial most)"]},
+          {wall:"🟢 Roof",color:"#4ade80",layers:["Lower arched fibers of Internal oblique","+ Transversus abdominis"]},
+          {wall:"🟡 Floor",color:"#f59e0b",layers:["Inguinal ligament (كل الامتداد)","Lacunar ligament (medial end)"]},
+        ].map((w,i)=>(
+          <div key={i} style={{background:`${w.color}12`,border:`2px solid ${w.color}40`,borderRadius:12,padding:12}}>
+            <div style={{fontWeight:800,color:w.color,fontSize:13,marginBottom:8}}>{w.wall}</div>
+            {w.layers.map((l,li)=><div key={li} style={{fontSize:11,color:"#d0d8e8",marginBottom:4}}>• {l}</div>)}
+          </div>
+        ))}
+      </div>
+      <Box color="#a78bfa" title="📦 Contents" icon="📦">
+        <strong style={{color:"#60a5fa"}}>♂ Male:</strong> Spermatic cord + Ilioinguinal nerve<br/>
+        <strong style={{color:"#f472b6"}}>♀ Female:</strong> Round ligament of uterus + Ilioinguinal nerve
+      </Box>
+      <Box color="#f59e0b" title="🔺 Hasselbach's Triangle" icon="🔺">
+        Medially: Rectus abdominis | Laterally: Inferior epigastric vessels | Inferiorly: Inguinal ligament<br/>
+        <span style={{color:"#f87171"}}>⚠️ Direct hernia من هنا!</span>
+      </Box>
+      <SectionTitle color="#f87171">⚔️ Direct vs Indirect vs Femoral</SectionTitle>
+      <Table headers={["","Indirect","Direct","Femoral"]}
+        rows={[
+          ["Incidence","أطفال/شباب — ذكور","المسنين","أكتر في الإناث"],
+          ["Course","LATERAL للـ Inf. Epigastric a.","MEDIAL — Hasselbach's triangle","Femoral ring"],
+          ["Sac site","فوق/داخل Pubic tubercle","فوق/داخل Pubic tubercle","تحت/خارج Pubic tubercle"],
+        ]}
+        colors={["#60a5fa","#f87171","#f59e0b"]} />
+      <Box color="#f87171" title="🧠 Trick!" icon="💡">
+        <strong style={{color:"#4ade80"}}>Indirect</strong> = Lateral (بيدش من باب جانبي) | <strong style={{color:"#f87171"}}>Direct</strong> = Medial (بيكسر الحيطة) | <strong style={{color:"#f59e0b"}}>Femoral</strong> = تحت الـ inguinal lig.
+      </Box>
+    </div>
+  );
+}
+
+function AnatEsophagus() {
+  return (
+    <div>
+      <SectionTitle color="#8b5cf6">📍 الـ 4 Constrictions</SectionTitle>
+      {[
+        {n:"1st",name:"Upper Esophageal Sphincter",color:"#60a5fa",details:["2nd narrowest في alimentary tract","15 cm من الأسنان","يقابل: C6"]},
+        {n:"2nd",name:"Aortic Constriction",color:"#4ade80",details:["Aortic arch","22.5 cm من الأسنان","يقابل: T4"]},
+        {n:"3rd",name:"Bronchial Constriction",color:"#f59e0b",details:["Lt. Main Bronchus","27.5 cm من الأسنان","يقابل: T5"]},
+        {n:"4th",name:"Lower Esophageal Sphincter",color:"#f87171",details:["Right Crus of Diaphragm","40 cm من الأسنان","يقابل: T11 | Physiological sphincter"]},
+      ].map(c=>(
+        <div key={c.n} style={{background:`${c.color}12`,border:`2px solid ${c.color}40`,borderRadius:12,padding:14,marginBottom:10,display:"grid",gridTemplateColumns:"60px 1fr",gap:12}}>
+          <div style={{background:`linear-gradient(135deg,${c.color},${c.color}88)`,borderRadius:10,padding:8,textAlign:"center"}}>
+            <div style={{fontWeight:900,color:"#fff",fontSize:16}}>{c.n}</div>
+          </div>
+          <div>
+            <div style={{fontWeight:700,color:c.color,fontSize:13,marginBottom:6}}>{c.name}</div>
+            {c.details.map((d,di)=><div key={di} style={{fontSize:11,color:"#d0d8e8",marginBottom:3}}>• {d}</div>)}
+          </div>
+        </div>
+      ))}
+      <SectionTitle color="#f472b6">🩸 Blood Supply</SectionTitle>
+      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:10 }}>
+        {[
+          {part:"Cervical",color:"#60a5fa",art:"Inferior Thyroid A.",vein:"Inferior Thyroid V.",lymph:"Paratracheal LNs"},
+          {part:"Thoracic",color:"#4ade80",art:"Descending Aorta",vein:"Azygos + Hemiazygos",lymph:"Posterior Mediastinal LNs"},
+          {part:"Abdominal",color:"#f59e0b",art:"Left Gastric A.",vein:"Left Gastric V.",lymph:"Left Gastric LNs"},
+        ].map((p,i)=>(
+          <div key={i} style={{background:`${p.color}12`,border:`2px solid ${p.color}40`,borderRadius:12,padding:12}}>
+            <div style={{fontWeight:800,color:p.color,fontSize:12,marginBottom:8}}>{p.part} Part</div>
+            <div style={{fontSize:11,color:"#d0d8e8",marginBottom:4}}>🩸 {p.art}</div>
+            <div style={{fontSize:11,color:"#d0d8e8",marginBottom:4}}>💙 {p.vein}</div>
+            <div style={{fontSize:11,color:"#d0d8e8"}}>🟢 {p.lymph}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function AnatStomach() {
+  return (
+    <div>
+      <Box color="#10b981" icon="🫁">
+        مغطاة بالكامل بـ Peritoneum <strong>ما عدا</strong> الـ Bare Area (قرب cardiac orifice)<br/>
+        Lesser Curvature → <strong style={{color:"#60a5fa"}}>Lesser Omentum</strong> | Greater Curvature → <strong style={{color:"#f472b6"}}>Greater Omentum + ligaments</strong>
+      </Box>
+      <SectionTitle color="#60a5fa">🔵 Anterior Surface</SectionTitle>
+      <Box color="#60a5fa" icon="⬆️">
+        Lt. Lobe of liver + Quadrate lobe + Anterior abdominal wall + Diaphragm (Lt. 6th→9th ribs)<br/>
+        كلها مفصولة بـ Greater Sac
+      </Box>
+      <SectionTitle color="#f472b6">🔴 Posterior Surface (Stomach Bed)</SectionTitle>
+      <Box color="#f472b6" icon="⬇️">
+        Transverse colon + mesocolon | Splenic artery | Body of Pancreas | Lt. Kidney | Lt. Suprarenal | Lt. Crus of Diaphragm | Spleen<br/>
+        <span style={{color:"#fbbf24",fontSize:11}}>⚠️ كلها بـ Lesser Sac ماعدا Spleen → Greater Sac</span>
+      </Box>
+      <SectionTitle color="#f87171">🩸 Blood Supply</SectionTitle>
+      <Box color="#f87171" icon="🩸">
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginTop:8}}>
+          {[
+            {name:"Lt. Gastric a.",src:"Celiac trunk",area:"Lesser curvature",color:"#f87171"},
+            {name:"Rt. Gastric a.",src:"Hepatic a.",area:"Lesser curvature",color:"#fb923c"},
+            {name:"Short Gastric aa.",src:"Splenic a.",area:"Fundus",color:"#f59e0b"},
+            {name:"Lt. Gastroepiploic a.",src:"Splenic a.",area:"Greater curvature",color:"#4ade80"},
+            {name:"Rt. Gastroepiploic a.",src:"Gastroduodenal a.",area:"Greater curvature",color:"#60a5fa"},
+          ].map((a,i)=>(
+            <div key={i} style={{background:`${a.color}15`,border:`1px solid ${a.color}40`,borderRadius:8,padding:8}}>
+              <div style={{fontWeight:700,color:a.color,fontSize:11}}>{a.name}</div>
+              <div style={{fontSize:10,color:"#94a3b8"}}>من: {a.src} | منطقة: {a.area}</div>
+            </div>
+          ))}
+        </div>
+      </Box>
+    </div>
+  );
+}
+
+function AnatDuodenum() {
+  return (
+    <div>
+      <Box color="#60a5fa" icon="📖">
+        C-shaped | حول رأس البنكرياس | مستوى L1, L2, L3
+      </Box>
+      <SectionTitle color="#f59e0b">📊 الـ 4 Parts</SectionTitle>
+      <Table headers={["الجزء","الامتداد","المميزات"]}
+        rows={[
+          ["1st (Superior) 5cm","Pyloric orifice → L1","Ampulla/Duodenal Cap ⭐\nمعظم القرحة الاثني عشرية هنا\nخلفه: Bile duct + Gastroduodenal a. + Portal vein + IVC"],
+          ["2nd (Descending) 7.5cm","L1 → L3","Major duodenal papilla (Bile + Pancreatic duct)\nMinor papilla (Accessory pancreatic duct)\nForegut-Midgut junction هنا"],
+          ["3rd (Horizontal) 10cm","عرضي عند L3","أمامه: Sup. mesenteric a. & v.\nخلفه: IVC + Aorta + Vertebral column"],
+          ["4th (Ascending) 2.5cm","L3 → L2 → Duodenojejunal flexure","Ligament of Treitz (Suspensory muscle)\nحد Upper vs Lower GIT"],
+        ]}
+        colors={["#60a5fa","#4ade80","#f59e0b","#f87171"]} />
+      <SectionTitle color="#f87171">🩸 Blood Supply</SectionTitle>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+        <Box color="#f87171" title="Upper Half" icon="⬆️">Celiac Trunk (Foregut): Supraduodenal + Rt. gastric + Superior pancreaticoduodenal</Box>
+        <Box color="#60a5fa" title="Lower Half" icon="⬇️">Inferior Pancreaticoduodenal a. من <strong>Superior Mesenteric a. (Midgut)</strong></Box>
+      </div>
+      <Box color="#fbbf24" title="🧠 Trick!" icon="💡">
+        الخط الفاصل Foregut/Midgut = <strong>منتصف الـ 2nd part</strong><br/>
+        فوقه → Celiac | تحته → Superior Mesenteric
+      </Box>
+    </div>
+  );
+}
+
+function AnatPancreas() {
+  return (
+    <div>
+      <Box color="#ec4899" icon="📖">
+        عرضياً على الجدار الخلفي | Duodenum (يمين) → Spleen (يسار) | 12-14 cm<br/>
+        الأجزاء: Head — Neck — Body — Tail
+      </Box>
+      <SectionTitle color="#ec4899">🧩 الأجزاء والعلاقات</SectionTitle>
+      {[
+        {part:"Head",color:"#f87171",notes:"في تجويف الـ Duodenum — له Uncinate Process",
+          rels:[{d:"Anteriorly",r:"Transverse colon"},{d:"Posteriorly",r:"IVC + Common bile duct (مدفون في سطحه)"},{d:"Laterally",r:"2nd part of duodenum"}]},
+        {part:"Neck",color:"#fb923c",notes:"2 cm — في median plane عند L1",
+          rels:[{d:"Anteriorly",r:"1st part duodenum (مفصول بـ Lesser sac)"},{d:"Posteriorly",r:"بداية Portal Vein — مهم جراحياً!"}]},
+        {part:"Body",color:"#f59e0b",notes:"مثلثي في المقطع — 3 surfaces + 3 borders",
+          rels:[{d:"Ant. surface",r:"Posterior surface of stomach (بـ Lesser sac)"},{d:"Post. surface",r:"Aorta + Sup. mesenteric a. + Splenic vein + Lt. kidney"},{d:"Superior border",r:"Splenic artery (tortuous)"}]},
+        {part:"Tail",color:"#4ade80",notes:"الأكثر تحركاً — مغطى بالكامل بـ Peritoneum",
+          rels:[{d:"يمشي في",r:"Lienorenal ligament → يصل للـ Spleen"}]},
+      ].map(p=>(
+        <div key={p.part} style={{background:`${p.color}12`,border:`2px solid ${p.color}40`,borderRadius:14,padding:14,marginBottom:12}}>
+          <div style={{fontWeight:800,color:p.color,fontSize:14,marginBottom:6}}>{p.part}</div>
+          <div style={{fontSize:11,color:"#fbbf24",marginBottom:8}}>📌 {p.notes}</div>
+          {p.rels.map((r,ri)=>(
+            <div key={ri} style={{display:"grid",gridTemplateColumns:"120px 1fr",gap:8,marginBottom:4,fontSize:11}}>
+              <div style={{color:p.color,fontWeight:700}}>{r.d}:</div>
+              <div style={{color:"#d0d8e8"}}>{r.r}</div>
+            </div>
+          ))}
+        </div>
+      ))}
+      <SectionTitle color="#f59e0b">🔗 Ducts</SectionTitle>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+        <Box color="#f59e0b" title="Main (Wirsung)" icon="1️⃣">Tail → Body → Neck → Head → يتحد مع Common bile duct → Ampulla of Vater → Major Duodenal Papilla</Box>
+        <Box color="#4ade80" title="Accessory (Santorini)" icon="2️⃣">من lower head → يصعد أمام Main duct → Minor Duodenal Papilla (2 cm فوق Major)</Box>
+      </div>
+      <SectionTitle color="#f87171">🩸 Blood Supply</SectionTitle>
+      <Box color="#f87171" icon="🩸">
+        Pancreatic branches of Splenic a. (على upper border) + Superior Pancreaticoduodenal a. (من Hepatic) + Inferior Pancreaticoduodenal a. (من Sup. Mesenteric)<br/>
+        Veins → Splenic + Sup. Mesenteric → <strong style={{color:"#60a5fa"}}>Portal Vein</strong>
+      </Box>
+    </div>
+  );
+}
+
+const anatContents = [AnatSalivary, AnatInguinal, AnatEsophagus, AnatStomach, AnatDuodenum, AnatPancreas];
+
+function AnatomyApp() {
+  const [active, setActive] = useState(0);
+  const Content = anatContents[active];
+  return (
+    <div>
+      <div style={{ display:"flex", gap:6, flexWrap:"wrap", justifyContent:"center", marginBottom:16 }}>
+        {anatTopics.map(t => (
+          <button key={t.id} onClick={() => setActive(t.id)} style={{
+            background: active===t.id ? "linear-gradient(135deg,#10b981,#059669)" : "rgba(255,255,255,0.05)",
+            border: active===t.id ? "2px solid #34d399" : "2px solid rgba(255,255,255,0.1)",
+            borderRadius:10, padding:"7px 14px", color: active===t.id ? "#fff" : "#94a3b8",
+            cursor:"pointer", fontSize:11, fontWeight:700, fontFamily:"inherit", whiteSpace:"nowrap",
+            boxShadow: active===t.id ? "0 4px 15px rgba(16,185,129,0.4)" : "none", transition:"all 0.2s"
+          }}>{t.label}</button>
+        ))}
+      </div>
+      <Content />
+    </div>
+  );
+}
+
+// ===================== PHYSIOLOGY CONTENT =====================
+const physioTopics = [
+  { id:0, label:"🧠 Regulation of GIT" },
+  { id:1, label:"👄 Oropharynx" },
+  { id:2, label:"🔄 Small Intestine" },
+  { id:3, label:"💊 GIT Hormones" },
+  { id:4, label:"📥 GI Absorption" },
+];
+
+function PhysioRegulation() {
+  return (
+    <div>
+      <Box color="#7eb8ff" title="🌐 Regulation of GIT" icon="🧠">
+        <strong style={{color:"#7eb8ff"}}>A) Nervous:</strong> External autonomic + Local enteric plexus<br/>
+        <strong style={{color:"#f59e0b"}}>B) Hormonal:</strong> GIT hormones (polypeptides)
+      </Box>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:14}}>
+        <Box color="#4ade80" title="✅ Parasympathetic (Dominant)" icon="🟢">
+          Vagus → Oesophagus to 1st half of large intestine | Sacral → rest<br/>
+          التأثيرات: Contraction of wall + Relaxation of sphincters + ↑ Secretion + Vasodilatation
+        </Box>
+        <Box color="#f87171" title="❌ Sympathetic (Inhibitory)" icon="🔴">
+          L.H.C T5 → L2 | ↓ Motility + ↓ Secretion + Vasoconstriction
+        </Box>
+      </div>
+      <SectionTitle color="#a78bfa">الـ Enteric Plexuses</SectionTitle>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:14}}>
+        <Box color="#a78bfa" title="Myenteric (Auerbach's)" icon="🔵">بين longitudinal + circular muscle | Controls motor activity | Excitatory: ACh | Inhibitory: VIP, ATP</Box>
+        <Box color="#8b5cf6" title="Submucosal (Meissner's)" icon="🔵">في الـ submucosal layer | Controls local secretion | ~100 million neurons</Box>
+      </div>
+      <SectionTitle color="#f59e0b">⚡ GIT Reflexes</SectionTitle>
+      {[
+        {n:1,name:"Local Enteric (Short Reflex)",color:"#4ade80",det:"Receptors في GIT wall → Enteric neurons → Smooth muscle/glands\nPeristalsis: contraction proximal (ACh) + relaxation distal (NO, VIP)"},
+        {n:2,name:"Ganglionic Reflex",color:"#f59e0b",det:"Afferent sympathetic → Collateral ganglia → Efferent sympathetic\nمثال: Enterogastric reflex"},
+        {n:3,name:"CNS Reflex (Long Reflex)",color:"#60a5fa",det:"Afferent parasympathetic → Brain stem/Spinal cord → Efferent parasympathetic\nمثال: Vagovagal reflex"},
+      ].map(r=><Step key={r.n} n={r.n} title={r.name} detail={r.det} color={r.color} />)}
+      <Box color="#f59e0b" title="B — Hormonal Regulation" icon="💊">
+        APUD cells | Gastrin group (Gastrin + CCK) | Secretin group (Secretin, GIP, VIP) | Motilin | Somatostatin
+      </Box>
+    </div>
+  );
+}
+
+function PhysioOropharynx() {
+  return (
+    <div>
+      <SectionTitle color="#4ade80">🦷 Mastication</SectionTitle>
+      <Box color="#4ade80" icon="🦷">
+        Mechanical breakdown في الـ mouth | Nerve: Trigeminal (CN V) | Center: Pons<br/>
+        Partly voluntary + partly reflex (chewing reflex)
+      </Box>
+      <SectionTitle color="#f59e0b">💧 Salivary Glands</SectionTitle>
+      <Table headers={["الغدة","الإفراز","النوع","الإعصاب"]}
+        rows={[["Parotid","~20%","Serous (watery + amylase)","Glossopharyngeal N"],["Submaxillary","~70%","Mixed","Facial N"],["Sublingual","~5%","Mucus (rich in mucin)","Facial N"]]}
+        colors={["#f59e0b","#fb923c","#f87171"]} />
+      <SectionTitle color="#4ade80">⚡ Functions of Saliva (9)</SectionTitle>
+      {[
+        {n:1,t:"Facilitation of speech & deglutition",d:"Mucin يلوبرك الـ food",c:"#4ade80"},
+        {n:2,t:"Cleaning",d:"Lysozymes + Thiothianate + IgA",c:"#22c55e"},
+        {n:3,t:"Buffering",d:"HCO₃⁻ + Phosphate → pH ~7 | يحايد GERD",c:"#16a34a"},
+        {n:4,t:"Digestive",d:"Ptyalin (α-amylase): starch → maltose (pH 6.9, Cl⁻ coenzyme)\nLingual Lipase: TG → FA + Glycerol (من Ebner's glands)",c:"#f59e0b"},
+        {n:5,t:"Excretory",d:"Lead, Mercury, Iodides + Morphine, Alcohol",c:"#f87171"},
+        {n:6,t:"Taste sensation",d:"Solvent للـ taste molecules",c:"#a78bfa"},
+        {n:7,t:"Kallikrein",d:"→ Bradykinin → Vasodilation",c:"#60a5fa"},
+        {n:8,t:"Water balance",d:"↓ في dehydration → Thirst",c:"#06b6d4"},
+        {n:9,t:"Hormones",d:"Somatostatin + Glucagon",c:"#34d399"},
+      ].map(f=><Step key={f.n} n={f.n} title={f.t} detail={f.d} color={f.c} />)}
+      <SectionTitle color="#f472b6">🎛️ Control — Nervous ONLY</SectionTitle>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+        <Box color="#34d399" title="Unconditioned Reflex (Inborn)" icon="🔵">
+          Stimuli: Direct food contact, chewing, GIT irritation<br/>
+          Afferent: Chorda tympani (ant. 2/3 tongue) + Glossopharyngeal (post. 1/3)<br/>
+          Center: Superior + Inferior salivary nuclei في M.O.
+        </Box>
+        <Box color="#a78bfa" title="Conditioned Reflex (Acquired)" icon="🔴">
+          Stimuli: Sight + Smell + Hearing + Thinking of food<br/>
+          Center: Cerebral cortex → Salivary nuclei
+        </Box>
+      </div>
+    </div>
+  );
+}
+
+function PhysioSmallInt() {
+  return (
+    <div>
+      <SectionTitle color="#f59e0b">🔄 Motility — 2 Types</SectionTitle>
+      <Box color="#f59e0b" title="1) Segmenting Movements (Mixing)" icon="🔀">
+        <strong>Nature:</strong> Myogenic (BER) | Rate: 12/min في duodenum<br/>
+        يساعد digestion + absorption + blood/lymph circulation
+      </Box>
+      <Box color="#60a5fa" title="2) Peristaltic Movements (Propulsive)" icon="➡️">
+        <strong>Nature:</strong> Neurogenic | Speed: 1-5 cm/sec for 20 cm<br/>
+        <strong>Types:</strong> Ordinary + Peristaltic rush (mass) + Antiperistalsis<br/>
+        يتحفز بـ Gastroenteric reflex + Gastrin + CCK + Vagus
+      </Box>
+      <SectionTitle color="#f472b6">🚪 Ileocecal Sphincter</SectionTitle>
+      <Box color="#f472b6" icon="🚪">
+        Tonically contracted | <strong style={{color:"#4ade80"}}>Relaxed by:</strong> Distension of stomach (gastro-ileal reflex) + ileum distension + Gastrin<br/>
+        <strong style={{color:"#f87171"}}>Contracted by:</strong> Cecum distension (colono-ileal reflex)
+      </Box>
+      <SectionTitle color="#a78bfa">🧪 Intestinal Secretion (Succus Entericus)</SectionTitle>
+      <Box color="#a78bfa" icon="🔬">
+        <strong>Mucus:</strong> من Brunner's glands + Goblet cells | يتحفز بـ Vagus + secretin | يتعطل بـ Sympathetic<br/>
+        <strong>Alkaline fluid (NaHCO₃):</strong> يتحفز بـ Secretin + CCK + VIP<br/>
+        <strong>VIP:</strong> ↑ secretion + Vasodilation + ↓ gastric acid + Relaxes LES
+      </Box>
+    </div>
+  );
+}
+
+function PhysioHormones() {
+  return (
+    <div>
+      {[
+        {name:"Gastrin",color:"#f87171",
+          stimuli:"Protein + Distention + Nervous (Acid inhibits)",
+          site:"G cells في Antrum, Duodenum, Jejunum",
+          actions:["✅ ↑ Gastric acid secretion","✅ Mucosal growth (trophic)","✅ ↑ Insulin secretion","✅ Lower esophageal sphincter → Contraction","✅ Ileocecal sphincter → Relaxation","✅ ↑ Intestinal motility"]},
+        {name:"Cholecystokinin (CCK)",color:"#fb923c",
+          stimuli:"Protein + Fat + Acid",
+          site:"I cells في Duodenum, Jejunum, Ileum",
+          actions:["✅ ↑ Pancreatic enzyme secretion","✅ Gallbladder contraction","✅ Growth of exocrine pancreas","❌ ↓ Gastric emptying","❌ ↓ Appetite"]},
+        {name:"Secretin",color:"#60a5fa",
+          stimuli:"Acid + Fat",
+          site:"S cells في Duodenum, Jejunum, Ileum",
+          actions:["✅ ↑ Pepsin secretion","✅ ↑ Pancreatic HCO₃⁻ secretion","✅ ↑ Biliary HCO₃⁻","❌ ↓ Gastrin release","❌ ↓ Gastric acid"]},
+      ].map(h=>(
+        <div key={h.name} style={{background:`${h.color}10`,border:`2px solid ${h.color}40`,borderRadius:16,padding:18,marginBottom:16}}>
+          <div style={{fontWeight:900,color:h.color,fontSize:18,marginBottom:12}}>💊 {h.name}</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 2fr",gap:12}}>
+            <div style={{background:"#0d1a2e",borderRadius:10,padding:10}}>
+              <div style={{color:h.color,fontWeight:700,fontSize:12,marginBottom:6}}>⚡ Stimuli</div>
+              <div style={{fontSize:11,color:"#d0d8e8"}}>{h.stimuli}</div>
+            </div>
+            <div style={{background:"#0d1a2e",borderRadius:10,padding:10}}>
+              <div style={{color:h.color,fontWeight:700,fontSize:12,marginBottom:6}}>📍 Site</div>
+              <div style={{fontSize:11,color:"#d0d8e8"}}>{h.site}</div>
+            </div>
+            <div style={{background:"#0d1a2e",borderRadius:10,padding:10}}>
+              <div style={{color:h.color,fontWeight:700,fontSize:12,marginBottom:6}}>🎯 Actions</div>
+              {h.actions.map((a,i)=><div key={i} style={{fontSize:11,color:"#d0d8e8",marginBottom:3}}>{a}</div>)}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function PhysioAbsorption() {
+  return (
+    <div>
+      <Box color="#4ade80" title="🏆 Small Intestine — Chief Site" icon="📥">
+        Valvulae conniventes + Villi + Microvilli تزود الـ surface area<br/>
+        الـ absorption عملية حيوية (vital): تزيد O₂ consumption + تزيد مع الحرارة + تتأثر بوقف الدم
+      </Box>
+      <SectionTitle color="#60a5fa">⚙️ Factors Affecting Absorption (8)</SectionTitle>
+      {[
+        {n:1,t:"Vitality of intestinal mucosa",d:"Blood flow + O₂ + Vitamin B",c:"#4ade80"},
+        {n:2,t:"State of digestion",d:"Proper digestion → good absorption",c:"#22c55e"},
+        {n:3,t:"Bile salts + Lymph flow",d:"Essential for fat absorption",c:"#f59e0b"},
+        {n:4,t:"Duration of contact",d:"↓ contact (diarrhea) → ↓ absorption",c:"#fb923c"},
+        {n:5,t:"Extent of absorptive surface",d:">50% resection → ↓↓ absorption",c:"#f87171"},
+        {n:6,t:"Intestinal mixing movements",d:"↑ exposure + blood/lymph flow",c:"#a78bfa"},
+        {n:7,t:"Villi movements",d:"Lashing + pumping → lymph flow",c:"#8b5cf6"},
+        {n:8,t:"Physico-chemical factors",d:"Concentration gradient + osmolality + pressure + solubility",c:"#60a5fa"},
+      ].map(f=><Step key={f.n} n={f.n} title={f.t} detail={f.d} color={f.c} />)}
+      <SectionTitle color="#a78bfa">⚙️ Mechanisms</SectionTitle>
+      <Table headers={["Substance","Mechanism"]}
+        rows={[
+          ["Water","Simple diffusion (osmosis) following electrolytes"],
+          ["Sodium","Active transport — 3 mechanisms: Uniport + Symport + Antiport"],
+          ["K⁺","Mostly passive into intestinal lumen → chronic diarrhea → hypokalemia"],
+          ["Calcium","Active (basolateral) + Facilitated diffusion (luminal) | Controlled by PTH + Vit D₃"],
+          ["Iron","Active في الـ Duodenum | Stimulated by Erythropoietin"],
+          ["Glucose/Galactose","Active — SGLT-1 (Na⁺ cotransport)"],
+          ["Fructose","Facilitated diffusion — GLUT-5"],
+          ["Proteins","Active في الـ Jejunum + Pinocytosis"],
+          ["Lipids","Micelles → simple diffusion → Chylomicrons → Lymphatics"],
+          ["Vit B12","يحتاج Intrinsic factor"],
+        ]}
+        colors={["#60a5fa","#4ade80","#f59e0b","#f472b6","#a78bfa","#34d399","#fb923c","#f87171","#06b6d4","#8b5cf6"]} />
+    </div>
+  );
+}
+
+const physioContents = [PhysioRegulation, PhysioOropharynx, PhysioSmallInt, PhysioHormones, PhysioAbsorption];
+
+function PhysiologyApp() {
+  const [active, setActive] = useState(0);
+  const Content = physioContents[active];
+  return (
+    <div>
+      <div style={{ display:"flex", gap:6, flexWrap:"wrap", justifyContent:"center", marginBottom:16 }}>
+        {physioTopics.map(t => (
+          <button key={t.id} onClick={() => setActive(t.id)} style={{
+            background: active===t.id ? "linear-gradient(135deg,#8b5cf6,#6d28d9)" : "rgba(255,255,255,0.05)",
+            border: active===t.id ? "2px solid #a78bfa" : "2px solid rgba(255,255,255,0.1)",
+            borderRadius:10, padding:"7px 14px", color: active===t.id ? "#fff" : "#94a3b8",
+            cursor:"pointer", fontSize:11, fontWeight:700, fontFamily:"inherit", whiteSpace:"nowrap",
+            boxShadow: active===t.id ? "0 4px 15px rgba(139,92,246,0.4)" : "none", transition:"all 0.2s"
+          }}>{t.label}</button>
+        ))}
+      </div>
+      <Content />
+    </div>
+  );
+}
+
+// ===================== HISTOLOGY CONTENT =====================
+const histoTopics = [
+  { id:0, label:"🦷 Salivary Glands" },
+  { id:1, label:"🫁 Esophagus" },
+  { id:2, label:"🔴 Stomach" },
+  { id:3, label:"🟢 Small Intestine" },
+];
+
+function HistoSalivary() {
+  return (
+    <div>
+      <Box color="#4ade80" icon="🦷">
+        Exocrine glands → Saliva | وظائف: Digestive + Lubricating + Immunological + Tasting<br/>
+        تفرز Lysozymes + Lactoferrin
+      </Box>
+      <SectionTitle color="#f59e0b">🔬 أنواع الـ Acini</SectionTitle>
+      {[
+        {name:"Serous Acini",color:"#60a5fa",sec:"Watery + protein + enzymes",
+          lm:"Rounded/ovoid + small + narrow lumen | Pyramidal cells | Basal rounded nucleus | Basal basophilic + Apical acidophilic | few myoepithelial cells",
+          em:"Abundant RER (basal) + supranuclear Golgi + ribosomes + apical secretory granules + microvilli | Joined by ZO+ZA+Gap junctions"},
+        {name:"Mucous Acini",color:"#4ade80",sec:"Mucous secretion",
+          lm:"Tubular + large + wide lumen | Cuboidal cells | Basal FLAT nuclei (pressed by mucous) | pale basophilic, foamy",
+          em:"Golgi + few mitochondria + basal RER + numerous mucinogen granules"},
+        {name:"Seromucous (Demilune)",color:"#f59e0b",sec:"Both serous + mucous",
+          lm:"Mucous cells form tubules (proximal) | Serous cells cap distal end = Crescent of Gianuzzi | dark crescent cap",
+          em:""},
+      ].map(a=>(
+        <div key={a.name} style={{background:`${a.color}10`,border:`2px solid ${a.color}40`,borderRadius:14,padding:14,marginBottom:12}}>
+          <div style={{fontWeight:900,color:a.color,fontSize:15,marginBottom:6}}>{a.name}</div>
+          <div style={{fontSize:12,color:"#fbbf24",marginBottom:8}}>💉 {a.sec}</div>
+          <div style={{display:"grid",gridTemplateColumns:a.em?"1fr 1fr":"1fr",gap:10}}>
+            <div style={{background:"#0d1a2e",borderRadius:8,padding:10}}>
+              <div style={{color:a.color,fontWeight:700,fontSize:11,marginBottom:4}}>🔵 LM</div>
+              <div style={{fontSize:11,color:"#d0d8e8"}}>{a.lm}</div>
+            </div>
+            {a.em && <div style={{background:"#0d1a2e",borderRadius:8,padding:10}}>
+              <div style={{color:a.color,fontWeight:700,fontSize:11,marginBottom:4}}>🟡 EM</div>
+              <div style={{fontSize:11,color:"#d0d8e8"}}>{a.em}</div>
+            </div>}
+          </div>
+        </div>
+      ))}
+      <Box color="#f472b6" title="🧺 Myoepithelial (Basket) Cells" icon="🧺">
+        داخل basal lamina | Highly branched تحيط بـ serous acini | Rich in actin + myosin<br/>
+        Contraction → يضغط على acini → يحرر الإفراز
+      </Box>
+      <SectionTitle color="#a78bfa">🚿 Duct System</SectionTitle>
+      <Table headers={["الـ Duct","المكان","الـ Epithelium","مميز"]}
+        rows={[["Intercalated","من لمن الـ acini","Low cuboidal","أصغر duct"],["Intralobular (Striated)","داخل الـ lobules","Cuboidal/Low columnar","Basal striation = active transport ⭐"],["Interlobular","C.T. septa بين lobules","Columnar",""],["Interlobar","C.T. septa بين lobes","Pseudostratified columnar",""],["Main ducts","تفتح في oral cavity","Stratified columnar → Squamous",""]]}
+        colors={["#60a5fa","#4ade80","#f59e0b","#fb923c","#f87171"]} />
+      <SectionTitle color="#f59e0b">⚖️ مقارنة الـ 3 Major Glands</SectionTitle>
+      <Table headers={["","Parotid","Submandibular","Sublingual"]}
+        rows={[
+          ["نوع","Purely Serous","Mixed (90% serous)","Mixed (mainly mucous)"],
+          ["نسبة","20-30%","~70%","~5%"],
+          ["Capsule","Well-dev + fat cells + IgA","Well-dev (less fat)","Thin, ill-developed"],
+          ["Striated ducts","Well-developed","Much longer ⭐","Poorly developed"],
+          ["Main duct","Stensen's (2nd upper molar)","Wharton's (floor of mouth)","لا يوجد — عدة ducts"],
+          ["Enzyme","Amylase","Lysozyme","Lysozyme"],
+        ]}
+        colors={["#f59e0b","#60a5fa","#4ade80","#f472b6","#a78bfa","#34d399"]} />
+    </div>
+  );
+}
+
+function HistoEsophagus() {
+  return (
+    <div>
+      <SectionTitle color="#7eb8ff">🏗️ الـ 4 Layers العامة للـ Digestive Tract</SectionTitle>
+      <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:8, marginBottom:14 }}>
+        {[
+          {n:1,name:"Mucosa",sub:"Epithelium + Lamina propria + Muscularis mucosa",color:"#4ade80"},
+          {n:2,name:"Submucosa",sub:"Dense C.T. + BV + lymphatics + Meissner's plexus",color:"#60a5fa"},
+          {n:3,name:"Muscularis Externa",sub:"Inner circular + outer longitudinal + Auerbach's plexus",color:"#f59e0b"},
+          {n:4,name:"Adventitia/Serosa",sub:"Outermost loose C.T.",color:"#f472b6"},
+        ].map(l=>(
+          <div key={l.n} style={{background:`${l.color}15`,border:`2px solid ${l.color}40`,borderRadius:12,padding:12}}>
+            <div style={{fontWeight:900,color:l.color,fontSize:20,marginBottom:4}}>{l.n}</div>
+            <div style={{fontWeight:700,color:l.color,fontSize:11,marginBottom:4}}>{l.name}</div>
+            <div style={{fontSize:10,color:"#94a3b8"}}>{l.sub}</div>
+          </div>
+        ))}
+      </div>
+      <SectionTitle color="#60a5fa">🔬 Esophagus Layers</SectionTitle>
+      {[
+        {n:1,name:"Mucosa",color:"#4ade80",parts:[
+          {t:"Epithelium",d:"Non-keratinized stratified squamous — لمقاومة abrasion | Langerhans cells موجودة"},
+          {t:"Lamina propria",d:"Simple tubular mucous glands في upper end (تسهل البلع) وlower end (تحيد HCl)\nDiffuse lymphatic tissue + nodules"},
+          {t:"Muscularis Mucosa ⭐",d:"SINGLE layer of LONGITUDINAL smooth muscle فقط! (مميز جداً)"},
+        ]},
+        {n:2,name:"Submucosa",color:"#60a5fa",parts:[
+          {t:"المحتوى",d:"Dense C.T. + BV + lymphatics + Esophageal glands (compound tubuloalveolar mucous glands)"},
+        ]},
+        {n:3,name:"Muscularis Externa ⭐",color:"#f59e0b",parts:[
+          {t:"Upper 1/3",d:"Striated muscle (skeletal)"},
+          {t:"Middle 1/3",d:"Both striated + smooth"},
+          {t:"Lower 1/3",d:"Smooth muscle only"},
+        ]},
+        {n:4,name:"Adventitia/Serosa",color:"#f472b6",parts:[
+          {t:"التوزيع",d:"Above diaphragm → Adventitia | Lower abdominal end → Serosa"},
+        ]},
+      ].map(layer=>(
+        <div key={layer.n} style={{background:`${layer.color}10`,border:`2px solid ${layer.color}40`,borderRadius:14,padding:14,marginBottom:12}}>
+          <div style={{fontWeight:900,color:layer.color,fontSize:14,marginBottom:10}}>Layer {layer.n}: {layer.name}</div>
+          {layer.parts.map((p,i)=>(
+            <div key={i} style={{display:"grid",gridTemplateColumns:"140px 1fr",gap:8,marginBottom:6}}>
+              <div style={{fontWeight:700,color:layer.color,fontSize:11}}>{p.t}:</div>
+              <div style={{fontSize:11,color:"#d0d8e8",whiteSpace:"pre-line"}}>{p.d}</div>
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function HistoStomach() {
+  const [reg, setReg] = useState(0);
+  return (
+    <div>
+      <div style={{display:"flex",gap:8,marginBottom:12}}>
+        {["Cardiac Region","Fundic Region","Pyloric Region"].map((r,i)=>(
+          <button key={i} onClick={()=>setReg(i)} style={{
+            background: reg===i?"linear-gradient(135deg,#ef4444,#b91c1c)":"rgba(255,255,255,0.05)",
+            border: reg===i?"2px solid #f87171":"2px solid rgba(255,255,255,0.1)",
+            borderRadius:10,padding:"8px 16px",color:reg===i?"#fff":"#94a3b8",
+            cursor:"pointer",fontSize:11,fontWeight:700,fontFamily:"inherit"
+          }}>{r}</button>
+        ))}
+      </div>
+      {reg===0 && <Box color="#94a3b8" title="Cardiac Region" icon="💙">
+        يحيط بمدخل الـ esophagus | Cardiac glands: small tubular branching — mucous secreting فقط
+      </Box>}
+      {reg===1 && <div>
+        <Box color="#f59e0b" title="Fundic Region" icon="⭐">
+          Rugae: طيات طولية في المعدة الفارغة | Gastric pits: تفتح فيها الـ fundic glands
+        </Box>
+        <Box color="#60a5fa" title="Gastric Juice Components" icon="🧪">
+          HCl + Mucus + Pepsinogen + Lipase + Intrinsic factor + Water + Electrolytes
+        </Box>
+        <SectionTitle color="#f59e0b">الـ 6 Cell Types</SectionTitle>
+        {[
+          {n:1,name:"Undifferentiated Stem Cells",loc:"Isthmus + Neck",color:"#94a3b8",
+            lm:"Columnar + basal oval nuclei + basophilic + mitotic figures",func:"تتكاثر → upward → Surface mucous cells | downward → other cells"},
+          {n:2,name:"Surface Mucous Cells",loc:"Surface + Gastric pits",color:"#4ade80",
+            lm:"Columnar + basal oval nuclei + apical mucin granules + pale H&E (PAS+ve)",func:"Thick neutral mucous → يحمي الـ mucosa من HCl"},
+          {n:3,name:"Mucous Neck Cells",loc:"Neck",color:"#34d399",
+            lm:"أقصر + less mucigen + rounded nuclei",func:"Thin ACIDIC mucous"},
+          {n:4,name:"Parietal (Oxyntic) Cells ⭐",loc:"Chiefly neck region",color:"#f59e0b",
+            lm:"Large, rounded/triangular + central spherical nucleus + Acidophilic + peripheral position",
+            em:"Intracellular canaliculi (HCl formation site) + long microvilli + tubulovesicular system + many mitochondria",
+            func:"① HCl: H⁺ actively → canaliculi, Cl⁻ from blood → HCl\n② Intrinsic factor → Vit B12 absorption"},
+          {n:5,name:"Chief (Zymogenic) Cells ⭐",loc:"Base of gland",color:"#60a5fa",
+            lm:"Basal rounded nucleus + Basal basophilic + Apical acidophilic zymogen granules",
+            em:"RER + extensive RER + Golgi + large apical granules + microvilli (protein-synthesizing cell)",
+            func:"Pepsinogen (inactive) + Lipase"},
+          {n:6,name:"Enteroendocrine (Argentaffin) ⭐",loc:"Basal parts",color:"#a78bfa",
+            lm:"Small pyramidal + apical nucleus + clear H&E + black with silver (argentaffin)",
+            em:"APUD features + basal electron dense granules | Open type (reaches lumen) + Closed type",
+            func:"G→Gastrin | A→Glucagon | D→Somatostatin | EC→Serotonin"},
+        ].map(cell=>(
+          <div key={cell.n} style={{background:`${cell.color}10`,border:`2px solid ${cell.color}40`,borderRadius:14,padding:14,marginBottom:10}}>
+            <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:8}}>
+              <div style={{background:cell.color,color:"#fff",borderRadius:8,width:26,height:26,display:"flex",alignItems:"center",justifyContent:"center",fontWeight:900,fontSize:12,flexShrink:0}}>{cell.n}</div>
+              <div style={{fontWeight:800,color:cell.color,fontSize:13}}>{cell.name}</div>
+              <div style={{fontSize:10,color:"#94a3b8"}}>📍 {cell.loc}</div>
+            </div>
+            <div style={{display:"grid",gridTemplateColumns:cell.em?"1fr 1fr 1fr":"1fr 1fr",gap:8}}>
+              <div style={{background:"#0d1a2e",borderRadius:8,padding:8}}><div style={{color:cell.color,fontWeight:700,fontSize:10,marginBottom:3}}>🔵 LM</div><div style={{fontSize:10,color:"#d0d8e8"}}>{cell.lm}</div></div>
+              {cell.em && <div style={{background:"#0d1a2e",borderRadius:8,padding:8}}><div style={{color:cell.color,fontWeight:700,fontSize:10,marginBottom:3}}>🟡 EM</div><div style={{fontSize:10,color:"#d0d8e8",whiteSpace:"pre-line"}}>{cell.em}</div></div>}
+              <div style={{background:"#0d1a2e",borderRadius:8,padding:8}}><div style={{color:"#4ade80",fontWeight:700,fontSize:10,marginBottom:3}}>⚡ Function</div><div style={{fontSize:10,color:"#d0d8e8",whiteSpace:"pre-line"}}>{cell.func}</div></div>
+            </div>
+          </div>
+        ))}
+      </div>}
+      {reg===2 && <div>
+        <Box color="#fb923c" title="Pyloric Region" icon="🚪">
+          Gastric pits: wider + deeper (1:1) | Glands: not crowded + highly convoluted<br/>
+          Cells: Mucous + Enteroendocrine (G cells) + Stem cells<br/>
+          Musculosa: circular layer thickened → <strong style={{color:"#fb923c"}}>Pyloric sphincter</strong>
+        </Box>
+        <SectionTitle color="#fb923c">Fundic vs Pyloric Glands</SectionTitle>
+        <Table headers={["Feature","Fundic","Pyloric"]}
+          rows={[["الطول","Long","Short"],["Gastric pits","Narrow + short (1:5)","Wide + deep (1:1)"],["كثافة","Very crowded","Not crowded"],["الاتجاه","Perpendicular","Coiled + oblique"],["الخلايا","Mucous+Parietal+Chief+Enteroendocrine","Mucous+Enteroendocrine فقط"]]}
+          colors={["#f59e0b","#fb923c","#f87171","#a78bfa","#60a5fa"]} />
+      </div>}
+    </div>
+  );
+}
+
+function HistoSmallInt() {
+  return (
+    <div>
+      <Box color="#34d399" icon="🟢">الـ 4 Layers: Mucosa + Submucosa + Musculosa + Serosa</Box>
+      <Box color="#60a5fa" title="Submucosa — Special Features" icon="🏗️">
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginTop:8}}>
+          <div style={{background:"#0d1a2e",borderRadius:8,padding:10}}>
+            <div style={{color:"#60a5fa",fontWeight:700,fontSize:11,marginBottom:6}}>Brunner's Glands (Duodenum) ⭐</div>
+            <div style={{fontSize:11,color:"#d0d8e8"}}>Branched tubuloalveolar | يفرزوا alkaline mucous → يحمي الـ duodenal mucosa | Urogastrone → ↓ HCl</div>
+          </div>
+          <div style={{background:"#0d1a2e",borderRadius:8,padding:10}}>
+            <div style={{color:"#a78bfa",fontWeight:700,fontSize:11,marginBottom:6}}>Peyer's Patches (Ileum) ⭐</div>
+            <div style={{fontSize:11,color:"#d0d8e8"}}>Aggregates of lymphoid nodules | lamina propria → submucosa | Villi over them: short/absent → replaced by M cells</div>
+          </div>
+        </div>
+      </Box>
+      <SectionTitle color="#f59e0b">🔬 Cell Types في Crypts والـ Villi</SectionTitle>
+      {[
+        {n:1,name:"Columnar Absorptive Cells (Enterocytes)",loc:"Villi + upper crypts",color:"#4ade80",
+          lm:"Tall columnar + basal oval nucleus + Brush border (acidophilic striated) = abundant long microvilli",
+          func:"Absorption (water + nutrients) + Secrete enzymes"},
+        {n:2,name:"Goblet Cells",loc:"↑ من duodenum لـ ileum",color:"#60a5fa",
+          lm:"Basal flat stained nuclei + Expanded apical pale (mucin) + Flask-shaped",func:"Unicellular mucous glands"},
+        {n:3,name:"Paneth Cells ⭐",loc:"Bases of crypts",color:"#f87171",
+          lm:"Large pyramidal + Large apical acidophilic zymogen granules + Basal basophilic",
+          func:"① Lysozyme (antibacterial) ② α-defensin + TNF-α ③ Regulate bacterial flora"},
+        {n:4,name:"M Cells (Microfold) ⭐",loc:"Overlying Peyer's patches",color:"#f472b6",
+          lm:"Dome-shaped + basal invaginations with lymphocytes",
+          func:"Phagocytose + transport antigens → macrophages + lymphocytes → immune response"},
+        {n:5,name:"Enteroendocrine Cells",loc:"Near crypt bases",color:"#a78bfa",
+          lm:"Clear H&E + black Ag-stain | A→Glucagon | D→Somatostatin | EC→Serotonin | I→CCK | Mo→Motilin",func:"Polypeptide hormones"},
+      ].map(cell=>(
+        <div key={cell.n} style={{background:`${cell.color}10`,border:`2px solid ${cell.color}40`,borderRadius:14,padding:14,marginBottom:10}}>
+          <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:8}}>
+            <div style={{background:cell.color,color:"#fff",borderRadius:8,width:26,height:26,display:"flex",alignItems:"center",justifyContent:"center",fontWeight:900,fontSize:12,flexShrink:0}}>{cell.n}</div>
+            <div style={{fontWeight:800,color:cell.color,fontSize:13}}>{cell.name}</div>
+            <div style={{fontSize:10,color:"#94a3b8"}}>📍 {cell.loc}</div>
+          </div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+            <div style={{background:"#0d1a2e",borderRadius:8,padding:8}}><div style={{color:cell.color,fontWeight:700,fontSize:10,marginBottom:3}}>🔵 LM</div><div style={{fontSize:10,color:"#d0d8e8",whiteSpace:"pre-line"}}>{cell.lm}</div></div>
+            <div style={{background:"#0d1a2e",borderRadius:8,padding:8}}><div style={{color:"#4ade80",fontWeight:700,fontSize:10,marginBottom:3}}>⚡ Function</div><div style={{fontSize:10,color:"#d0d8e8",whiteSpace:"pre-line"}}>{cell.func}</div></div>
+          </div>
+        </div>
+      ))}
+      <SectionTitle color="#f59e0b">⚖️ Duodenum vs Jejunum vs Ileum</SectionTitle>
+      <Table headers={["","Duodenum","Jejunum","Ileum"]}
+        rows={[["Villi","Broad, leaf-shaped","Narrow, tongue-shape","Fewer + narrow"],["Goblet Cells","Few","More","Abundant"],["Submucosa","Brunner's glands ✅","لا شيء مميز","Peyer's patches ✅"],["Outer layer","Adventitia (retroperitoneal)","Serosa","Serosa"]]}
+        colors={["#60a5fa","#4ade80","#a78bfa","#f59e0b"]} />
+      <SectionTitle color="#34d399">📏 Surface Area Amplification</SectionTitle>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:10}}>
+        {[{name:"Plicae Circularis",fold:"× 3",color:"#60a5fa"},{name:"Intestinal Villi",fold:"× 10",color:"#4ade80"},{name:"Microvilli",fold:"× 30",color:"#f59e0b"}].map((s,i)=>(
+          <div key={i} style={{background:`${s.color}15`,border:`2px solid ${s.color}40`,borderRadius:12,padding:12,textAlign:"center"}}>
+            <div style={{fontWeight:900,color:s.color,fontSize:28,marginBottom:4}}>{s.fold}</div>
+            <div style={{fontWeight:700,color:s.color,fontSize:11}}>{s.name}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+const histoContents = [HistoSalivary, HistoEsophagus, HistoStomach, HistoSmallInt];
+
+function HistologyApp() {
+  const [active, setActive] = useState(0);
+  const Content = histoContents[active];
+  return (
+    <div>
+      <div style={{ display:"flex", gap:6, flexWrap:"wrap", justifyContent:"center", marginBottom:16 }}>
+        {histoTopics.map(t => (
+          <button key={t.id} onClick={() => setActive(t.id)} style={{
+            background: active===t.id ? "linear-gradient(135deg,#f87171,#dc2626)" : "rgba(255,255,255,0.05)",
+            border: active===t.id ? "2px solid #f87171" : "2px solid rgba(255,255,255,0.1)",
+            borderRadius:10, padding:"7px 14px", color: active===t.id ? "#fff" : "#94a3b8",
+            cursor:"pointer", fontSize:11, fontWeight:700, fontFamily:"inherit", whiteSpace:"nowrap",
+            boxShadow: active===t.id ? "0 4px 15px rgba(248,113,113,0.4)" : "none", transition:"all 0.2s"
+          }}>{t.label}</button>
+        ))}
+      </div>
+      <Content />
+    </div>
+  );
+}
+
+// ===================== HOME SCREEN =====================
+const subjects = [
+  {
+    id: "biochem", label: "Biochemistry", icon: "🧬",
+    color: "#3b82f6", desc: "Carbs · Glycolysis · TCA · Gluconeogenesis · Glycogen · Lipids · Nitrogen",
+    topics: "7 topics", gradient: "linear-gradient(135deg, #1e3a8a, #1d4ed8)"
+  },
+  {
+    id: "anatomy", label: "Anatomy", icon: "🫀",
+    color: "#10b981", desc: "Submandibular · Inguinal · Esophagus · Stomach · Duodenum · Pancreas",
+    topics: "6 topics", gradient: "linear-gradient(135deg, #064e3b, #059669)"
+  },
+  {
+    id: "physiology", label: "Physiology", icon: "⚡",
+    color: "#8b5cf6", desc: "Regulation · Oropharynx · Small Intestine · Hormones · Absorption",
+    topics: "5 topics", gradient: "linear-gradient(135deg, #2e1065, #6d28d9)"
+  },
+  {
+    id: "histology", label: "Histology", icon: "🔬",
+    color: "#f87171", desc: "Salivary Glands · Esophagus · Stomach · Small Intestine",
+    topics: "4 topics", gradient: "linear-gradient(135deg, #7f1d1d, #dc2626)"
+  },
+];
+
+function HomeScreen({ onSelect }) {
+  return (
+    <div style={{ minHeight:"100vh", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:24 }}>
+      <div style={{ textAlign:"center", marginBottom:40 }}>
+        <div style={{ fontSize:48, marginBottom:12 }}>📚</div>
+        <div style={{ fontSize:28, fontWeight:900, color:"#fff", marginBottom:8 }}>ZNU — GIT Module</div>
+        <div style={{ fontSize:16, color:"#94a3b8", marginBottom:4 }}>Digestive System & Nutrition</div>
+        <div style={{ fontSize:13, color:"#60a5fa" }}>اختار المادة اللي عاوز تذاكرها 👇</div>
+      </div>
+      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:16, maxWidth:700, width:"100%" }}>
+        {subjects.map(s=>(
+          <button key={s.id} onClick={()=>onSelect(s.id)} style={{
+            background: s.gradient,
+            border: `2px solid ${s.color}60`,
+            borderRadius:20, padding:"28px 24px",
+            cursor:"pointer", textAlign:"right",
+            fontFamily:"inherit",
+            boxShadow: `0 8px 32px ${s.color}30`,
+            transition:"all 0.25s",
+          }}
+            onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-4px)"; e.currentTarget.style.boxShadow=`0 16px 40px ${s.color}50`; }}
+            onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow=`0 8px 32px ${s.color}30`; }}
+          >
+            <div style={{ fontSize:40, marginBottom:10 }}>{s.icon}</div>
+            <div style={{ fontWeight:900, color:"#fff", fontSize:20, marginBottom:6 }}>{s.label}</div>
+            <div style={{ fontSize:11, color:"rgba(255,255,255,0.7)", marginBottom:10, lineHeight:1.6 }}>{s.desc}</div>
+            <div style={{ background:`${s.color}30`, border:`1px solid ${s.color}60`, borderRadius:20, padding:"4px 12px", fontSize:11, color:s.color, fontWeight:700, display:"inline-block" }}>{s.topics}</div>
+          </button>
+        ))}
+      </div>
+      <div style={{ marginTop:32, fontSize:12, color:"#475569", textAlign:"center" }}>
+        ZNU · Digestive System & Nutrition · GIT Module 2026
+      </div>
+    </div>
+  );
+}
+
+// ===================== MAIN APP =====================
+const subjectApps = {
+  biochem: { comp: BiochemApp, label:"Biochemistry", icon:"🧬", color:"#3b82f6" },
+  anatomy: { comp: AnatomyApp, label:"Anatomy", icon:"🫀", color:"#10b981" },
+  physiology: { comp: PhysiologyApp, label:"Physiology", icon:"⚡", color:"#8b5cf6" },
+  histology: { comp: HistologyApp, label:"Histology", icon:"🔬", color:"#f87171" },
+};
+function App() {
+  const [selected, setSelected] = useState(null)
+
+  const subjectApps = {
+    biochem: { comp: BiochemApp, label:"Biochemistry", icon:"🧬", color:"#3b82f6" },
+    anatomy: { comp: AnatomyApp, label:"Anatomy", icon:"🫀", color:"#10b981" },
+    physiology: { comp: PhysiologyApp, label:"Physiology", icon:"⚡", color:"#8b5cf6" },
+    histology: { comp: HistologyApp, label:"Histology", icon:"🔬", color:"#f87171" },
+  }
+
+  const subj = selected ? subjectApps[selected] : null
+  const SubjectComp = subj ? subj.comp : null
+
+  return (
+    <div style={{ minHeight:"100vh", background:"linear-gradient(135deg,#0a0f1e,#0d1a2e,#0a1628)", fontFamily:"'Segoe UI',sans-serif", padding:"0 0 40px 0" }}>
+      {selected && (
+        <div style={{ background:"#1a2a4a", borderBottom:"2px solid #2a4a7a", padding:"14px 24px", position:"sticky", top:0, zIndex:100, display:"flex", alignItems:"center", gap:12 }}>
+          <button onClick={() => setSelected(null)} style={{ background:"rgba(255,255,255,0.08)", border:"2px solid rgba(255,255,255,0.15)", borderRadius:10, padding:"6px 14px", color:"#94a3b8", cursor:"pointer", fontSize:12, fontWeight:700 }}>
+            ← Back
+          </button>
+          <div style={{ flex:1, textAlign:"center", color:"#fff", fontWeight:900, fontSize:18 }}>{subj.icon} {subj.label}</div>
+          <div style={{ width:60 }} />
+        </div>
+      )}
+
+      {!selected ? (
+        <div style={{ padding:"24px 16px", maxWidth:700, margin:"0 auto" }}>
+          <div style={{ textAlign:"center", padding:"40px 0 30px" }}>
+            <div style={{ fontSize:48, marginBottom:12 }}>📚</div>
+            <div style={{ fontSize:28, fontWeight:900, color:"#fff", marginBottom:8 }}>GIT End Module</div>
+            <div style={{ fontSize:16, color:"#94a3b8" }}>Select a subject to start reviewing</div>
+          </div>
+          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:16 }}>
+            {Object.entries(subjectApps).map(([key, s]) => (
+              <div key={key} onClick={() => setSelected(key)} style={{
+                background:`linear-gradient(135deg,${s.color}20,${s.color}10)`,
+                border:`2px solid ${s.color}40`,
+                borderRadius:20, padding:"28px 16px",
+                textAlign:"center", cursor:"pointer",
+                transition:"all 0.2s"
+              }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = s.color; e.currentTarget.style.transform = "translateY(-4px)" }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = `${s.color}40`; e.currentTarget.style.transform = "translateY(0)" }}>
+                <div style={{ fontSize:36, marginBottom:10 }}>{s.icon}</div>
+                <div style={{ fontWeight:900, color:"#fff", fontSize:16 }}>{s.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+              ) : (
+        <div style={{ maxWidth:900, margin:"0 auto", padding:"20px 16px" }}>
+          <SubjectComp />
+        </div>
+      )}
+      <div style={{ textAlign:"center", padding:"20px", borderTop:"1px solid #1e3a5f", color:"#475569", fontSize:13, fontWeight:600, marginTop:40 }}>
+        Made with ❤️ by Ahmed Lasheen · ZNU Future Doctors
+      </div>
+    </div>
+  )
+}
+ReactDOM.createRoot(document.getElementById('root')).render(<App />)
+</script>
+</body>
+</html>

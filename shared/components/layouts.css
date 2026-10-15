@@ -1,0 +1,208 @@
+/* LAYOUTS: numbered sections, the at-a-glance strip, step flows and comparison cards.
+
+   Section (numbers and colours are added automatically):
+   <section class="zp-section"><h2 class="zp-h2">Title</h2> ... </section>
+
+   At a glance:
+   <div class="zp-glance">
+     <div class="zp-glance-title">At a glance</div>
+     <p class="zp-glance-lead">One sentence.</p>
+     <div class="zp-glance-grid">
+       <div class="zp-glance-item"><div class="zp-glance-value">5</div><div class="zp-glance-label">what it counts</div></div>
+     </div>
+   </div>
+
+   Step flow:
+   <ol class="zp-flow"><li><div class="zp-flow-title">Step</div><p>Text.</p></li></ol>
+
+   Comparison cards:
+   <div class="zp-compare"><div class="zp-compare-card"><h4 class="zp-compare-title">Name</h4><ul><li>Point</li></ul></div></div> */
+
+/* Numbered sections */
+main { counter-reset: zp-section; }
+
+.zp-section {
+  --sec: var(--zp-accent);
+  margin-top: var(--zp-space-5);
+}
+.zp-section:nth-of-type(3n+2) { --sec: var(--zp-clin); }
+.zp-section:nth-of-type(3n)   { --sec: var(--zp-hy); }
+
+.zp-section > h2.zp-h2 {
+  position: relative;
+  border-bottom: 1px solid var(--zp-border);
+  padding-bottom: var(--zp-space-2);
+  margin-bottom: var(--zp-space-3);
+}
+
+.zp-section > h2.zp-h2::before {
+  counter-increment: zp-section;
+  content: counter(zp-section, decimal-leading-zero);
+  display: block;
+  margin-bottom: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: var(--sec);
+}
+
+.zp-section > h2.zp-h2::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 56px;
+  height: 3px;
+  border-radius: 3px;
+  background: var(--sec);
+}
+
+.zp-section h3.zp-h3 { color: var(--sec); }
+
+/* At a glance */
+.zp-glance {
+  background: var(--zp-surface);
+  border: 1px solid var(--zp-border);
+  border-radius: var(--zp-radius-lg);
+  padding: var(--zp-space-3);
+  margin-top: var(--zp-space-2);
+}
+
+.zp-glance-title {
+  margin-bottom: var(--zp-space-1);
+  font-family: var(--zp-font);
+  font-weight: 700;
+  font-size: 11.5px;
+  line-height: 1.3;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--zp-accent);
+}
+
+.zp-glance-lead {
+  margin: 0 0 var(--zp-space-3);
+  max-width: 760px;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.55;
+}
+
+.zp-glance-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: var(--zp-space-2);
+}
+
+.zp-glance-item {
+  background: var(--zp-accent-soft);
+  border-radius: var(--zp-radius-md);
+  padding: var(--zp-space-2);
+}
+
+.zp-glance-value {
+  font-family: var(--zp-font);
+  font-weight: 800;
+  font-size: clamp(24px, 4vw, 32px);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--zp-accent);
+}
+
+.zp-glance-label {
+  margin-top: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--zp-muted);
+}
+
+/* Step flow */
+.zp-flow {
+  list-style: none;
+  margin: var(--zp-space-3) 0;
+  padding: 0;
+  counter-reset: zp-step;
+}
+
+.zp-flow > li {
+  position: relative;
+  margin: 0;
+  padding: 0 0 var(--zp-space-3) 56px;
+  max-width: 760px;
+  counter-increment: zp-step;
+}
+
+.zp-flow > li::before {
+  content: counter(zp-step);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--zp-accent);
+  color: var(--zp-bg);
+  font-family: var(--zp-font);
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1;
+}
+
+.zp-flow > li::after {
+  content: "";
+  position: absolute;
+  left: 18px;
+  top: 46px;
+  bottom: 8px;
+  width: 2px;
+  background: var(--zp-border);
+}
+
+.zp-flow > li:last-child { padding-bottom: 0; }
+.zp-flow > li:last-child::after { display: none; }
+
+.zp-flow-title {
+  display: flex;
+  align-items: center;
+  min-height: 38px;
+  font-family: var(--zp-font);
+  font-weight: 700;
+  font-size: 17px;
+  line-height: 1.3;
+}
+
+.zp-flow p { margin: 0 0 4px; }
+
+/* Comparison cards */
+.zp-compare {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--zp-space-2);
+  margin: var(--zp-space-3) 0;
+}
+
+.zp-compare-card {
+  --card: var(--zp-accent);
+  background: var(--zp-surface);
+  border: 1px solid var(--zp-border);
+  border-top: 4px solid var(--card);
+  border-radius: var(--zp-radius-lg);
+  padding: var(--zp-space-3) var(--zp-space-3) var(--zp-space-2);
+}
+.zp-compare-card:nth-child(2) { --card: var(--zp-clin); }
+.zp-compare-card:nth-child(3) { --card: var(--zp-hy); }
+
+.zp-compare-title {
+  margin: 0 0 var(--zp-space-1);
+  font-family: var(--zp-font);
+  font-weight: 700;
+  font-size: 17px;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--card);
+}
+
+.zp-compare-card ul { margin: 0; padding-left: 20px; }
+.zp-compare-card p { max-width: none; }

@@ -6,5 +6,9 @@
 @import url("core/theme.css");
 @import url("core/content.css");
 @import url("core/header.css");
+@import url("components/boxes.css");
+@import url("components/layouts.css");
+@import url("components/recall.css");
 @import url("theme-switch/theme-switch.css");
+@import url("progress/progress.css");
 @import url("footer/footer.css");

@@ -27,8 +27,13 @@ var FILES = [
   'core/content.css',
   'core/header.css',
   'core/header.js',
+  'components/boxes.css',
+  'components/layouts.css',
+  'components/recall.css',
   'theme-switch/theme-switch.css',
   'theme-switch/theme-switch.js',
+  'progress/progress.css',
+  'progress/progress.js',
   'footer/footer.css',
   'footer/footer.js'
 ]
@@ -67,11 +72,11 @@ Promise.all(FILES.map(load)).then(function (texts) {
     byName['core/font.css'].length > 20000)
 
   var imports = (byName['znu-pulse.css'].match(/@import\s+url\(\s*["']?[^"')\s;]+["']?\s*\)\s*;/g) || []).length
-  show('znu-pulse.css lists ' + imports + ' style files (should be 6)', imports === 6)
+  show('znu-pulse.css lists ' + imports + ' style files (should be 10)', imports === 10)
 
   var match = byName['znu-pulse.js'].match(/ZNU_PULSE_FILES\s*=\s*\[([^\]]*)\]/)
   var scripts = match ? (match[1].match(/["'][^"']+["']/g) || []).length : 0
-  show('znu-pulse.js lists ' + scripts + ' script files (should be 3)', scripts === 3)
+  show('znu-pulse.js lists ' + scripts + ' script files (should be 4)', scripts === 4)
 
   var summary = document.getElementById('summary')
   summary.innerHTML = problems === 0

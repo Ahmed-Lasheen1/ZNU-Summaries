@@ -10,6 +10,14 @@
   --zp-accent: #315f8f;
   --zp-accent-soft: rgba(49, 95, 143, 0.08);
 
+  /* Extra colours for the box types, cards and section accents */
+  --zp-hy: #96610f;
+  --zp-hy-soft: rgba(245, 158, 11, 0.14);
+  --zp-clin: #0f766e;
+  --zp-clin-soft: rgba(20, 184, 166, 0.11);
+  --zp-warn: #be123c;
+  --zp-warn-soft: rgba(244, 63, 94, 0.09);
+
   --zp-glass-bg: linear-gradient(160deg, rgba(255,255,255,0.65), rgba(255,255,255,0.35));
   --zp-glass-border: rgba(255,255,255,0.6);
   --zp-glass-shadow:
@@ -41,6 +49,13 @@ html[data-theme="dark"] {
   --zp-border: rgba(255, 255, 255, 0.12);
   --zp-accent: #8bb8e8;
   --zp-accent-soft: rgba(139, 184, 232, 0.10);
+
+  --zp-hy: #f0b35a;
+  --zp-hy-soft: rgba(240, 179, 90, 0.12);
+  --zp-clin: #4fd1c5;
+  --zp-clin-soft: rgba(79, 209, 197, 0.12);
+  --zp-warn: #fb7185;
+  --zp-warn-soft: rgba(251, 113, 133, 0.12);
 
   --zp-glass-bg: linear-gradient(160deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03));
   --zp-glass-border: rgba(255,255,255,0.10);

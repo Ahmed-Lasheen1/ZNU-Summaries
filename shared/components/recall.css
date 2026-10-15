@@ -1,0 +1,82 @@
+/* RECALL: tap-to-reveal quick checks. Works without any script.
+
+   <details class="zp-recall">
+     <summary>Question?</summary>
+     <div class="zp-recall-answer"><p>Answer.</p></div>
+   </details> */
+
+.zp-recall {
+  background: var(--zp-surface);
+  border: 1px solid var(--zp-border);
+  border-radius: var(--zp-radius-md);
+  margin: var(--zp-space-1) 0;
+  overflow: hidden;
+}
+
+.zp-recall summary {
+  position: relative;
+  display: block;
+  list-style: none;
+  cursor: pointer;
+  padding: 14px 56px 14px 18px;
+  font-family: var(--zp-font);
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.zp-recall summary::-webkit-details-marker { display: none; }
+
+.zp-recall summary::before {
+  content: "Quick check";
+  display: block;
+  margin-bottom: 2px;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--zp-accent);
+}
+
+.zp-recall summary::after {
+  content: "+";
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 26px;
+  height: 26px;
+  border: 1.5px solid var(--zp-accent);
+  border-radius: 50%;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 23px;
+  color: var(--zp-accent);
+}
+
+.zp-recall[open] summary::after { content: "\2212"; }
+
+.zp-recall summary:focus-visible {
+  outline: 2px solid var(--zp-accent);
+  outline-offset: -2px;
+}
+
+.zp-recall-answer {
+  padding: 14px 18px 16px;
+  border-top: 1px solid var(--zp-border);
+  background: var(--zp-accent-soft);
+}
+
+.zp-recall-answer::before {
+  content: "Answer";
+  display: block;
+  margin-bottom: 4px;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--zp-accent);
+}
+
+.zp-recall-answer p,
+.zp-recall-answer ul { margin: 0; max-width: none; }

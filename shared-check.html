@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shared files check</title>
+<style>
+  body { font-family: -apple-system, sans-serif; padding: 16px; line-height: 1.5; }
+  li { margin-bottom: 6px; word-break: break-all; }
+  .ok { color: #0a7a2f; }
+  .bad { color: #b42318; font-weight: 700; }
+</style>
+</head>
+<body>
+<h1>Shared files check</h1>
+<ul id="results"></ul>
+<p id="summary"><strong>Checking...</strong></p>
+
+<script>
+var BASE = location.href.replace(/[^\/]*$/, '') + 'shared/'
+var FILES = [
+  'version.txt',
+  'znu-pulse.css',
+  'znu-pulse.js',
+  'core/font.css',
+  'core/theme.css',
+  'core/content.css',
+  'core/header.css',
+  'core/header.js',
+  'theme-switch/theme-switch.css',
+  'theme-switch/theme-switch.js',
+  'footer/footer.css',
+  'footer/footer.js'
+]
+
+var list = document.getElementById('results')
+var problems = 0
+
+function show(text, ok) {
+  var item = document.createElement('li')
+  item.className = ok ? 'ok' : 'bad'
+  item.textContent = (ok ? 'OK    ' : 'FAIL  ') + text
+  list.appendChild(item)
+  if (!ok) problems++
+}
+
+function load(file) {
+  return fetch(BASE + file, { cache: 'no-store' })
+    .then(function (response) {
+      return response.text().then(function (text) {
+        var ok = response.ok && text.length > 0
+        show(file + ' (status ' + response.status + ', ' + text.length + ' characters)', ok)
+        return ok ? text : ''
+      })
+    })
+    .catch(function () {
+      show(file + ' (could not load)', false)
+      return ''
+    })
+}
+
+Promise.all(FILES.map(load)).then(function (texts) {
+  var byName = {}
+  FILES.forEach(function (file, index) { byName[file] = texts[index] })
+
+  show('core/font.css holds the real font (' + byName['core/font.css'].length + ' characters, should be over 20000)',
+    byName['core/font.css'].length > 20000)
+
+  var imports = (byName['znu-pulse.css'].match(/@import\s+url\(\s*["']?[^"')\s;]+["']?\s*\)\s*;/g) || []).length
+  show('znu-pulse.css lists ' + imports + ' style files (should be 6)', imports === 6)
+
+  var match = byName['znu-pulse.js'].match(/ZNU_PULSE_FILES\s*=\s*\[([^\]]*)\]/)
+  var scripts = match ? (match[1].match(/["'][^"']+["']/g) || []).length : 0
+  show('znu-pulse.js lists ' + scripts + ' script files (should be 3)', scripts === 3)
+
+  var summary = document.getElementById('summary')
+  summary.innerHTML = problems === 0
+    ? '<strong class="ok">Everything is fine.</strong>'
+    : '<strong class="bad">' + problems + ' problem(s). Fix the FAIL lines.</strong>'
+})
+</script>
+</body>
+</html>

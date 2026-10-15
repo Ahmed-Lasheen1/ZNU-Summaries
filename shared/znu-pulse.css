@@ -1,0 +1,10 @@
+/* ZNU Pulse shared styles: entry file.
+   Every lesson links only to this file.
+   To add or remove a shared style file, edit the list below.
+   Keep one import per line, written exactly like these. */
+@import url("core/font.css");
+@import url("core/theme.css");
+@import url("core/content.css");
+@import url("core/header.css");
+@import url("theme-switch/theme-switch.css");
+@import url("footer/footer.css");

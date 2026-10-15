@@ -1,0 +1,133 @@
+/* THEME: colors, spacing, radius, type sizes and page width.
+   Edit this file to change the look of every lesson. */
+
+:root {
+  --zp-bg: #f5f7fa;
+  --zp-surface: #ffffff;
+  --zp-text: #101828;
+  --zp-muted: #667085;
+  --zp-border: rgba(16, 24, 40, 0.12);
+  --zp-accent: #315f8f;
+  --zp-accent-soft: rgba(49, 95, 143, 0.08);
+
+  --zp-glass-bg: linear-gradient(160deg, rgba(255,255,255,0.65), rgba(255,255,255,0.35));
+  --zp-glass-border: rgba(255,255,255,0.6);
+  --zp-glass-shadow:
+    0 1px 0 rgba(255,255,255,0.4) inset,
+    0 -1px 0 rgba(16,24,40,0.10) inset,
+    0 4px 8px -2px rgba(16,24,40,0.18);
+  --zp-glass-hover: rgba(16,24,40,0.06);
+
+  --zp-space-1: 8px;
+  --zp-space-2: 16px;
+  --zp-space-3: 24px;
+  --zp-space-4: 32px;
+  --zp-space-5: 48px;
+  --zp-space-6: 80px;
+
+  --zp-radius-sm: 8px;
+  --zp-radius-md: 10px;
+  --zp-radius-lg: 14px;
+  --zp-radius-pill: 999px;
+
+  --zp-font: 'Sora', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+html[data-theme="dark"] {
+  --zp-bg: #0a0f1e;
+  --zp-surface: #111827;
+  --zp-text: #f4f7fb;
+  --zp-muted: #aab4c3;
+  --zp-border: rgba(255, 255, 255, 0.12);
+  --zp-accent: #8bb8e8;
+  --zp-accent-soft: rgba(139, 184, 232, 0.10);
+
+  --zp-glass-bg: linear-gradient(160deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03));
+  --zp-glass-border: rgba(255,255,255,0.10);
+  --zp-glass-shadow:
+    0 1px 0 rgba(255,255,255,0.04) inset,
+    0 -1px 0 rgba(0,0,0,0.12) inset,
+    0 4px 8px -2px rgba(0,0,0,0.40);
+  --zp-glass-hover: rgba(255,255,255,0.08);
+}
+
+/* Basics */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--zp-bg);
+  color: var(--zp-text);
+  font-family: var(--zp-font);
+  font-size: 16px;
+  line-height: 1.7;
+  font-weight: 400;
+}
+
+/* Text. Paragraphs and list items stay readable on wide screens. */
+p, li { font-size: 16px; max-width: 760px; }
+p { margin: 0 0 var(--zp-space-2); }
+ul, ol { margin: 0 0 var(--zp-space-2); padding-left: 24px; }
+li { margin: 0 0 4px; }
+
+h2.zp-h2 {
+  font-family: var(--zp-font);
+  font-weight: 700;
+  font-size: clamp(22px, 3vw, 28px);
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  margin: 0 0 var(--zp-space-2);
+  padding-bottom: var(--zp-space-1);
+  border-bottom: 2px solid var(--zp-border);
+}
+
+h3.zp-h3 {
+  font-family: var(--zp-font);
+  font-weight: 600;
+  font-size: 19px;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  margin: var(--zp-space-4) 0 var(--zp-space-1);
+  color: var(--zp-accent);
+}
+
+h4.zp-h4 {
+  font-family: var(--zp-font);
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 1.3;
+  margin: var(--zp-space-3) 0 var(--zp-space-1);
+}
+
+.zp-muted, figcaption {
+  font-family: var(--zp-font);
+  font-weight: 500;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--zp-muted);
+}
+
+/* Page width */
+main {
+  width: 100%;
+  margin: 0 auto;
+  padding: var(--zp-space-1) var(--zp-space-2) var(--zp-space-3);
+}
+
+@media (max-width: 600px) {
+  main { padding: var(--zp-space-1) var(--zp-space-2) var(--zp-space-3); }
+}
+
+@media (min-width: 601px) and (max-width: 1023px) {
+  main { width: 90%; padding: var(--zp-space-1) 0 var(--zp-space-3); }
+}
+
+@media (min-width: 1024px) and (max-width: 1439px) {
+  main { width: 92%; max-width: 1300px; padding: var(--zp-space-1) 0 var(--zp-space-3); }
+}
+
+@media (min-width: 1440px) {
+  main { width: 88%; max-width: 1500px; padding: var(--zp-space-1) 0 var(--zp-space-3); }
+}

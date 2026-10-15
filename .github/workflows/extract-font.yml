@@ -1,0 +1,58 @@
+name: Extract Sora font
+
+on:
+  workflow_dispatch:
+    inputs:
+      lesson_path:
+        description: "Path of an existing lesson file in this repo, for example summaries/module/subject/lesson/index.html"
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Copy the font block into shared/core/font.css
+        env:
+          LESSON_PATH: ${{ inputs.lesson_path }}
+        run: |
+          python3 - <<'PY'
+          import os, re, sys
+
+          path = os.environ["LESSON_PATH"].strip().lstrip("/")
+          if not os.path.isfile(path):
+              sys.exit("Lesson file not found: " + path)
+
+          html = open(path, encoding="utf-8").read()
+          blocks = re.findall(r"@font-face\s*\{[^}]*\}", html)
+          font = None
+          for block in blocks:
+              if re.search(r"font-family:\s*['\"]Sora['\"]", block) and "base64," in block:
+                  font = block
+                  break
+
+          if font is None:
+              sys.exit("No embedded Sora font block found in that lesson")
+          if len(font) < 20000:
+              sys.exit("The font block looks too small, nothing was written")
+
+          os.makedirs("shared/core", exist_ok=True)
+          with open("shared/core/font.css", "w", encoding="utf-8") as out:
+              out.write("/* Sora font, embedded. Copied from an existing lesson. Do not edit by hand. */\n")
+              out.write(font + "\n")
+
+          print("Wrote shared/core/font.css with " + str(len(font)) + " characters")
+          PY
+
+      - name: Commit the font file
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add shared/core/font.css
+          git diff --cached --quiet || git commit -m "Add shared Sora font file"
+          git push
+          

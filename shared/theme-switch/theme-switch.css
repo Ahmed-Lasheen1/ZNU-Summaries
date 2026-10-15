@@ -1,0 +1,50 @@
+/* THEME SWITCH: the dark / light button in the top corner. */
+
+.zp-theme-toggle {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 1000;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--zp-font);
+  border: 1px solid var(--zp-border);
+  border-radius: var(--zp-radius-pill);
+  background: var(--zp-surface);
+  color: var(--zp-text);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transition:
+    background-color 180ms ease,
+    color 180ms ease,
+    border-color 180ms ease,
+    transform 180ms ease;
+}
+
+.zp-theme-toggle:hover { transform: translateY(-1px); }
+
+.zp-theme-toggle:focus-visible {
+  outline: 2px solid var(--zp-accent);
+  outline-offset: 3px;
+}
+
+.zp-theme-toggle svg {
+  width: 19px;
+  height: 19px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.zp-moon-icon { display: none; }
+html[data-theme="dark"] .zp-sun-icon { display: none; }
+html[data-theme="dark"] .zp-moon-icon { display: block; }
+
+@media (max-width: 600px) {
+  .zp-theme-toggle { top: 14px; right: 14px; width: 40px; height: 40px; }
+}

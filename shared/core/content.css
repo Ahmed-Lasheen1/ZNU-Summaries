@@ -1,0 +1,98 @@
+/* CONTENT: callouts, tables, overview box, key points and the lesson illustration. */
+
+.zp-callout {
+  border-left: 3px solid var(--zp-accent);
+  background: var(--zp-accent-soft);
+  border-radius: var(--zp-radius-sm);
+  padding: var(--zp-space-2) var(--zp-space-3);
+  margin: var(--zp-space-2) 0;
+}
+.zp-callout p { margin: 0; max-width: none; }
+.zp-callout p + p { margin-top: var(--zp-space-1); }
+
+.zp-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  margin: var(--zp-space-2) 0;
+  border: 1px solid var(--zp-border);
+  border-radius: var(--zp-radius-lg);
+}
+
+table.zp-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 480px;
+  font-size: 14.5px;
+}
+
+table.zp-table th, table.zp-table td {
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--zp-border);
+  vertical-align: top;
+}
+
+table.zp-table th {
+  background: var(--zp-accent-soft);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+table.zp-table tr:last-child td { border-bottom: none; }
+
+.zp-overview,
+.zp-keypoints {
+  background: var(--zp-surface);
+  border: 1px solid var(--zp-border);
+  border-radius: var(--zp-radius-lg);
+  padding: var(--zp-space-3) var(--zp-space-3);
+}
+
+.zp-overview { background: var(--zp-accent-soft); }
+
+.zp-overview p:last-child { margin-bottom: 0; }
+
+.zp-keypoints-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 4px 40px;
+}
+
+.zp-keypoints-group h4.zp-h4 { margin-top: 0; }
+
+@media (min-width: 900px) {
+  .zp-keypoints-grid { grid-template-columns: repeat(2, 1fr); row-gap: 22px; }
+}
+
+@media (min-width: 1440px) {
+  .zp-keypoints-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+.zp-lesson-illustration {
+  width: 100%;
+  margin-top: var(--zp-space-4);
+  display: flex;
+  justify-content: center;
+}
+
+.zp-lesson-illustration figure {
+  margin: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.zp-lesson-illustration img {
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  border-radius: var(--zp-radius-lg);
+  border: 1px solid var(--zp-border);
+}
+
+.zp-lesson-illustration figcaption {
+  margin-top: var(--zp-space-1);
+  text-align: center;
+}

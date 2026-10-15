@@ -1,0 +1,99 @@
+/* FOOTER: the ZNU Pulse wordmark, credit line, action pills and copyright. */
+
+.zp-footer {
+  width: 100%;
+  margin-top: var(--zp-space-5);
+  border-top: 1px solid var(--zp-border);
+}
+
+.zp-footer-inner {
+  width: min(100% - 40px, 1400px);
+  margin: 0 auto;
+  padding: 54px 0 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.zp-footer-brand {
+  font-family: var(--zp-font);
+  font-size: clamp(36px, 10vw, 96px);
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  background: linear-gradient(135deg, var(--zp-muted), var(--zp-accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  opacity: 0.35;
+}
+
+.zp-footer-credit {
+  margin-top: var(--zp-space-1);
+  font-family: var(--zp-font);
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 1.5;
+  opacity: 0.75;
+}
+
+.zp-footer-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: var(--zp-space-3);
+}
+
+.zp-footer-pill {
+  min-height: 38px;
+  padding: 0 15px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--zp-font);
+  font-weight: 600;
+  font-size: 13.5px;
+  border-radius: var(--zp-radius-pill);
+  background: var(--zp-glass-bg);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--zp-glass-border);
+  box-shadow: var(--zp-glass-shadow);
+  color: var(--zp-text);
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    transform 180ms ease,
+    background-color 180ms ease;
+}
+
+.zp-footer-pill:hover {
+  background: var(--zp-glass-hover);
+  transform: translateY(-1px);
+}
+
+.zp-footer-pill:focus-visible {
+  outline: 2px solid var(--zp-accent);
+  outline-offset: 3px;
+}
+
+.zp-footer-pill svg { flex-shrink: 0; }
+
+.zp-footer-copy {
+  margin-top: var(--zp-space-3);
+  font-family: var(--zp-font);
+  font-weight: 500;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--zp-muted);
+}
+
+@media (max-width: 600px) {
+  .zp-footer { margin-top: var(--zp-space-4); }
+  .zp-footer-inner { width: min(100% - 28px, 1400px); padding: 42px 0 24px; }
+  .zp-footer-actions { width: 100%; }
+}

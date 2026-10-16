@@ -77,10 +77,7 @@ html { -webkit-text-size-adjust: 100%; }
 
 body {
   margin: 0;
-  background:
-    radial-gradient(900px 480px at 8% 0px, var(--zp-accent-soft), transparent 70%),
-    radial-gradient(800px 440px at calc(100% - 40px) 120px, var(--zp-vio-soft), transparent 70%),
-    var(--zp-bg);
+  background: var(--zp-bg);
   color: var(--zp-text);
   font-family: var(--zp-font);
   font-size: 16px;

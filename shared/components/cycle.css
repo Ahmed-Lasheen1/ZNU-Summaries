@@ -1,4 +1,5 @@
 /* CYCLE: a circular diagram for loops and cycles (3 to 6 steps).
+   The coloured ring, the arrows and the travelling dot are drawn by cycle.js.
 
    <div class="zp-cycle" style="--n:4">
      <div class="zp-cycle-node" style="--i:0">Step one</div>
@@ -19,20 +20,43 @@
   counter-reset: zp-cyc;
 }
 
+/* Simple ring, only used if the script does not run */
 .zp-cycle::before {
   content: "";
   position: absolute;
   inset: calc(50% - var(--r));
-  border: 2px dashed var(--zp-muted);
+  border: 3px solid var(--zp-border);
   border-radius: 50%;
-  opacity: 0.55;
-  animation: zp-spin 90s linear infinite;
+}
+.zp-cycle.zp-cycle-ready::before { display: none; }
+
+.zp-cycle-svg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.zp-cycle-seg {
+  fill: none;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+}
+
+.zp-cycle-dot {
+  fill: var(--zp-surface);
+  stroke: var(--zp-text);
+  stroke-width: 0.7;
 }
 
 .zp-cycle-node {
   --n-col: var(--zp-accent);
   --n-bg: var(--zp-accent-soft);
   position: absolute;
+  z-index: 1;
   left: calc(50% + var(--r) * sin(calc(360deg * var(--i) / var(--n))));
   top: calc(50% - var(--r) * cos(calc(360deg * var(--i) / var(--n))));
   transform: translate(-50%, -50%);
@@ -41,15 +65,15 @@
   gap: 8px;
   max-width: 36%;
   padding: 6px 12px 6px 6px;
-  border: 1.5px solid var(--n-col);
-  border-radius: 22px;
+  border: 2px solid var(--n-col);
+  border-radius: 24px;
   background: linear-gradient(var(--n-bg), var(--n-bg)), var(--zp-surface);
   font-family: var(--zp-font);
-  font-weight: 600;
+  font-weight: 700;
   font-size: 13px;
   line-height: 1.25;
   color: var(--zp-text);
-  box-shadow: 0 6px 16px -10px rgba(16, 24, 40, 0.5);
+  box-shadow: 0 8px 18px -10px rgba(16, 24, 40, 0.55);
 }
 .zp-cycle-node:nth-child(4n+2) { --n-col: var(--zp-clin); --n-bg: var(--zp-clin-soft); }
 .zp-cycle-node:nth-child(4n+3) { --n-col: var(--zp-hy);   --n-bg: var(--zp-hy-soft); }
@@ -59,48 +83,54 @@
   counter-increment: zp-cyc;
   content: counter(zp-cyc);
   flex: 0 0 auto;
-  width: 24px;
-  height: 24px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   display: grid;
   place-items: center;
   background: var(--n-col);
   color: var(--zp-bg);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 800;
   line-height: 1;
 }
 
 .zp-cycle-center {
   position: absolute;
+  z-index: 1;
   left: 50%;
   top: 50%;
-  width: 24%;
+  width: 25%;
   aspect-ratio: 1;
   transform: translate(-50%, -50%);
   display: grid;
   place-items: center;
   padding: 8px;
+  border: 4px solid transparent;
   border-radius: 50%;
-  background: radial-gradient(circle, var(--zp-accent-soft), var(--zp-clin-soft));
-  border: 1px solid var(--zp-border);
+  background:
+    linear-gradient(var(--zp-surface), var(--zp-surface)) padding-box,
+    conic-gradient(var(--zp-accent), var(--zp-clin), var(--zp-hy), var(--zp-vio), var(--zp-accent)) border-box;
+  box-shadow: 0 10px 26px -14px rgba(16, 24, 40, 0.6);
   text-align: center;
   font-family: var(--zp-font);
   font-weight: 800;
   font-size: 12px;
   line-height: 1.25;
-  color: var(--zp-accent);
+  color: var(--zp-text);
 }
 
-@keyframes zp-spin {
-  to { transform: rotate(360deg); }
+/* Five or six steps: slimmer labels so they never crowd the arrows */
+.zp-cycle--dense .zp-cycle-node {
+  max-width: 31%;
+  gap: 6px;
+  padding: 5px 10px 5px 5px;
+  font-size: 12px;
 }
+.zp-cycle--dense .zp-cycle-node::before { width: 22px; height: 22px; font-size: 12px; }
 
 @media (min-width: 560px) {
   .zp-cycle-node { font-size: 14.5px; }
+  .zp-cycle--dense .zp-cycle-node { font-size: 13.5px; }
   .zp-cycle-center { font-size: 15px; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .zp-cycle::before { animation: none; }
 }

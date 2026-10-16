@@ -1,83 +1,43 @@
-/* HERO HEADER: an optional bigger, colourful header.
+/* BIGGER HEADER: an optional larger title block with no background.
    Turn it on by adding the class zp-meta--hero to the header section:
    <section class="zp-meta zp-meta--hero" aria-label="Lesson information"> ...
    Without the class, lessons keep the standard header. */
 
 .zp-meta.zp-meta--hero {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  width: min(100% - 32px, 1100px);
-  margin: 16px auto 0;
-  padding: 40px 24px 34px;
+  padding: 36px 24px 20px;
   gap: 8px;
-  border-radius: 24px;
-  background:
-    radial-gradient(circle at 12% 10%, rgba(79, 209, 197, 0.35), transparent 42%),
-    radial-gradient(circle at 92% 90%, rgba(167, 139, 250, 0.35), transparent 45%),
-    linear-gradient(135deg, #0c2340, #174a78 58%, #0f766e);
-  box-shadow: 0 18px 40px -22px rgba(12, 35, 64, 0.7);
-}
-
-.zp-meta--hero::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
-  background-size: 28px 28px;
-  -webkit-mask-image: radial-gradient(circle at 50% 40%, #000, transparent 75%);
-  mask-image: radial-gradient(circle at 50% 40%, #000, transparent 75%);
 }
 
 .zp-meta--hero .zp-meta-icon {
-  width: 84px;
-  height: 84px;
+  width: 68px;
+  height: 68px;
   margin-bottom: 6px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.04), 0 0 36px rgba(79, 209, 197, 0.35);
-  animation: zp-glow 3.2s ease-in-out infinite;
 }
 
 .zp-meta--hero .zp-meta-icon svg {
-  width: 60px;
-  height: 60px;
+  width: 56px;
+  height: 56px;
 }
 
 .zp-meta--hero #zp-module {
   padding: 5px 14px;
-  border: 1px solid rgba(255, 255, 255, 0.22);
+  border: 1px solid var(--zp-border);
   border-radius: var(--zp-radius-pill);
-  background: rgba(255, 255, 255, 0.12);
-  color: #d9ecff;
+  background: var(--zp-surface);
+  color: var(--zp-accent);
 }
 
 .zp-meta--hero #zp-subject {
   font-size: 13.5px;
-  color: rgba(255, 255, 255, 0.78);
 }
 
 .zp-meta--hero #zp-lesson {
   margin-top: 6px;
-  font-size: clamp(26px, 5.5vw, 42px);
+  font-size: clamp(28px, 5.5vw, 42px);
   line-height: 1.12;
   letter-spacing: -0.02em;
-  color: #ffffff;
-}
-
-@keyframes zp-glow {
-  0%, 100% { box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.04), 0 0 30px rgba(79, 209, 197, 0.25); }
-  50%      { box-shadow: 0 0 0 12px rgba(255, 255, 255, 0.06), 0 0 48px rgba(79, 209, 197, 0.5); }
 }
 
 @media (max-width: 600px) {
-  .zp-meta.zp-meta--hero { padding: 32px 18px 28px; border-radius: 20px; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .zp-meta--hero .zp-meta-icon { animation: none; }
+  .zp-meta.zp-meta--hero { padding: 28px 18px 16px; }
 }

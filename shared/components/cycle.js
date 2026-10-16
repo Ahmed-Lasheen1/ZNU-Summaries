@@ -1,11 +1,21 @@
-/* CYCLE: draws the coloured ring, the arrows between steps and the travelling dot
-   behind each circular diagram. Steps stay readable if this script does not run. */
+/* CYCLE: draws the coloured ring behind each circular diagram and sends arrows
+   flowing around it. The arrows take on the ring's colour as they travel.
+   Steps stay readable if this script does not run. With reduced motion switched on,
+   the arrows stand still between the steps. */
 (function () {
   var NS = 'http://www.w3.org/2000/svg'
   var COLORS = ['--zp-accent', '--zp-clin', '--zp-hy', '--zp-vio']
   var CENTER = 50
   var RADIUS = 32
+  var PERIOD = 10000
+  var ARROW = '4.4,0 -2.8,3.6 -2.8,-3.6'
+
   var counter = 0
+  var entries = []
+  var running = false
+
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  var canMix = !!(window.CSS && CSS.supports && CSS.supports('color', 'color-mix(in srgb, red 50%, blue)'))
 
   function make(name, attributes) {
     var element = document.createElementNS(NS, name)
@@ -24,6 +34,56 @@
     return 'var(' + COLORS[(index % count) % COLORS.length] + ')'
   }
 
+  /* the ring colour at a given angle: a blend of the two steps it lies between */
+  function colorAt(entry, angle) {
+    var segment = Math.floor(angle / entry.step) % entry.count
+    var fraction = (angle - segment * entry.step) / entry.step
+    var from = color(segment, entry.count)
+    var to = color(segment + 1, entry.count)
+    if (!canMix) return fraction < 0.5 ? from : to
+    return 'color-mix(in srgb, ' + from + ' ' + Math.round((1 - fraction) * 100) + '%, ' + to + ')'
+  }
+
+  function place(arrow, entry, angle) {
+    var spot = point(angle)
+    arrow.setAttribute('transform', 'translate(' + spot[0].toFixed(2) + ' ' + spot[1].toFixed(2) + ') rotate(' + angle.toFixed(1) + ')')
+    arrow.style.fill = colorAt(entry, angle)
+  }
+
+  /* still arrows (reduced motion): one halfway between each pair of steps */
+  function rest(entry) {
+    entry.arrows.forEach(function (arrow, index) {
+      if (index % 2) {
+        arrow.style.display = 'none'
+        return
+      }
+      place(arrow, entry, (index / 2) * entry.step + entry.step / 2)
+    })
+  }
+
+  function frame(now) {
+    var active = false
+    entries.forEach(function (entry) {
+      if (!entry.visible) return
+      active = true
+      var base = (now % PERIOD) / PERIOD * 360
+      entry.arrows.forEach(function (arrow, index) {
+        place(arrow, entry, (base + index * entry.step / 2) % 360)
+      })
+    })
+    if (active) {
+      window.requestAnimationFrame(frame)
+    } else {
+      running = false
+    }
+  }
+
+  function start() {
+    if (running) return
+    running = true
+    window.requestAnimationFrame(frame)
+  }
+
   function build(cycle) {
     if (cycle.classList.contains('zp-cycle-ready')) return
 
@@ -37,10 +97,8 @@
     svg.appendChild(defs)
 
     for (var i = 0; i < count; i++) {
-      var start = i * step
-      var end = (i + 1) * step
-      var from = point(start)
-      var to = point(end)
+      var from = point(i * step)
+      var to = point((i + 1) * step)
 
       var gradient = make('linearGradient', {
         id: id + '-' + i,
@@ -60,44 +118,38 @@
         d: 'M ' + from[0] + ' ' + from[1] + ' A ' + RADIUS + ' ' + RADIUS + ' 0 0 1 ' + to[0] + ' ' + to[1],
         stroke: 'url(#' + id + '-' + i + ')'
       }))
-
-      /* arrowhead halfway between two steps, pointing the way round */
-      var mid = start + step / 2
-      var middle = point(mid)
-      var radians = mid * Math.PI / 180
-      var tx = Math.cos(radians)
-      var ty = Math.sin(radians)
-      var nx = -Math.sin(radians)
-      var ny = Math.cos(radians)
-      var tip = [middle[0] + tx * 3.6, middle[1] + ty * 3.6]
-      var left = [middle[0] - tx * 2.4 + nx * 3, middle[1] - ty * 2.4 + ny * 3]
-      var right = [middle[0] - tx * 2.4 - nx * 3, middle[1] - ty * 2.4 - ny * 3]
-      var arrow = make('polygon', {
-        points: tip.join(',') + ' ' + left.join(',') + ' ' + right.join(',')
-      })
-      arrow.style.fill = color(i + 1, count)
-      svg.appendChild(arrow)
     }
 
-    var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (!reduced) {
-      var top = point(0)
-      var bottom = point(180)
-      var travel = make('circle', { 'class': 'zp-cycle-dot', r: '1.7' })
-      travel.appendChild(make('animateMotion', {
-        dur: '9s',
-        repeatCount: 'indefinite',
-        path: 'M ' + top[0] + ' ' + top[1] +
-          ' A ' + RADIUS + ' ' + RADIUS + ' 0 0 1 ' + bottom[0] + ' ' + bottom[1] +
-          ' A ' + RADIUS + ' ' + RADIUS + ' 0 0 1 ' + top[0] + ' ' + top[1]
-      }))
-      svg.appendChild(travel)
+    /* two arrows per step, evenly spaced, so some are always in view */
+    var arrows = []
+    for (var k = 0; k < count * 2; k++) {
+      var arrow = make('polygon', { 'class': 'zp-cycle-arrow', points: ARROW })
+      svg.appendChild(arrow)
+      arrows.push(arrow)
     }
 
     /* added last, so the numbering of the steps does not change */
     cycle.appendChild(svg)
     if (count >= 5) cycle.classList.add('zp-cycle--dense')
     cycle.classList.add('zp-cycle-ready')
+
+    var entry = { cycle: cycle, count: count, step: step, arrows: arrows, visible: false }
+    entries.push(entry)
+    rest(entry)
+
+    if (reduced) return
+
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (changes) {
+        changes.forEach(function (change) {
+          entry.visible = change.isIntersecting
+          if (entry.visible) start()
+        })
+      }).observe(cycle)
+    } else {
+      entry.visible = true
+      start()
+    }
   }
 
   function init() {

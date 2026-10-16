@@ -1,5 +1,5 @@
 /* CYCLE: a circular diagram for loops and cycles (3 to 6 steps).
-   The coloured ring, the arrows and the travelling dot are drawn by cycle.js.
+   The coloured ring and the flowing arrows are drawn by cycle.js.
 
    <div class="zp-cycle" style="--n:4">
      <div class="zp-cycle-node" style="--i:0">Step one</div>
@@ -46,10 +46,11 @@
   stroke-linecap: round;
 }
 
-.zp-cycle-dot {
-  fill: var(--zp-surface);
-  stroke: var(--zp-text);
-  stroke-width: 0.7;
+.zp-cycle-arrow {
+  stroke: #ffffff;
+  stroke-width: 0.8;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 0.4px 0.6px rgba(16, 24, 40, 0.45));
 }
 
 .zp-cycle-node {

@@ -8,7 +8,7 @@
 
   var SELECTOR = [
     '.zp-glance', '.zp-glance-item', '.zp-section > h2.zp-h2', '.zp-box',
-    '.zp-flow > li', '.zp-chain-node', '.zp-compare-card', '.zp-flip',
+    '.zp-flow > li', '.zp-chain-node', '.zp-cycle', '.zp-compare-card', '.zp-flip',
     '.zp-recall', '.zp-keypoints-group', '.zp-table-wrap', '.zp-lesson-illustration'
   ].join(', ')
 

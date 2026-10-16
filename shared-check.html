@@ -28,11 +28,16 @@ var FILES = [
   'core/header.css',
   'core/header.js',
   'components/icons.css',
+  'components/hero.css',
   'components/boxes.css',
   'components/layouts.css',
+  'components/cycle.css',
   'components/flip.css',
   'components/flip.js',
   'components/recall.css',
+  'components/recall.js',
+  'components/zoom.css',
+  'components/zoom.js',
   'theme-switch/theme-switch.css',
   'theme-switch/theme-switch.js',
   'motion/motion.css',
@@ -77,11 +82,11 @@ Promise.all(FILES.map(load)).then(function (texts) {
     byName['core/font.css'].length > 20000)
 
   var imports = (byName['znu-pulse.css'].match(/@import\s+url\(\s*["']?[^"')\s;]+["']?\s*\)\s*;/g) || []).length
-  show('znu-pulse.css lists ' + imports + ' style files (should be 13)', imports === 13)
+  show('znu-pulse.css lists ' + imports + ' style files (should be 16)', imports === 16)
 
   var match = byName['znu-pulse.js'].match(/ZNU_PULSE_FILES\s*=\s*\[([^\]]*)\]/)
   var scripts = match ? (match[1].match(/["'][^"']+["']/g) || []).length : 0
-  show('znu-pulse.js lists ' + scripts + ' script files (should be 6)', scripts === 6)
+  show('znu-pulse.js lists ' + scripts + ' script files (should be 8)', scripts === 8)
 
   var summary = document.getElementById('summary')
   summary.innerHTML = problems === 0

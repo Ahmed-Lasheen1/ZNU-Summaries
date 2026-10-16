@@ -1,0 +1,106 @@
+/* CYCLE: a circular diagram for loops and cycles (3 to 6 steps).
+
+   <div class="zp-cycle" style="--n:4">
+     <div class="zp-cycle-node" style="--i:0">Step one</div>
+     <div class="zp-cycle-node" style="--i:1">Step two</div>
+     <div class="zp-cycle-node" style="--i:2">Step three</div>
+     <div class="zp-cycle-node" style="--i:3">Step four</div>
+     <div class="zp-cycle-center">Loop name</div>
+   </div>
+   --n is the number of steps and --i is each step's position, starting at 0.
+   Keep the centre label as the last item. */
+
+.zp-cycle {
+  --r: 32%;
+  position: relative;
+  width: min(100%, 460px);
+  aspect-ratio: 1;
+  margin: var(--zp-space-4) auto;
+  counter-reset: zp-cyc;
+}
+
+.zp-cycle::before {
+  content: "";
+  position: absolute;
+  inset: calc(50% - var(--r));
+  border: 2px dashed var(--zp-muted);
+  border-radius: 50%;
+  opacity: 0.55;
+  animation: zp-spin 90s linear infinite;
+}
+
+.zp-cycle-node {
+  --n-col: var(--zp-accent);
+  --n-bg: var(--zp-accent-soft);
+  position: absolute;
+  left: calc(50% + var(--r) * sin(calc(360deg * var(--i) / var(--n))));
+  top: calc(50% - var(--r) * cos(calc(360deg * var(--i) / var(--n))));
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 36%;
+  padding: 6px 12px 6px 6px;
+  border: 1.5px solid var(--n-col);
+  border-radius: 22px;
+  background: linear-gradient(var(--n-bg), var(--n-bg)), var(--zp-surface);
+  font-family: var(--zp-font);
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 1.25;
+  color: var(--zp-text);
+  box-shadow: 0 6px 16px -10px rgba(16, 24, 40, 0.5);
+}
+.zp-cycle-node:nth-child(4n+2) { --n-col: var(--zp-clin); --n-bg: var(--zp-clin-soft); }
+.zp-cycle-node:nth-child(4n+3) { --n-col: var(--zp-hy);   --n-bg: var(--zp-hy-soft); }
+.zp-cycle-node:nth-child(4n)   { --n-col: var(--zp-vio);  --n-bg: var(--zp-vio-soft); }
+
+.zp-cycle-node::before {
+  counter-increment: zp-cyc;
+  content: counter(zp-cyc);
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--n-col);
+  color: var(--zp-bg);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.zp-cycle-center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 24%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  display: grid;
+  place-items: center;
+  padding: 8px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--zp-accent-soft), var(--zp-clin-soft));
+  border: 1px solid var(--zp-border);
+  text-align: center;
+  font-family: var(--zp-font);
+  font-weight: 800;
+  font-size: 12px;
+  line-height: 1.25;
+  color: var(--zp-accent);
+}
+
+@keyframes zp-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (min-width: 560px) {
+  .zp-cycle-node { font-size: 14.5px; }
+  .zp-cycle-center { font-size: 15px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .zp-cycle::before { animation: none; }
+}

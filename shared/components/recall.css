@@ -97,3 +97,47 @@
   .zp-recall-answer { animation: none; }
   .zp-recall summary::after { transition: none; }
 }
+
+/* Celebration when every check has been opened */
+.zp-toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  z-index: 1500;
+  transform: translateX(-50%);
+  padding: 12px 20px;
+  border-radius: var(--zp-radius-pill);
+  background: var(--zp-accent);
+  box-shadow: 0 12px 28px -10px rgba(16, 24, 40, 0.5);
+  font-family: var(--zp-font);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--zp-bg);
+  white-space: nowrap;
+  animation: zp-toast 3.4s ease both;
+  pointer-events: none;
+}
+
+.zp-confetti {
+  position: fixed;
+  top: -14px;
+  z-index: 1400;
+  width: 9px;
+  height: 14px;
+  border-radius: 2px;
+  opacity: 0;
+  animation: zp-fall linear both;
+  pointer-events: none;
+}
+
+@keyframes zp-toast {
+  0%   { opacity: 0; transform: translate(-50%, 16px); }
+  10%  { opacity: 1; transform: translate(-50%, 0); }
+  85%  { opacity: 1; transform: translate(-50%, 0); }
+  100% { opacity: 0; transform: translate(-50%, 8px); }
+}
+
+@keyframes zp-fall {
+  0%   { opacity: 1; transform: translate(0, 0) rotate(0deg); }
+  100% { opacity: 0.9; transform: translate(var(--drift, 0px), 105vh) rotate(540deg); }
+}

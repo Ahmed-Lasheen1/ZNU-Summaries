@@ -96,3 +96,21 @@ table.zp-table tr:last-child td { border-bottom: none; }
   margin-top: var(--zp-space-1);
   text-align: center;
 }
+
+/* Lead paragraph: a larger opening sentence for a section */
+.zp-lead {
+  max-width: 760px;
+  font-size: 19px;
+  font-weight: 500;
+  line-height: 1.6;
+}
+
+/* Tables: coloured header and soft stripes */
+table.zp-table th {
+  color: var(--zp-accent);
+  font-size: 12.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+table.zp-table tbody tr:nth-child(even) td { background: var(--zp-accent-soft); }

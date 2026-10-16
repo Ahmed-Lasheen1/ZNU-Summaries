@@ -1,7 +1,8 @@
-/* LAYOUTS: numbered sections, the at-a-glance strip, step flows and comparison cards.
+/* LAYOUTS: section banners, the at-a-glance card, pathway chains, step flows,
+   comparison cards and the key points colours.
 
-   Section (numbers and colours are added automatically):
-   <section class="zp-section"><h2 class="zp-h2">Title</h2> ... </section>
+   Section (banner, number and colour are added automatically; data-icon is optional):
+   <section class="zp-section" data-icon="zap"><h2 class="zp-h2">Title</h2> ... </section>
 
    At a glance:
    <div class="zp-glance">
@@ -12,60 +13,92 @@
      </div>
    </div>
 
+   Pathway chain:
+   <div class="zp-chain"><div class="zp-chain-node">Receptor</div><div class="zp-chain-node">Neuron</div></div>
+
    Step flow:
    <ol class="zp-flow"><li><div class="zp-flow-title">Step</div><p>Text.</p></li></ol>
 
    Comparison cards:
    <div class="zp-compare"><div class="zp-compare-card"><h4 class="zp-compare-title">Name</h4><ul><li>Point</li></ul></div></div> */
 
-/* Numbered sections */
+/* ---------- Section banners ---------- */
 main { counter-reset: zp-section; }
 
 .zp-section {
   --sec: var(--zp-accent);
-  margin-top: var(--zp-space-5);
+  --sec-soft: var(--zp-accent-soft);
+  --ic: var(--zp-ic-book);
+  counter-increment: zp-section;
+  margin-top: 56px;
 }
-.zp-section:nth-of-type(3n+2) { --sec: var(--zp-clin); }
-.zp-section:nth-of-type(3n)   { --sec: var(--zp-hy); }
+.zp-section:nth-of-type(4n+2) { --sec: var(--zp-clin); --sec-soft: var(--zp-clin-soft); }
+.zp-section:nth-of-type(4n+3) { --sec: var(--zp-hy);   --sec-soft: var(--zp-hy-soft); }
+.zp-section:nth-of-type(4n)   { --sec: var(--zp-vio);  --sec-soft: var(--zp-vio-soft); }
 
 .zp-section > h2.zp-h2 {
   position: relative;
-  border-bottom: 1px solid var(--zp-border);
-  padding-bottom: var(--zp-space-2);
-  margin-bottom: var(--zp-space-3);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 0 0 var(--zp-space-3);
+  padding: 18px 76px 18px 20px;
+  border: 1px solid var(--zp-border);
+  border-left: 5px solid var(--sec);
+  border-radius: var(--zp-radius-lg);
+  background: linear-gradient(100deg, var(--sec-soft), var(--zp-surface) 80%);
+  overflow: hidden;
+  isolation: isolate;
 }
 
 .zp-section > h2.zp-h2::before {
-  counter-increment: zp-section;
-  content: counter(zp-section, decimal-leading-zero);
-  display: block;
-  margin-bottom: 6px;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  color: var(--sec);
+  content: "";
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  background: var(--sec);
+  -webkit-mask: var(--ic) center / contain no-repeat;
+  mask: var(--ic) center / contain no-repeat;
 }
 
 .zp-section > h2.zp-h2::after {
-  content: "";
+  content: counter(zp-section, decimal-leading-zero);
   position: absolute;
-  left: 0;
-  bottom: -1px;
-  width: 56px;
-  height: 3px;
-  border-radius: 3px;
-  background: var(--sec);
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--zp-font);
+  font-weight: 800;
+  font-size: 52px;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--sec);
+  opacity: 0.16;
+  z-index: -1;
+  pointer-events: none;
 }
 
 .zp-section h3.zp-h3 { color: var(--sec); }
 
-/* At a glance */
+@media (max-width: 600px) {
+  .zp-section { margin-top: 44px; }
+  .zp-section > h2.zp-h2 { padding: 14px 66px 14px 16px; gap: 12px; }
+  .zp-section > h2.zp-h2::before { width: 26px; height: 26px; }
+  .zp-section > h2.zp-h2::after { font-size: 42px; right: 12px; }
+}
+
+/* ---------- At a glance ---------- */
 .zp-glance {
-  background: var(--zp-surface);
+  position: relative;
+  overflow: hidden;
   border: 1px solid var(--zp-border);
-  border-radius: var(--zp-radius-lg);
-  padding: var(--zp-space-3);
+  border-radius: 20px;
+  padding: 28px;
   margin-top: var(--zp-space-2);
+  background:
+    radial-gradient(circle at 100% 0%, var(--zp-vio-soft), transparent 45%),
+    linear-gradient(135deg, var(--zp-accent-soft), var(--zp-clin-soft)),
+    var(--zp-surface);
 }
 
 .zp-glance-title {
@@ -82,9 +115,9 @@ main { counter-reset: zp-section; }
 .zp-glance-lead {
   margin: 0 0 var(--zp-space-3);
   max-width: 760px;
-  font-size: 18px;
-  font-weight: 500;
-  line-height: 1.55;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.5;
 }
 
 .zp-glance-grid {
@@ -94,18 +127,24 @@ main { counter-reset: zp-section; }
 }
 
 .zp-glance-item {
-  background: var(--zp-accent-soft);
+  --i: var(--zp-accent);
+  background: var(--zp-surface);
+  border: 1px solid var(--zp-border);
+  border-top: 4px solid var(--i);
   border-radius: var(--zp-radius-md);
   padding: var(--zp-space-2);
 }
+.zp-glance-item:nth-child(4n+2) { --i: var(--zp-clin); }
+.zp-glance-item:nth-child(4n+3) { --i: var(--zp-hy); }
+.zp-glance-item:nth-child(4n)   { --i: var(--zp-vio); }
 
 .zp-glance-value {
   font-family: var(--zp-font);
   font-weight: 800;
-  font-size: clamp(24px, 4vw, 32px);
+  font-size: clamp(28px, 5vw, 38px);
   line-height: 1.1;
   letter-spacing: -0.02em;
-  color: var(--zp-accent);
+  color: var(--i);
 }
 
 .zp-glance-label {
@@ -116,7 +155,60 @@ main { counter-reset: zp-section; }
   color: var(--zp-muted);
 }
 
-/* Step flow */
+/* ---------- Pathway chain ---------- */
+.zp-chain {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px 38px;
+  margin: var(--zp-space-3) 0;
+}
+
+.zp-chain-node {
+  --n: var(--zp-accent);
+  --n-soft: var(--zp-accent-soft);
+  position: relative;
+  padding: 10px 18px;
+  border: 1.5px solid var(--n);
+  border-radius: var(--zp-radius-pill);
+  background: var(--n-soft);
+  font-family: var(--zp-font);
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 1.3;
+  color: var(--zp-text);
+}
+.zp-chain-node:nth-child(4n+2) { --n: var(--zp-clin); --n-soft: var(--zp-clin-soft); }
+.zp-chain-node:nth-child(4n+3) { --n: var(--zp-hy);   --n-soft: var(--zp-hy-soft); }
+.zp-chain-node:nth-child(4n)   { --n: var(--zp-vio);  --n-soft: var(--zp-vio-soft); }
+
+.zp-chain-node:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  right: -31px;
+  top: 50%;
+  width: 22px;
+  height: 22px;
+  margin-top: -11px;
+  background: var(--zp-muted);
+  -webkit-mask: var(--zp-ic-arrow) center / contain no-repeat;
+  mask: var(--zp-ic-arrow) center / contain no-repeat;
+}
+
+@media (max-width: 520px) {
+  .zp-chain { flex-direction: column; align-items: center; gap: 34px; }
+  .zp-chain-node { min-width: 60%; text-align: center; }
+  .zp-chain-node:not(:last-child)::after {
+    right: auto;
+    left: 50%;
+    top: auto;
+    bottom: -28px;
+    margin: 0 0 0 -11px;
+    transform: rotate(90deg);
+  }
+}
+
+/* ---------- Step flow ---------- */
 .zp-flow {
   list-style: none;
   margin: var(--zp-space-3) 0;
@@ -127,7 +219,7 @@ main { counter-reset: zp-section; }
 .zp-flow > li {
   position: relative;
   margin: 0;
-  padding: 0 0 var(--zp-space-3) 56px;
+  padding: 0 0 var(--zp-space-3) 58px;
   max-width: 760px;
   counter-increment: zp-step;
 }
@@ -137,27 +229,29 @@ main { counter-reset: zp-section; }
   position: absolute;
   left: 0;
   top: 0;
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   display: grid;
   place-items: center;
-  background: var(--zp-accent);
+  background: var(--sec, var(--zp-accent));
   color: var(--zp-bg);
   font-family: var(--zp-font);
-  font-weight: 700;
-  font-size: 15px;
+  font-weight: 800;
+  font-size: 16px;
   line-height: 1;
 }
 
 .zp-flow > li::after {
   content: "";
   position: absolute;
-  left: 18px;
-  top: 46px;
+  left: 19px;
+  top: 48px;
   bottom: 8px;
   width: 2px;
-  background: var(--zp-border);
+  border-radius: 2px;
+  background: var(--sec-soft, var(--zp-border));
+  box-shadow: inset 0 0 0 2px var(--zp-border);
 }
 
 .zp-flow > li:last-child { padding-bottom: 0; }
@@ -166,7 +260,7 @@ main { counter-reset: zp-section; }
 .zp-flow-title {
   display: flex;
   align-items: center;
-  min-height: 38px;
+  min-height: 40px;
   font-family: var(--zp-font);
   font-weight: 700;
   font-size: 17px;
@@ -175,7 +269,7 @@ main { counter-reset: zp-section; }
 
 .zp-flow p { margin: 0 0 4px; }
 
-/* Comparison cards */
+/* ---------- Comparison cards ---------- */
 .zp-compare {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -185,20 +279,22 @@ main { counter-reset: zp-section; }
 
 .zp-compare-card {
   --card: var(--zp-accent);
-  background: var(--zp-surface);
+  --card-soft: var(--zp-accent-soft);
+  background: linear-gradient(180deg, var(--card-soft), var(--zp-surface) 90px);
   border: 1px solid var(--zp-border);
-  border-top: 4px solid var(--card);
+  border-top: 5px solid var(--card);
   border-radius: var(--zp-radius-lg);
   padding: var(--zp-space-3) var(--zp-space-3) var(--zp-space-2);
 }
-.zp-compare-card:nth-child(2) { --card: var(--zp-clin); }
-.zp-compare-card:nth-child(3) { --card: var(--zp-hy); }
+.zp-compare-card:nth-child(4n+2) { --card: var(--zp-clin); --card-soft: var(--zp-clin-soft); }
+.zp-compare-card:nth-child(4n+3) { --card: var(--zp-hy);   --card-soft: var(--zp-hy-soft); }
+.zp-compare-card:nth-child(4n)   { --card: var(--zp-vio);  --card-soft: var(--zp-vio-soft); }
 
 .zp-compare-title {
   margin: 0 0 var(--zp-space-1);
   font-family: var(--zp-font);
-  font-weight: 700;
-  font-size: 17px;
+  font-weight: 800;
+  font-size: 19px;
   line-height: 1.3;
   letter-spacing: -0.01em;
   color: var(--card);
@@ -206,3 +302,23 @@ main { counter-reset: zp-section; }
 
 .zp-compare-card ul { margin: 0; padding-left: 20px; }
 .zp-compare-card p { max-width: none; }
+
+/* ---------- Key points: a colour per group ---------- */
+.zp-keypoints-group {
+  --k: var(--zp-accent);
+  border-left: 4px solid var(--k);
+  padding-left: 16px;
+}
+.zp-keypoints-group:nth-child(4n+2) { --k: var(--zp-clin); }
+.zp-keypoints-group:nth-child(4n+3) { --k: var(--zp-hy); }
+.zp-keypoints-group:nth-child(4n)   { --k: var(--zp-vio); }
+.zp-keypoints-group h4.zp-h4 { color: var(--k); }
+
+/* ---------- Hover lift (only on devices with a mouse) ---------- */
+@media (hover: hover) {
+  .zp-compare-card:hover,
+  .zp-glance-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px -12px rgba(16, 24, 40, 0.35);
+  }
+}

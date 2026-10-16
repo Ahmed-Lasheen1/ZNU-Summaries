@@ -1,0 +1,110 @@
+/* FLIP CARDS: key terms. Tap a card to turn it over and see the meaning.
+   Without the script, both sides simply show one under the other.
+
+   <div class="zp-flip-grid">
+     <button class="zp-flip" type="button">
+       <span class="zp-flip-inner">
+         <span class="zp-flip-face zp-flip-front">Term</span>
+         <span class="zp-flip-face zp-flip-back">Meaning</span>
+       </span>
+     </button>
+   </div> */
+
+.zp-flip-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: var(--zp-space-2);
+  margin: var(--zp-space-3) 0;
+}
+
+.zp-flip {
+  --card: var(--zp-accent);
+  --card-soft: var(--zp-accent-soft);
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: center;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.zp-flip:nth-child(4n+2) { --card: var(--zp-clin); --card-soft: var(--zp-clin-soft); }
+.zp-flip:nth-child(4n+3) { --card: var(--zp-hy);   --card-soft: var(--zp-hy-soft); }
+.zp-flip:nth-child(4n)   { --card: var(--zp-vio);  --card-soft: var(--zp-vio-soft); }
+
+.zp-flip:focus-visible {
+  outline: 2px solid var(--zp-accent);
+  outline-offset: 3px;
+  border-radius: var(--zp-radius-lg);
+}
+
+.zp-flip-inner { display: block; }
+
+.zp-flip-face {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 110px;
+  padding: 16px 14px;
+  border: 1px solid var(--zp-border);
+  border-radius: var(--zp-radius-lg);
+  line-height: 1.4;
+}
+
+.zp-flip-front {
+  background: linear-gradient(180deg, var(--card-soft), var(--zp-surface) 80%);
+  border-top: 5px solid var(--card);
+  font-family: var(--zp-font);
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--card);
+}
+
+.zp-flip-back {
+  margin-top: 8px;
+  background: var(--card);
+  border-color: var(--card);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--zp-bg);
+}
+
+/* With the script: a real card that turns over */
+.zp-flip-on .zp-flip { perspective: 900px; }
+
+.zp-flip-on .zp-flip-inner {
+  display: grid;
+  transform-style: preserve-3d;
+  transition: transform 560ms cubic-bezier(0.3, 0.7, 0.2, 1);
+}
+
+.zp-flip-on .zp-flip-face {
+  grid-area: 1 / 1;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.zp-flip-on .zp-flip-front::after {
+  content: "Tap to flip";
+  margin-top: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--zp-muted);
+}
+
+.zp-flip-on .zp-flip-back {
+  margin-top: 0;
+  transform: rotateY(180deg);
+}
+
+.zp-flip-on .zp-flip.is-flipped .zp-flip-inner { transform: rotateY(180deg); }
+
+@media (prefers-reduced-motion: reduce) {
+  .zp-flip-on .zp-flip-inner { transition: none; }
+}

@@ -8,6 +8,7 @@
 .zp-recall {
   background: var(--zp-surface);
   border: 1px solid var(--zp-border);
+  border-left: 5px solid var(--sec, var(--zp-accent));
   border-radius: var(--zp-radius-md);
   margin: var(--zp-space-1) 0;
   overflow: hidden;
@@ -22,6 +23,7 @@
   font-family: var(--zp-font);
   font-weight: 600;
   line-height: 1.5;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .zp-recall summary::-webkit-details-marker { display: none; }
@@ -34,7 +36,7 @@
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--zp-accent);
+  color: var(--sec, var(--zp-accent));
 }
 
 .zp-recall summary::after {
@@ -43,18 +45,22 @@
   right: 16px;
   top: 50%;
   transform: translateY(-50%);
-  width: 26px;
-  height: 26px;
-  border: 1.5px solid var(--zp-accent);
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
+  background: var(--sec, var(--zp-accent));
   text-align: center;
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 600;
-  line-height: 23px;
-  color: var(--zp-accent);
+  line-height: 27px;
+  color: var(--zp-bg);
+  transition: transform 260ms ease;
 }
 
-.zp-recall[open] summary::after { content: "\2212"; }
+.zp-recall[open] summary::after {
+  content: "\2212";
+  transform: translateY(-50%) rotate(180deg);
+}
 
 .zp-recall summary:focus-visible {
   outline: 2px solid var(--zp-accent);
@@ -64,7 +70,8 @@
 .zp-recall-answer {
   padding: 14px 18px 16px;
   border-top: 1px solid var(--zp-border);
-  background: var(--zp-accent-soft);
+  background: var(--sec-soft, var(--zp-accent-soft));
+  animation: zp-answer-in 320ms ease both;
 }
 
 .zp-recall-answer::before {
@@ -75,8 +82,18 @@
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--zp-accent);
+  color: var(--sec, var(--zp-accent));
 }
 
 .zp-recall-answer p,
 .zp-recall-answer ul { margin: 0; max-width: none; }
+
+@keyframes zp-answer-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .zp-recall-answer { animation: none; }
+  .zp-recall summary::after { transition: none; }
+}

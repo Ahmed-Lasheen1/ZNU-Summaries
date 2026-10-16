@@ -1,0 +1,38 @@
+/* ICONS: small line icons used by the boxes, section banners and arrows.
+   They are drawn as masks, so they take the colour of whatever uses them.
+
+   Choose a section icon in a lesson with: <section class="zp-section" data-icon="zap">
+   Section icons: book, list, columns, check, heart, zap, layers, eye, droplet, shield, search, pulse */
+
+:root {
+  --zp-ic-book: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%2024%2024%27%20fill=%27none%27%20stroke=%27black%27%20stroke-width=%272%27%20stroke-linecap=%27round%27%20stroke-linejoin=%27round%27%3E%3Cpath%20d=%27M2%203h6a4%204%200%200%201%204%204v14a3%203%200%200%200-3-3H2z%27/%3E%3Cpath%20d=%27M22%203h-6a4%204%200%200%200-4%204v14a3%203%200%200%201%203-3h7z%27/%3E%3C/svg%3E");
+  --zp-ic-list: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%2024%2024%27%20fill=%27none%27%20stroke=%27black%27%20stroke-width=%272%27%20stroke-linecap=%27round%27%20stroke-linejoin=%27round%27%3E%3Cpath%20d=%27M8%206h13M8%2012h13M8%2018h13M3%206h.01M3%2012h.01M3%2018h.01%27/%3E%3C/svg%3E");
+  --zp-ic-columns: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%2024%2024%27%20fill=%27none%27%20stroke=%27black%27%20stroke-width=%272%27%20stroke-linecap=%27round%27%20stroke-linejoin=%27round%27%3E%3Crect%20x=%273%27%20y=%273%27%20width=%2718%27%20height=%2718%27%20rx=%272%27/%3E%3Cpath%20d=%27M12%203v18%27/%3E%3C/svg%3E");
+  --zp-ic-check: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%2024%2024%27%20fill=%27none%27%20stroke=%27black%27%20stroke-width=%272%27%20stroke-linecap=%27round%27%20stroke-linejoin=%27round%27%3E%3Cpath%20d=%27M22%2011.08V12a10%2010%200%201%201-5.93-9.14%27/%3E%3Cpath%20d=%27M22%204L12%2014.01l-3-3%27/%3E%3C/svg%3E");
+  --zp-ic-heart: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%2024%2024%27%20fill=%27none%27%20stroke=%27black%27%20stroke-width=%272%27%20stroke-linecap=%27round%27%20stroke-linejoin=%27round%27%3E%3Cpath%20d=%27M20.84%204.61a5.5%205.5%200%200%200-7.78%200L12%205.67l-1.06-1.06a5.5%205.5%200%200%200-7.78%207.78l1.06%201.06L12%2021.23l7.78-7.78%201.06-1.06a5.5%205.5%200%200%200%200-7.78z%27/%3E%3C/svg%3E");
+  --zp-ic-zap: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%2024%2024%27%20fill=%27none%27%20stroke=%27black%27%20stroke-width=%272%27%20stroke-linecap=%27round%27%20stroke-linejoin=%27round%27%3E%3Cpath%20d=%27M13%202L3%2014h9l-1%208%2010-12h-9l1-8z%27/%3E%3C/svg%3E");
+  --zp-ic-layers: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%2024%2024%27%20fill=%27none%27%20stroke=%27black%27%20stroke-width=%272%27%20stroke-linecap=%27round%27%20stroke-linejoin=%27round%27%3E%3Cpath%20d=%27M12%202L2%207l10%205%2010-5-10-5z%27/%3E%3Cpath%20d=%27M2%2017l10%205%2010-5%27/%3E%3Cpath%20d=%27M2%2012l10%205%2010-5%27/%3E%3C/svg%3E");
+  --zp-ic-eye: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%2024%2024%27%20fill=%27none%27%20stroke=%27black%27%20stroke-width=%272%27%20stroke-linecap=%27round%27%20stroke-linejoin=%27round%27%3E%3Cpath%20d=%27M1%2012s4-8%2011-8%2011%208%2011%208-4%208-11%208-11-8-11-8z%27/%3E%3Ccircle%20cx=%2712%27%20cy=%2712%27%20r=%273%27/%3E%3C/svg%3E");
+  --zp-ic-droplet: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%2024%2024%27%20fill=%27none%27%20stroke=%27black%27%20stroke-width=%272%27%20stroke-linecap=%27round%27%20stroke-linejoin=%27round%27%3E%3Cpath%20d=%27M12%202.69l5.66%205.66a8%208%200%201%201-11.31%200z%27/%3E%3C/svg%3E");
+  --zp-ic-shield: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%2024%2024%27%20fill=%27none%27%20stroke=%27black%27%20stroke-width=%272%27%20stroke-linecap=%27round%27%20stroke-linejoin=%27round%27%3E%3Cpath%20d=%27M12%2022s8-4%208-10V5l-8-3-8%203v7c0%206%208%2010%208%2010z%27/%3E%3C/svg%3E");
+  --zp-ic-search: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%2024%2024%27%20fill=%27none%27%20stroke=%27black%27%20stroke-width=%272%27%20stroke-linecap=%27round%27%20stroke-linejoin=%27round%27%3E%3Ccircle%20cx=%2711%27%20cy=%2711%27%20r=%278%27/%3E%3Cpath%20d=%27M21%2021l-4.35-4.35%27/%3E%3C/svg%3E");
+  --zp-ic-pulse: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%2024%2024%27%20fill=%27none%27%20stroke=%27black%27%20stroke-width=%272%27%20stroke-linecap=%27round%27%20stroke-linejoin=%27round%27%3E%3Cpath%20d=%27M22%2012h-4l-3%209L9%203l-3%209H2%27/%3E%3C/svg%3E");
+  --zp-ic-info: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%2024%2024%27%20fill=%27none%27%20stroke=%27black%27%20stroke-width=%272%27%20stroke-linecap=%27round%27%20stroke-linejoin=%27round%27%3E%3Ccircle%20cx=%2712%27%20cy=%2712%27%20r=%2710%27/%3E%3Cpath%20d=%27M12%2016v-4M12%208h.01%27/%3E%3C/svg%3E");
+  --zp-ic-star: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%2024%2024%27%20fill=%27none%27%20stroke=%27black%27%20stroke-width=%272%27%20stroke-linecap=%27round%27%20stroke-linejoin=%27round%27%3E%3Cpath%20d=%27M12%202l3.09%206.26L22%209.27l-5%204.87%201.18%206.88L12%2017.77l-6.18%203.25L7%2014.14%202%209.27l6.91-1.01L12%202z%27/%3E%3C/svg%3E");
+  --zp-ic-alert: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%2024%2024%27%20fill=%27none%27%20stroke=%27black%27%20stroke-width=%272%27%20stroke-linecap=%27round%27%20stroke-linejoin=%27round%27%3E%3Cpath%20d=%27M10.29%203.86L1.82%2018a2%202%200%200%200%201.71%203h16.94a2%202%200%200%200%201.71-3L13.71%203.86a2%202%200%200%200-3.42%200z%27/%3E%3Cpath%20d=%27M12%209v4M12%2017h.01%27/%3E%3C/svg%3E");
+  --zp-ic-help: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%2024%2024%27%20fill=%27none%27%20stroke=%27black%27%20stroke-width=%272%27%20stroke-linecap=%27round%27%20stroke-linejoin=%27round%27%3E%3Ccircle%20cx=%2712%27%20cy=%2712%27%20r=%2710%27/%3E%3Cpath%20d=%27M9.09%209a3%203%200%200%201%205.83%201c0%202-3%203-3%203M12%2017h.01%27/%3E%3C/svg%3E");
+  --zp-ic-arrow: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%2024%2024%27%20fill=%27none%27%20stroke=%27black%27%20stroke-width=%272%27%20stroke-linecap=%27round%27%20stroke-linejoin=%27round%27%3E%3Cpath%20d=%27M5%2012h14M12%205l7%207-7%207%27/%3E%3C/svg%3E");
+}
+
+.zp-section[data-icon="book"] { --ic: var(--zp-ic-book); }
+.zp-section[data-icon="list"] { --ic: var(--zp-ic-list); }
+.zp-section[data-icon="columns"] { --ic: var(--zp-ic-columns); }
+.zp-section[data-icon="check"] { --ic: var(--zp-ic-check); }
+.zp-section[data-icon="heart"] { --ic: var(--zp-ic-heart); }
+.zp-section[data-icon="zap"] { --ic: var(--zp-ic-zap); }
+.zp-section[data-icon="layers"] { --ic: var(--zp-ic-layers); }
+.zp-section[data-icon="eye"] { --ic: var(--zp-ic-eye); }
+.zp-section[data-icon="droplet"] { --ic: var(--zp-ic-droplet); }
+.zp-section[data-icon="shield"] { --ic: var(--zp-ic-shield); }
+.zp-section[data-icon="search"] { --ic: var(--zp-ic-search); }
+.zp-section[data-icon="pulse"] { --ic: var(--zp-ic-pulse); }

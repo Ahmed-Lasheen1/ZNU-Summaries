@@ -4,10 +4,11 @@
   position: fixed;
   top: 0;
   left: 0;
-  height: 3px;
+  height: 4px;
   width: 0;
   z-index: 999;
-  background: var(--zp-accent);
+  border-radius: 0 4px 4px 0;
+  background: linear-gradient(90deg, var(--zp-accent), var(--zp-clin), var(--zp-hy), var(--zp-vio));
   transition: width 80ms linear;
   pointer-events: none;
 }

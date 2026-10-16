@@ -1,0 +1,55 @@
+/* MOTION: things fade and slide in as you scroll to them.
+   Everything stays fully visible if the script does not run, if the device asks
+   for reduced motion, or if the browser cannot watch scrolling.
+   The list of animated parts below must match the list in motion.js. */
+
+.zp-motion :is(
+  .zp-glance,
+  .zp-glance-item,
+  .zp-section > h2.zp-h2,
+  .zp-box,
+  .zp-flow > li,
+  .zp-chain-node,
+  .zp-compare-card,
+  .zp-flip,
+  .zp-recall,
+  .zp-keypoints-group,
+  .zp-table-wrap,
+  .zp-lesson-illustration
+) {
+  transition: opacity 480ms ease, transform 480ms cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 240ms ease;
+}
+
+.zp-motion :is(
+  .zp-glance,
+  .zp-glance-item,
+  .zp-section > h2.zp-h2,
+  .zp-box,
+  .zp-flow > li,
+  .zp-chain-node,
+  .zp-compare-card,
+  .zp-flip,
+  .zp-recall,
+  .zp-keypoints-group,
+  .zp-table-wrap,
+  .zp-lesson-illustration
+):not(.is-visible) {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+/* Flow steps: the circle pops and the line draws downward */
+.zp-motion .zp-flow > li::before {
+  transition: transform 420ms cubic-bezier(0.3, 1.5, 0.5, 1);
+}
+.zp-motion .zp-flow > li:not(.is-visible)::before { transform: scale(0.5); }
+
+.zp-motion .zp-flow > li::after {
+  transform-origin: top;
+  transition: transform 700ms ease 150ms;
+}
+.zp-motion .zp-flow > li:not(.is-visible)::after { transform: scaleY(0); }
+
+/* Chain arrows appear after their node */
+.zp-motion .zp-chain-node::after { transition: opacity 400ms ease 250ms; }
+.zp-motion .zp-chain-node:not(.is-visible)::after { opacity: 0; }

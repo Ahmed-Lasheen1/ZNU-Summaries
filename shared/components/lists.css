@@ -1,0 +1,59 @@
+/* LISTS: coloured bullets and numbers. The colour follows the part the list sits in
+   (section, box, card or key-points group). Add class zp-plain to a list to keep it plain. */
+
+.zp-box ul, .zp-box ol { --sec: var(--box); --sec-soft: var(--box-soft); }
+.zp-compare-card ul, .zp-compare-card ol { --sec: var(--card); --sec-soft: var(--card-soft); }
+.zp-keypoints-group ul, .zp-keypoints-group ol { --sec: var(--k); }
+
+main ul:not(.zp-plain),
+main ol:not(.zp-flow) {
+  list-style: none;
+  padding-left: 0;
+}
+
+main ul:not(.zp-plain) > li,
+main ol:not(.zp-flow) > li {
+  position: relative;
+  margin: 0 0 7px;
+  padding-left: 26px;
+}
+
+main ul:not(.zp-plain) > li::before {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 0.62em;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--sec, var(--zp-accent));
+}
+
+main ul:not(.zp-plain) ul > li::before {
+  box-sizing: border-box;
+  width: 7px;
+  height: 7px;
+  background: transparent;
+  border: 2px solid var(--sec, var(--zp-accent));
+}
+
+main ol:not(.zp-flow) { counter-reset: zp-li; }
+
+main ol:not(.zp-flow) > li { counter-increment: zp-li; }
+
+main ol:not(.zp-flow) > li::before {
+  content: counter(zp-li);
+  position: absolute;
+  left: 0;
+  top: 0.22em;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--sec-soft, var(--zp-accent-soft));
+  color: var(--sec, var(--zp-accent));
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1;
+}

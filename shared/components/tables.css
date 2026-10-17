@@ -1,0 +1,71 @@
+/* TABLES: on a phone, each table row becomes its own small card, so nothing
+   scrolls sideways. The labels come from the table header (added by tables.js).
+   Printing and wide screens keep the normal table. */
+
+@media screen and (max-width: 600px) {
+  html.zp-cards .zp-table-wrap {
+    border: 0;
+    border-radius: 0;
+    overflow: visible;
+  }
+
+  html.zp-cards table.zp-table,
+  html.zp-cards table.zp-table tbody,
+  html.zp-cards table.zp-table tr,
+  html.zp-cards table.zp-table td,
+  html.zp-cards table.zp-table th {
+    display: block;
+    width: 100%;
+    min-width: 0;
+  }
+
+  html.zp-cards table.zp-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  html.zp-cards table.zp-table tbody tr {
+    margin: 0 0 14px;
+    border: 1px solid var(--zp-border);
+    border-radius: var(--zp-radius-lg);
+    background: var(--zp-surface);
+    overflow: hidden;
+  }
+
+  html.zp-cards table.zp-table tbody tr:nth-child(even) td { background: transparent; }
+
+  html.zp-cards table.zp-table td {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--zp-border);
+    font-size: 14.5px;
+  }
+
+  html.zp-cards table.zp-table td::before {
+    content: attr(data-label);
+    flex: 0 0 34%;
+    max-width: 34%;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--zp-accent);
+  }
+
+  html.zp-cards table.zp-table td:first-child,
+  html.zp-cards table.zp-table tbody tr:nth-child(even) td:first-child {
+    display: block;
+    background: var(--zp-accent-soft);
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  html.zp-cards table.zp-table td:first-child::before { display: none; }
+  html.zp-cards table.zp-table td:last-child { border-bottom: 0; }
+}

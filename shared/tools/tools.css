@@ -1,0 +1,208 @@
+/* TOOLS: the small menu in the top corner (theme, text size, hide terms, print),
+   plus the effects of those settings on the lesson. */
+
+.zp-tools {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 1000;
+}
+
+.zp-tools-button {
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--zp-border);
+  border-radius: var(--zp-radius-pill);
+  background: var(--zp-surface);
+  color: var(--zp-text);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease, transform 180ms ease;
+}
+
+.zp-tools-button:hover { transform: translateY(-1px); }
+
+.zp-tools-button[aria-expanded="true"] {
+  background: var(--zp-accent);
+  border-color: var(--zp-accent);
+  color: var(--zp-bg);
+}
+
+.zp-tools-button:focus-visible,
+.zp-seg button:focus-visible,
+.zp-switch:focus-visible,
+.zp-tools-print:focus-visible {
+  outline: 2px solid var(--zp-accent);
+  outline-offset: 2px;
+}
+
+.zp-tools svg {
+  width: 19px;
+  height: 19px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex: 0 0 auto;
+}
+
+.zp-tools-panel {
+  position: absolute;
+  top: 52px;
+  right: 0;
+  width: min(300px, calc(100vw - 28px));
+  padding: 6px;
+  border: 1px solid var(--zp-border);
+  border-radius: 16px;
+  background: var(--zp-surface);
+  box-shadow: 0 18px 40px -14px rgba(16, 24, 40, 0.45);
+  font-family: var(--zp-font);
+  color: var(--zp-text);
+  animation: zp-tools-in 160ms ease both;
+}
+
+.zp-tools-panel[hidden] { display: none; }
+
+.zp-tools-row {
+  padding: 12px 10px;
+}
+
+.zp-tools-row + .zp-tools-row { border-top: 1px solid var(--zp-border); }
+
+.zp-tools-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.3;
+}
+
+.zp-tools-head > span:first-of-type { flex: 1 1 auto; }
+
+.zp-seg {
+  display: flex;
+  gap: 4px;
+  margin-top: 10px;
+  padding: 3px;
+  border-radius: 10px;
+  background: var(--zp-accent-soft);
+}
+
+.zp-seg button {
+  flex: 1 1 0;
+  padding: 8px 4px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  font-family: var(--zp-font);
+  font-weight: 600;
+  font-size: 12.5px;
+  line-height: 1.2;
+  color: var(--zp-muted);
+  cursor: pointer;
+}
+
+.zp-seg button[aria-pressed="true"] {
+  background: var(--zp-surface);
+  color: var(--zp-text);
+  box-shadow: 0 1px 4px rgba(16, 24, 40, 0.18);
+}
+
+.zp-switch {
+  position: relative;
+  flex: 0 0 auto;
+  width: 44px;
+  height: 26px;
+  padding: 0;
+  border: 0;
+  border-radius: 26px;
+  background: var(--zp-border);
+  cursor: pointer;
+  transition: background-color 160ms ease;
+}
+
+.zp-switch::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.3);
+  transition: transform 160ms ease;
+}
+
+.zp-switch[aria-checked="true"] { background: var(--zp-accent); }
+.zp-switch[aria-checked="true"]::after { transform: translateX(18px); }
+.zp-switch:disabled { cursor: not-allowed; }
+
+.zp-tools-row.is-disabled .zp-tools-head { opacity: 0.55; }
+
+.zp-tools-note {
+  margin: 6px 0 0 28px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--zp-muted);
+}
+
+.zp-tools-print {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  font-family: var(--zp-font);
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.3;
+  color: var(--zp-text);
+  text-align: left;
+  cursor: pointer;
+}
+
+.zp-tools-hint {
+  margin: 6px 0 0 28px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--zp-warn);
+}
+
+@keyframes zp-tools-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@media (max-width: 600px) {
+  .zp-tools { top: 14px; right: 14px; }
+  .zp-tools-button { width: 40px; height: 40px; }
+  .zp-tools-panel { top: 50px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .zp-tools-panel { animation: none; }
+}
+
+/* ---- Text size: the whole lesson content grows together ---- */
+html[data-size="large"] main  { zoom: 1.15; }
+html[data-size="larger"] main { zoom: 1.3; }
+
+/* ---- Hide terms: highlighted key terms are blurred until tapped ---- */
+html.zp-hide-terms .zp-term:not(.is-shown) {
+  color: transparent;
+  text-shadow: 0 0 9px var(--zp-text);
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+}

@@ -5,20 +5,20 @@
 .zp-compare-card ul, .zp-compare-card ol { --sec: var(--card); --sec-soft: var(--card-soft); }
 .zp-keypoints-group ul, .zp-keypoints-group ol { --sec: var(--k); }
 
-main ul:not(.zp-plain),
-main ol:not(.zp-flow) {
+main ul:not(.zp-plain):not(.zp-tree-branch),
+main ol:not(.zp-flow):not(.zp-layers) {
   list-style: none;
   padding-left: 0;
 }
 
-main ul:not(.zp-plain) > li,
-main ol:not(.zp-flow) > li {
+main ul:not(.zp-plain):not(.zp-tree-branch) > li,
+main ol:not(.zp-flow):not(.zp-layers) > li {
   position: relative;
   margin: 0 0 7px;
   padding-left: 26px;
 }
 
-main ul:not(.zp-plain) > li::before {
+main ul:not(.zp-plain):not(.zp-tree-branch) > li::before {
   content: "";
   position: absolute;
   left: 3px;
@@ -29,7 +29,7 @@ main ul:not(.zp-plain) > li::before {
   background: var(--sec, var(--zp-accent));
 }
 
-main ul:not(.zp-plain) ul > li::before {
+main ul:not(.zp-plain):not(.zp-tree-branch) ul > li::before {
   box-sizing: border-box;
   width: 7px;
   height: 7px;
@@ -37,11 +37,11 @@ main ul:not(.zp-plain) ul > li::before {
   border: 2px solid var(--sec, var(--zp-accent));
 }
 
-main ol:not(.zp-flow) { counter-reset: zp-li; }
+main ol:not(.zp-flow):not(.zp-layers) { counter-reset: zp-li; }
 
-main ol:not(.zp-flow) > li { counter-increment: zp-li; }
+main ol:not(.zp-flow):not(.zp-layers) > li { counter-increment: zp-li; }
 
-main ol:not(.zp-flow) > li::before {
+main ol:not(.zp-flow):not(.zp-layers) > li::before {
   content: counter(zp-li);
   position: absolute;
   left: 0;

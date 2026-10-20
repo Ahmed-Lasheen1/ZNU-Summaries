@@ -16,7 +16,16 @@
   .zp-recall,
   .zp-keypoints-group,
   .zp-table-wrap,
-  .zp-lesson-illustration
+  .zp-lesson-illustration,
+  .zp-layers > li,
+  .zp-tree-root,
+  .zp-tree-branch > li,
+  .zp-bignum,
+  .zp-map-row,
+  .zp-range,
+  .zp-effect-step,
+  .zp-rule,
+  .zp-short
 ) {
   transition: opacity 480ms ease, transform 480ms cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 240ms ease;
 }
@@ -34,7 +43,16 @@
   .zp-recall,
   .zp-keypoints-group,
   .zp-table-wrap,
-  .zp-lesson-illustration
+  .zp-lesson-illustration,
+  .zp-layers > li,
+  .zp-tree-root,
+  .zp-tree-branch > li,
+  .zp-bignum,
+  .zp-map-row,
+  .zp-range,
+  .zp-effect-step,
+  .zp-rule,
+  .zp-short
 ):not(.is-visible) {
   opacity: 0;
   transform: translateY(20px);
@@ -55,3 +73,11 @@
 /* Chain arrows appear after their node */
 .zp-motion .zp-chain-node::after { transition: opacity 400ms ease 250ms; }
 .zp-motion .zp-chain-node:not(.is-visible)::after { opacity: 0; }
+
+/* Range bars: the coloured part grows from its left edge */
+.zp-motion .zp-range .zp-range-fill { transition: transform 800ms cubic-bezier(0.2, 0.7, 0.2, 1) 200ms; }
+.zp-motion .zp-range:not(.is-visible) .zp-range-fill { transform: scaleX(0); }
+
+/* Effect chain arrows appear after their step */
+.zp-motion .zp-effect-step::after { transition: opacity 400ms ease 250ms; }
+.zp-motion .zp-effect-step:not(.is-visible)::after { opacity: 0; }

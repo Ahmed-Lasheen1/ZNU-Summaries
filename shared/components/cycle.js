@@ -14,7 +14,9 @@
   var entries = []
   var running = false
 
-  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  var reduced = (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) ||
+    document.documentElement.classList.contains('zp-print-view')
+  var printing = false
   var canMix = !!(window.CSS && CSS.supports && CSS.supports('color', 'color-mix(in srgb, red 50%, blue)'))
 
   function make(name, attributes) {
@@ -62,6 +64,10 @@
   }
 
   function frame(now) {
+    if (printing) {
+      running = false
+      return
+    }
     var active = false
     entries.forEach(function (entry) {
       if (!entry.visible) return
@@ -150,6 +156,29 @@
       entry.visible = true
       start()
     }
+  }
+
+  /* On paper the arrows rest at their default places between the steps. */
+  function freeze() {
+    printing = true
+    entries.forEach(rest)
+  }
+
+  function thaw() {
+    printing = false
+    entries.forEach(function (entry) {
+      entry.arrows.forEach(function (arrow) { arrow.style.display = '' })
+      if (entry.visible) start()
+    })
+  }
+
+  window.addEventListener('beforeprint', freeze)
+  window.addEventListener('afterprint', thaw)
+  if (window.matchMedia) {
+    var printQuery = window.matchMedia('print')
+    var onPrintChange = function (event) { if (event.matches) freeze(); else thaw() }
+    if (printQuery.addEventListener) printQuery.addEventListener('change', onPrintChange)
+    else if (printQuery.addListener) printQuery.addListener(onPrintChange)
   }
 
   function init() {

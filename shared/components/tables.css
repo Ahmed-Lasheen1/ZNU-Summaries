@@ -66,6 +66,11 @@
     font-weight: 700;
   }
 
+  html.zp-cards .zp-section table.zp-table td::before { color: var(--sec); }
+
+  html.zp-cards .zp-section table.zp-table td:first-child,
+  html.zp-cards .zp-section table.zp-table tbody tr:nth-child(even) td:first-child { background: var(--sec-soft); }
+
   html.zp-cards table.zp-table td:first-child::before { display: none; }
   html.zp-cards table.zp-table td:last-child { border-bottom: 0; }
 }

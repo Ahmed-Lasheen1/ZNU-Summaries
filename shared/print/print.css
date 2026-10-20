@@ -1,6 +1,9 @@
-/* PRINT: how a lesson looks on paper or when saved as a PDF.
-   Always the light theme, nothing hidden by animations, controls removed,
-   answers and both flip-card sides shown, and parts kept together across pages. */
+/* PRINT AND PDF.
+   1. Normal printing (Ctrl+P): light theme, nothing hidden by animations, controls removed,
+      answers and both flip-card sides shown, parts kept together across pages.
+   2. The PDF view (the Save as PDF button opens the lesson with #print): the lesson is laid out as
+      numbered A4 pages by print/pdf.js, with no browser header or footer. The rules below that start
+      with html.zp-print-view are the same paper rules, applied to that on-screen page layout. */
 
 @page { margin: 14mm; }
 
@@ -31,34 +34,13 @@
 
   html, body { background: #ffffff; }
 
-  /* controls and effects that mean nothing on paper */
-  .zp-tools,
-  .zp-progress,
-  .zp-toast,
-  .zp-confetti,
-  .zp-zoom,
-  .zp-recall-progress,
-  .zp-footer-actions,
-  .zp-lesson-illustration figure::after,
-  .zp-flip-front::after { display: none !important; }
-
   main { zoom: 1 !important; }
 
   /* nothing stays hidden waiting for a scroll animation */
   .zp-motion :is(
-    .zp-glance,
-    .zp-glance-item,
-    .zp-section > h2.zp-h2,
-    .zp-box,
-    .zp-flow > li,
-    .zp-chain-node,
-    .zp-cycle,
-    .zp-compare-card,
-    .zp-flip,
-    .zp-recall,
-    .zp-keypoints-group,
-    .zp-table-wrap,
-    .zp-lesson-illustration
+    .zp-glance, .zp-glance-item, .zp-section > h2.zp-h2, .zp-box, .zp-flow > li, .zp-chain-node, .zp-cycle,
+    .zp-compare-card, .zp-flip, .zp-recall, .zp-keypoints-group, .zp-table-wrap, .zp-lesson-illustration,
+    .zp-layers > li, .zp-tree-root, .zp-tree-branch > li, .zp-bignum, .zp-map-row, .zp-range, .zp-effect-step, .zp-rule, .zp-short
   ) {
     opacity: 1 !important;
     transform: none !important;
@@ -67,7 +49,9 @@
 
   .zp-motion .zp-flow > li::before,
   .zp-motion .zp-flow > li::after { transform: none !important; }
-  .zp-motion .zp-chain-node::after { opacity: 1 !important; }
+  .zp-motion .zp-chain-node::after,
+  .zp-motion .zp-effect-step::after { opacity: 1 !important; }
+  .zp-motion .zp-range .zp-range-fill { transform: none !important; transition: none !important; }
 
   /* key terms are never blurred on paper */
   html.zp-hide-terms .zp-term {
@@ -75,27 +59,31 @@
     text-shadow: none !important;
   }
 
-  /* flip cards show both sides, one under the other */
-  .zp-flip-on .zp-flip-inner { display: block !important; transform: none !important; }
-  .zp-flip-on .zp-flip-face {
-    -webkit-backface-visibility: visible;
-    backface-visibility: visible;
-    transform: none !important;
+  .zp-tools, .zp-progress, .zp-toast, .zp-confetti, .zp-zoom, .zp-recall-progress, .zp-footer-actions,
+  .zp-lesson-illustration figure::after, .zp-flip-front::after, .zp-here, .zp-done-btn, .zp-tool-status {
+    display: none !important;
   }
-  .zp-flip-on .zp-flip-back { margin-top: 6px; }
+
+  .zp-flip-on .zp-flip-inner {
+    display: block !important; transform: none !important;
+  }
+
+  .zp-flip-on .zp-flip-face {
+    -webkit-backface-visibility: visible; backface-visibility: visible; transform: none !important;
+  }
+
+  .zp-flip-on .zp-flip-back {
+    margin-top: 6px;
+  }
+
+  .zp-footer-brand {
+    background: none !important; -webkit-text-fill-color: #b4bdcb !important; opacity: 1 !important;
+  }
 
   /* keep parts together across pages */
-  .zp-box,
-  .zp-compare-card,
-  .zp-flip,
-  .zp-recall,
-  .zp-flow > li,
-  .zp-chain,
-  .zp-cycle,
-  .zp-glance,
-  .zp-keypoints-group,
-  .zp-table-wrap tr,
-  .zp-lesson-illustration figure {
+  .zp-box, .zp-compare-card, .zp-flip, .zp-recall, .zp-flow > li, .zp-chain, .zp-cycle, .zp-glance,
+  .zp-keypoints-group, .zp-table-wrap tr, .zp-lesson-illustration figure, .zp-layers > li, .zp-tree-branch > li,
+  .zp-bignum, .zp-map-row, .zp-range, .zp-effect, .zp-rule, .zp-short {
     break-inside: avoid;
     page-break-inside: avoid;
   }
@@ -112,11 +100,135 @@
   .zp-cycle, .zp-glance, .zp-box, .zp-compare-card { box-shadow: none; }
 
   .zp-footer { margin-top: 24px; }
+}
 
-  /* the faded gradient wordmark prints as a plain grey one */
-  .zp-footer-brand {
-    background: none !important;
-    -webkit-text-fill-color: #b4bdcb !important;
-    opacity: 1 !important;
+/* ---------- The PDF view: the same paper rules, on screen ---------- */
+html.zp-print-view .zp-tools,
+html.zp-print-view .zp-progress,
+html.zp-print-view .zp-toast,
+html.zp-print-view .zp-confetti,
+html.zp-print-view .zp-zoom,
+html.zp-print-view .zp-recall-progress,
+html.zp-print-view .zp-footer-actions,
+html.zp-print-view .zp-lesson-illustration figure::after,
+html.zp-print-view .zp-flip-front::after,
+html.zp-print-view .zp-here,
+html.zp-print-view .zp-done-btn,
+html.zp-print-view .zp-tool-status {
+  display: none !important;
+}
+
+html.zp-print-view.zp-flip-on .zp-flip-inner {
+  display: block !important; transform: none !important;
+}
+
+html.zp-print-view.zp-flip-on .zp-flip-face {
+  -webkit-backface-visibility: visible; backface-visibility: visible; transform: none !important;
+}
+
+html.zp-print-view.zp-flip-on .zp-flip-back {
+  margin-top: 6px;
+}
+
+html.zp-print-view .zp-footer-brand {
+  background: none !important; -webkit-text-fill-color: #b4bdcb !important; opacity: 1 !important;
+}
+
+html.zp-print-view body { margin: 0; background: #d9dde5; }
+
+html.zp-print-view .zp-sheets { counter-reset: zp-section; padding: 14px 0 6px; }
+
+html.zp-print-view .zp-sheet {
+  position: relative;
+  width: 210mm;
+  height: 296mm;
+  margin: 0 auto 14px;
+  padding: 14mm 14mm 22mm;
+  box-sizing: border-box;
+  overflow: hidden;
+  background: #ffffff;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.18);
+}
+
+html.zp-print-view .zp-sheet main {
+  display: flow-root;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  counter-reset: none;
+  zoom: 1;
+}
+
+html.zp-print-view .zp-sheet main > :first-child { margin-top: 0; }
+html.zp-print-view .zp-sheet .zp-section { margin-top: 30px; }
+html.zp-print-view .zp-sheet .zp-sec-part { counter-increment: none; margin-top: 0; }
+html.zp-print-view .zp-sheet .zp-sec-part + .zp-sec-part { margin-top: 0; }
+html.zp-print-view .zp-sheet .zp-lesson-illustration img { max-height: 190mm; object-fit: contain; }
+html.zp-print-view .zp-sheet .zp-footer { margin-top: 10px; }
+html.zp-print-view .zp-sheet .zp-footer-inner { padding: 16px 0 4px; }
+html.zp-print-view .zp-sheet .zp-footer-brand { font-size: 30px; }
+html.zp-print-view .zp-sheet .zp-footer-credit { margin-top: 4px; font-size: 11px; }
+html.zp-print-view .zp-sheet .zp-footer-copy { margin-top: 8px; }
+
+html.zp-print-view .zp-sheet-num {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 9mm;
+  text-align: center;
+  font-family: var(--zp-font);
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 1;
+  color: #667085;
+}
+
+/* the bar above the pages (screen only; it is large because phones show the pages zoomed out) */
+.zp-pdf-bar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 18px 28px;
+  background: #101828;
+  font-family: var(--zp-font);
+  font-weight: 600;
+  font-size: 26px;
+  line-height: 1.35;
+  color: #ffffff;
+}
+
+.zp-pdf-bar button {
+  flex: 0 0 auto;
+  padding: 12px 26px;
+  border: 0;
+  border-radius: 999px;
+  background: #ffffff;
+  font-family: var(--zp-font);
+  font-weight: 700;
+  font-size: 26px;
+  color: #101828;
+  cursor: pointer;
+}
+
+@media (min-width: 900px) {
+  .zp-pdf-bar { padding: 12px 20px; font-size: 15px; }
+  .zp-pdf-bar button { padding: 8px 18px; font-size: 15px; }
+}
+
+@media print {
+  html.zp-print-view body { background: #ffffff; }
+  html.zp-print-view .zp-sheets { padding: 0; }
+  html.zp-print-view .zp-sheet {
+    margin: 0;
+    box-shadow: none;
+    break-after: page;
+    page-break-after: always;
   }
+  html.zp-print-view .zp-sheet:last-child { break-after: auto; page-break-after: auto; }
+  .zp-pdf-bar { display: none !important; }
 }

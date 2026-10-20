@@ -87,6 +87,33 @@ main { counter-reset: zp-section; }
   .zp-section > h2.zp-h2::after { font-size: 42px; right: 12px; }
 }
 
+/* ---------- Subtle colour touches: thin lines and soft tints in the section's own colour ---------- */
+.zp-section h3.zp-h3 {
+  padding-left: 12px;
+  border-left: 4px solid var(--sec);
+  border-radius: 2px;
+}
+
+.zp-section .zp-term {
+  background:
+    linear-gradient(to top, var(--sec) 2px, transparent 2px),
+    var(--sec-soft);
+}
+
+.zp-section .zp-box .zp-term {
+  background:
+    linear-gradient(to top, var(--box) 2px, transparent 2px),
+    var(--zp-surface);
+}
+
+.zp-section table.zp-table th { color: var(--sec); }
+.zp-section table.zp-table tbody tr:nth-child(even) td { background: var(--sec-soft); }
+
+.zp-keypoints > h2.zp-h2 {
+  border-bottom: 3px solid transparent;
+  border-image: linear-gradient(90deg, var(--zp-accent), var(--zp-clin), var(--zp-hy), var(--zp-vio)) 1;
+}
+
 /* ---------- At a glance ---------- */
 .zp-glance {
   position: relative;

@@ -12,12 +12,14 @@
 @import url("components/boxes.css");
 @import url("components/layouts.css");
 @import url("components/lists.css");
+@import url("components/visuals.css");
 @import url("components/cycle.css");
 @import url("components/flip.css");
 @import url("components/recall.css");
 @import url("components/zoom.css");
 @import url("tools/tools.css");
 @import url("motion/motion.css");
+@import url("study/study.css");
 @import url("progress/progress.css");
 @import url("footer/footer.css");
 @import url("print/print.css");

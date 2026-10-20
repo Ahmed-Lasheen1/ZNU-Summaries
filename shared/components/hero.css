@@ -38,6 +38,16 @@
   letter-spacing: -0.02em;
 }
 
+.zp-meta--hero #zp-lesson::after {
+  content: "";
+  display: block;
+  width: 72px;
+  height: 4px;
+  margin: 14px auto 0;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--zp-accent), var(--zp-clin), var(--zp-hy), var(--zp-vio));
+}
+
 @media (max-width: 600px) {
   .zp-meta.zp-meta--hero { padding: 28px 18px 16px; }
 }

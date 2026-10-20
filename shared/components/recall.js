@@ -1,7 +1,6 @@
 /* RECALL: shows "1 of 3 checked" above a group of quick checks and, when every check
-   in the group has been opened, celebrates with a message and falling colour dots. */
+   in the group has been opened, celebrates (see core/celebrate.js). */
 (function () {
-  var COLORS = ['var(--zp-accent)', 'var(--zp-clin)', 'var(--zp-hy)', 'var(--zp-vio)', 'var(--zp-warn)']
   var groups = []
 
   function isRecall(node) {
@@ -9,33 +8,7 @@
   }
 
   function celebrate(total) {
-    var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches
-
-    var toast = document.createElement('div')
-    toast.className = 'zp-toast'
-    toast.setAttribute('role', 'status')
-    toast.textContent = 'All ' + total + ' checks done. Nice work!'
-    document.body.appendChild(toast)
-
-    var pieces = []
-    if (!reduced) {
-      for (var i = 0; i < 60; i++) {
-        var piece = document.createElement('span')
-        piece.className = 'zp-confetti'
-        piece.style.left = (Math.random() * 100) + '%'
-        piece.style.background = COLORS[i % COLORS.length]
-        piece.style.animationDelay = (Math.random() * 500) + 'ms'
-        piece.style.animationDuration = (2000 + Math.random() * 1800) + 'ms'
-        piece.style.setProperty('--drift', ((Math.random() - 0.5) * 220) + 'px')
-        document.body.appendChild(piece)
-        pieces.push(piece)
-      }
-    }
-
-    setTimeout(function () {
-      toast.remove()
-      pieces.forEach(function (piece) { piece.remove() })
-    }, 4800)
+    if (window.zpCelebrate) window.zpCelebrate('All ' + total + ' checks done. Nice work!')
   }
 
   function refresh(group) {

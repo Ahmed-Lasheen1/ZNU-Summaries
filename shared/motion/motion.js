@@ -5,11 +5,14 @@
 
   var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches
   if (reduced || !('IntersectionObserver' in window)) return
+  if (root.classList.contains('zp-print-view')) return
 
   var SELECTOR = [
     '.zp-glance', '.zp-glance-item', '.zp-section > h2.zp-h2', '.zp-box',
     '.zp-flow > li', '.zp-chain-node', '.zp-cycle', '.zp-compare-card', '.zp-flip',
-    '.zp-recall', '.zp-keypoints-group', '.zp-table-wrap', '.zp-lesson-illustration'
+    '.zp-recall', '.zp-keypoints-group', '.zp-table-wrap', '.zp-lesson-illustration',
+    '.zp-layers > li', '.zp-tree-root', '.zp-tree-branch > li', '.zp-bignum', '.zp-map-row',
+    '.zp-range', '.zp-effect-step', '.zp-rule', '.zp-short'
   ].join(', ')
 
   var started = false
@@ -55,6 +58,11 @@
         if (element.classList.contains('zp-glance-item')) {
           var value = element.querySelector('.zp-glance-value')
           if (value) countUp(value)
+        }
+
+        if (element.classList.contains('zp-bignum')) {
+          var counted = element.querySelector('.zp-count')
+          if (counted) countUp(counted)
         }
 
         setTimeout(function () { element.style.transitionDelay = '' }, delay + 900)

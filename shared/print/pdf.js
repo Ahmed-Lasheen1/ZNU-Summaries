@@ -1,8 +1,9 @@
 /* PDF VIEW: when a lesson is opened with #print (the Save as PDF button does this), lay it out
-   as numbered A4 pages. The PDF is built in the background as soon as the page is ready.
-   On phones and tablets, Download PDF opens the share sheet, which has "Save to Files".
-   On a computer, the file downloads directly. The pages carry their own numbers and have
-   no margin of their own, so the browser adds no header or footer. */
+   as numbered A4 pages. The PDF is built in the background, and Download PDF stays disabled until
+   it is ready, so each tap starts the save straight away.
+   Installed web app on a phone or tablet: the share sheet opens, with "Save to Files".
+   Everywhere else (normal browsers, Mac, computers): the file downloads directly.
+   The pages carry their own numbers and have no margin, so the browser adds no header or footer. */
 (function () {
   var root = document.documentElement
   if (!root.classList.contains('zp-print-view')) return
@@ -20,8 +21,8 @@
 
   var pdfBlob = null
   var pdfName = 'ZNU Pulse lesson.pdf'
-  var building = false
-  var waitingToSave = null
+  var button = null
+  var status = null
 
   function isSticky(node) {
     return STICKY.test(node.tagName) ||
@@ -34,6 +35,12 @@
     var agent = navigator.userAgent || ''
     if (/iPhone|iPad|iPod|Android/i.test(agent)) return true
     return navigator.maxTouchPoints > 1 && /Mac/i.test(navigator.platform || '')
+  }
+
+  /* true only when the lesson runs as an installed app (added to the home screen) */
+  function isInstalledApp() {
+    if (navigator.standalone === true) return true
+    return !!(window.matchMedia && window.matchMedia('(display-mode: standalone)').matches)
   }
 
   /* page size and a layout as wide as an A4 page, so phones lay it out like a desktop */
@@ -172,8 +179,8 @@
   }
 
   /* builds the whole PDF once, in the background, and keeps it in memory */
-  function buildPdf(status) {
-    building = true
+  function buildPdf() {
+    button.disabled = true
     pdfName = pdfFileName()
 
     loadLibraries().then(function () {
@@ -198,21 +205,16 @@
         pdfBlob = pdf.output('blob')
       })
     }).then(function () {
-      building = false
-      status.textContent = 'Your PDF is ready. Tap Download PDF.'
-      if (waitingToSave) {
-        var next = waitingToSave
-        waitingToSave = null
-        next()
-      }
+      status.textContent = 'Your PDF is ready.'
+      button.disabled = false
     }, function () {
-      building = false
       pdfBlob = null
       status.textContent = 'Could not make the PDF. Check your connection and try again.'
+      button.disabled = false
     })
   }
 
-  /* a normal download, used on computers and when sharing is not available */
+  /* a normal download, used in browsers and on computers */
   function saveAsDownload(blob, name) {
     var url = URL.createObjectURL(blob)
     var link = document.createElement('a')
@@ -224,41 +226,38 @@
     setTimeout(function () { URL.revokeObjectURL(url) }, 60000)
   }
 
-  function savePdf(status) {
+  /* runs inside the tap, so browsers allow the download */
+  function onDownloadTap() {
     if (!pdfBlob) {
-      if (building) {
-        status.textContent = 'Still preparing your PDF, one moment...'
-      } else {
-        status.textContent = 'Preparing your PDF...'
-        waitingToSave = function () { savePdf(status) }
-        buildPdf(status)
+      buildPdf()
+      return
+    }
+
+    /* installed app on a phone or tablet: the share sheet offers "Save to Files" */
+    if (isTouchDevice() && isInstalledApp() && navigator.share) {
+      var file = null
+      try {
+        file = new File([pdfBlob], pdfName, { type: 'application/pdf' })
+      } catch (error) {
+        file = null
       }
-      return
+
+      if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
+        navigator.share({ files: [file], title: pdfName }).then(function () {
+          status.textContent = 'Choose Save to Files to keep the PDF'
+        }, function (error) {
+          if (error && error.name === 'AbortError') {
+            status.textContent = 'Saving cancelled'
+          } else {
+            saveAsDownload(pdfBlob, pdfName)
+            status.textContent = 'PDF downloaded'
+          }
+        })
+        return
+      }
     }
 
-    var file = null
-    try {
-      file = new File([pdfBlob], pdfName, { type: 'application/pdf' })
-    } catch (error) {
-      file = null
-    }
-
-    /* phones and tablets only: the share sheet offers "Save to Files" in one tap */
-    if (isTouchDevice() && file && navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-      navigator.share({ files: [file], title: pdfName }).then(function () {
-        status.textContent = 'Choose Save to Files to keep the PDF'
-      }, function (error) {
-        if (error && error.name === 'AbortError') {
-          status.textContent = 'Saving cancelled'
-        } else {
-          saveAsDownload(pdfBlob, pdfName)
-          status.textContent = 'PDF downloaded'
-        }
-      })
-      return
-    }
-
-    /* computers: the file downloads straight away */
+    /* browsers, Mac and computers: the file downloads straight away */
     saveAsDownload(pdfBlob, pdfName)
     status.textContent = 'PDF downloaded'
   }
@@ -267,19 +266,20 @@
     var bar = document.createElement('div')
     bar.className = 'zp-pdf-bar'
 
-    var text = document.createElement('span')
-    text.textContent = pageCount + (pageCount === 1 ? ' page' : ' pages') + ' ready.'
+    status = document.createElement('span')
+    status.textContent = pageCount + (pageCount === 1 ? ' page' : ' pages') + ' ready.'
 
-    var button = document.createElement('button')
+    button = document.createElement('button')
     button.type = 'button'
     button.textContent = 'Download PDF'
-    button.addEventListener('click', function () { savePdf(text) })
+    button.disabled = true
+    button.addEventListener('click', onDownloadTap)
 
-    bar.appendChild(text)
+    bar.appendChild(status)
     bar.appendChild(button)
     document.body.insertBefore(bar, document.body.firstChild)
 
-    buildPdf(text)
+    buildPdf()
   }
 
   function run() {

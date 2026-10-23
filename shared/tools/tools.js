@@ -47,7 +47,10 @@
 
   function say(button, text) {
     statusLabel.textContent = text
-    statusLabel.style.top = (button.offsetTop + (button.offsetHeight - statusLabel.offsetHeight) / 2) + 'px'
+    var holderTop = holder.getBoundingClientRect().top
+    var box = button.getBoundingClientRect()
+    var top = box.top - holderTop + (box.height - statusLabel.offsetHeight) / 2
+    statusLabel.style.top = Math.max(0, top) + 'px'
     statusLabel.classList.add('is-shown')
     clearTimeout(statusTimer)
     statusTimer = setTimeout(function () { statusLabel.classList.remove('is-shown') }, 1900)
@@ -146,26 +149,24 @@
     return /^https?:/.test(address) ? address.split('#')[0] : null
   }
 
-  /* The lesson is opened on its own as numbered pages (see print/pdf.js), where the browser
-     can save it as a PDF. This also works in home-screen web apps, which cannot print. */
+  /* The lesson is opened on its own as numbered pages (see print/pdf.js), where the Download PDF
+     button builds the file. This also works in home-screen web apps, which cannot print. */
   function savePdf() {
     var address = lessonAddress()
 
     if (address) {
+      /* on a home-screen app window.open can return nothing, so move to the page in this window */
       var opened = window.open(address + '#print', '_blank')
-      say(buttons.pdf, opened ? 'Opening the PDF pages...' : 'Allow pop-ups to save as PDF')
+      if (opened) {
+        say(buttons.pdf, 'Opening the PDF pages...')
+      } else {
+        window.location.href = address + '#print'
+      }
       return
     }
 
-    /* an offline copy has no address of its own: print it as it is */
-    var started = false
-    var mark = function () { started = true }
-    window.addEventListener('beforeprint', mark)
-    try { window.print() } catch (error) { /* blocked */ }
-    setTimeout(function () {
-      window.removeEventListener('beforeprint', mark)
-      if (!started) say(buttons.pdf, 'Open this lesson online to save it as a PDF')
-    }, 900)
+    /* an offline copy has no web address to open its PDF pages from */
+    say(buttons.pdf, 'Open this lesson online to save it as a PDF')
   }
 
   function makeButton(name, label, markup, index) {

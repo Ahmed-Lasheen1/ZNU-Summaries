@@ -17,8 +17,6 @@
 
   var started = false
 
-  root.classList.add('zp-motion')
-
   /* Safety net: if nothing was ever revealed, show everything. */
   setTimeout(function () {
     if (!started) root.classList.remove('zp-motion')
@@ -42,6 +40,18 @@
 
   function init() {
     var items = [].slice.call(document.querySelectorAll(SELECTOR))
+    var lineOfView = window.innerHeight * 0.9
+
+    /* items already on screen show at once, so nothing blinks on load */
+    items.forEach(function (element) {
+      if (element.getBoundingClientRect().top < lineOfView) element.classList.add('is-visible')
+    })
+
+    /* only now hide the items that are still below the screen */
+    root.classList.add('zp-motion')
+
+    var pending = items.filter(function (element) { return !element.classList.contains('is-visible') })
+    if (!pending.length) return
 
     var observer = new IntersectionObserver(function (entries) {
       var order = 0
@@ -69,7 +79,7 @@
       })
     }, { threshold: 0.12, rootMargin: '0px 0px -5% 0px' })
 
-    items.forEach(function (element) { observer.observe(element) })
+    pending.forEach(function (element) { observer.observe(element) })
   }
 
   if (document.readyState === 'loading') {

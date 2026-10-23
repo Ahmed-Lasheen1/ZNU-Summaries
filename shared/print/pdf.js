@@ -1,7 +1,7 @@
 /* PDF VIEW: when a lesson is opened with #print (the Save as PDF button does this), lay it out
-   as numbered A4 pages, then open the print dialog. The pages carry their own numbers (1, 2, 3...)
-   and have no margin of their own, so the browser adds no header or footer (no web address, no date).
-   Circular diagrams rest at their default place. */
+   as numbered A4 pages. A "Download PDF" button then builds the file and saves it, without
+   opening the print dialog. The pages carry their own numbers (1, 2, 3...) and have no margin
+   of their own, so the browser adds no header or footer. */
 (function () {
   var root = document.documentElement
   if (!root.classList.contains('zp-print-view')) return
@@ -10,6 +10,12 @@
   var PAGE_HEIGHT = 296 * MM
   var CAPACITY = PAGE_HEIGHT - (14 + 22) * MM
   var STICKY = /^(H2|H3|H4)$/
+
+  var CDN = 'https://cdnjs.cloudflare.com/ajax/libs/'
+  var LIBRARIES = [
+    CDN + 'html2canvas/1.4.1/html2canvas.min.js',
+    CDN + 'jspdf/2.5.1/jspdf.umd.min.js'
+  ]
 
   function isSticky(node) {
     return STICKY.test(node.tagName) ||
@@ -126,30 +132,82 @@
     return pages.length
   }
 
-  function addBar(pageCount) {
-    var started = false
-    window.addEventListener('beforeprint', function () { started = true })
+  function loadScript(src) {
+    return new Promise(function (resolve, reject) {
+      var script = document.createElement('script')
+      script.src = src
+      script.onload = resolve
+      script.onerror = function () { reject(new Error('Could not load ' + src)) }
+      document.head.appendChild(script)
+    })
+  }
 
+  /* loaded only when the person taps Download, so the lesson page stays light */
+  function loadLibraries() {
+    if (window.html2canvas && window.jspdf) return Promise.resolve()
+    return LIBRARIES.reduce(function (chain, src) {
+      return chain.then(function () { return loadScript(src) })
+    }, Promise.resolve())
+  }
+
+  function pdfFileName() {
+    var title = document.getElementById('zp-lesson')
+    var name = (title ? title.textContent : 'ZNU Pulse lesson')
+      .replace(/[\\\/:*?"<>|]+/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim()
+    return name + '.pdf'
+  }
+
+  function downloadPdf(button, status) {
+    button.disabled = true
+    status.textContent = 'Preparing your PDF...'
+
+    loadLibraries().then(function () {
+      var pdf = new window.jspdf.jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait', compress: true })
+      var sheets = [].slice.call(document.querySelectorAll('.zp-sheet'))
+
+      /* one page at a time, so a phone does not run out of memory */
+      return sheets.reduce(function (chain, sheet, index) {
+        return chain.then(function () {
+          return window.html2canvas(sheet, {
+            scale: 2,
+            useCORS: true,
+            backgroundColor: '#ffffff',
+            logging: false
+          }).then(function (canvas) {
+            if (index > 0) pdf.addPage()
+            pdf.addImage(canvas.toDataURL('image/jpeg', 0.92), 'JPEG', 0, 0, 210, 296)
+            status.textContent = 'Preparing your PDF... ' + (index + 1) + ' of ' + sheets.length
+          })
+        })
+      }, Promise.resolve()).then(function () {
+        pdf.save(pdfFileName())
+      })
+    }).then(function () {
+      status.textContent = 'PDF downloaded'
+    }, function () {
+      status.textContent = 'Could not make the PDF. Check your connection and try again.'
+    }).then(function () {
+      button.disabled = false
+    })
+  }
+
+  function addBar(pageCount) {
     var bar = document.createElement('div')
     bar.className = 'zp-pdf-bar'
+
     var text = document.createElement('span')
-    text.textContent = pageCount + (pageCount === 1 ? ' page' : ' pages') + ' ready. Save it as a PDF.'
+    text.textContent = pageCount + (pageCount === 1 ? ' page' : ' pages') + ' ready.'
+
     var button = document.createElement('button')
     button.type = 'button'
-    button.textContent = 'Save as PDF'
-    button.addEventListener('click', function () {
-      try { window.print() } catch (error) { /* blocked */ }
-    })
+    button.textContent = 'Download PDF'
+    button.addEventListener('click', function () { downloadPdf(button, text) })
+
     bar.appendChild(text)
     bar.appendChild(button)
     document.body.insertBefore(bar, document.body.firstChild)
-
-    setTimeout(function () {
-      try { window.print() } catch (error) { /* blocked */ }
-      setTimeout(function () {
-        if (!started) text.textContent = 'If the print window did not open: tap Share, then Print.'
-      }, 1500)
-    }, 700)
   }
 
   function run() {

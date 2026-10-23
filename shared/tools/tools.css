@@ -134,7 +134,8 @@ html[data-size="larger"] .zp-tool-badge::before { content: "++"; }
   position: absolute;
   right: calc(var(--zp-tool) + 10px);
   top: 0;
-  max-width: 230px;
+  width: max-content;
+  max-width: min(230px, calc(100vw - 96px));
   padding: 7px 12px;
   border: 1px solid var(--zp-border);
   border-radius: 14px;

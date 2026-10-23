@@ -1,8 +1,8 @@
 /* PDF VIEW: when a lesson is opened with #print (the Save as PDF button does this), lay it out
-   as numbered A4 pages. The PDF is built in the background as soon as the page is ready, so the
-   Download PDF button opens the share sheet straight away. On iPhone and Android the share sheet
-   has "Save to Files" as one tap. Elsewhere the file downloads directly. The pages carry their own
-   numbers and have no margin of their own, so the browser adds no header or footer. */
+   as numbered A4 pages. The PDF is built in the background as soon as the page is ready.
+   On phones and tablets, Download PDF opens the share sheet, which has "Save to Files".
+   On a computer, the file downloads directly. The pages carry their own numbers and have
+   no margin of their own, so the browser adds no header or footer. */
 (function () {
   var root = document.documentElement
   if (!root.classList.contains('zp-print-view')) return
@@ -27,6 +27,13 @@
     return STICKY.test(node.tagName) ||
       node.classList.contains('zp-source') ||
       node.classList.contains('zp-short')
+  }
+
+  /* true on phones and tablets only (iPads in desktop mode report a Mac platform with touch) */
+  function isTouchDevice() {
+    var agent = navigator.userAgent || ''
+    if (/iPhone|iPad|iPod|Android/i.test(agent)) return true
+    return navigator.maxTouchPoints > 1 && /Mac/i.test(navigator.platform || '')
   }
 
   /* page size and a layout as wide as an A4 page, so phones lay it out like a desktop */
@@ -205,8 +212,8 @@
     })
   }
 
-  /* falls back to a normal download, or opens the file, when sharing is not available */
-  function saveWithoutShare(blob, name) {
+  /* a normal download, used on computers and when sharing is not available */
+  function saveAsDownload(blob, name) {
     var url = URL.createObjectURL(blob)
     var link = document.createElement('a')
     link.href = url
@@ -236,22 +243,23 @@
       file = null
     }
 
-    /* iPhone and Android: the share sheet offers "Save to Files" in one tap */
-    if (file && navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+    /* phones and tablets only: the share sheet offers "Save to Files" in one tap */
+    if (isTouchDevice() && file && navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
       navigator.share({ files: [file], title: pdfName }).then(function () {
         status.textContent = 'Choose Save to Files to keep the PDF'
       }, function (error) {
         if (error && error.name === 'AbortError') {
           status.textContent = 'Saving cancelled'
         } else {
-          saveWithoutShare(pdfBlob, pdfName)
+          saveAsDownload(pdfBlob, pdfName)
           status.textContent = 'PDF downloaded'
         }
       })
       return
     }
 
-    saveWithoutShare(pdfBlob, pdfName)
+    /* computers: the file downloads straight away */
+    saveAsDownload(pdfBlob, pdfName)
     status.textContent = 'PDF downloaded'
   }
 

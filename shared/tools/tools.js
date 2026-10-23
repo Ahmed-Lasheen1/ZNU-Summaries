@@ -1,15 +1,15 @@
-/* TOOLS: round buttons for theme, text size, hide terms and save as PDF.
+/* TOOLS: round buttons for theme, text size, hide terms and Download PDF.
    Light theme, normal text size and visible terms are the defaults.
    Theme and text size are remembered where the browser allows it (not in offline copies).
    Hide terms always starts switched off.
-   The PDF is built in a hidden frame while the lesson is open, so the PDF button can
-   open the share sheet (Save to Files) straight away. */
+   The PDF is built only when the person taps Download PDF, in a hidden frame, and then downloaded. */
 (function () {
   var THEME_KEY = 'zp-theme'
   var SIZE_KEY = 'zp-size'
   var SIZES = ['normal', 'large', 'larger']
   var SIZE_NAMES = { normal: 'Normal', large: 'Large', larger: 'Larger' }
   var MIN_TERMS = 3
+  var BUILD_TIMEOUT = 90000
   var root = document.documentElement
 
   function read(key) {
@@ -122,12 +122,21 @@
   var pdfBlob = null
   var pdfName = 'ZNU Pulse lesson.pdf'
   var builder = null
+  var waiting = false
+  var waitTimer = null
   var reopened = []
 
   /* the hidden frame calls this when its PDF is ready */
   window.zpSetPdf = function (blob, name) {
     pdfBlob = blob
     pdfName = name
+    clearTimeout(waitTimer)
+    stopBuilder()
+    if (waiting) {
+      waiting = false
+      downloadPdf()
+      say(buttons.pdf, 'PDF downloaded')
+    }
   }
 
   function lessonAddress() {
@@ -135,10 +144,10 @@
     return /^https?:/.test(address) ? address.split('#')[0] : null
   }
 
-  /* opens the lesson once, hidden, so it can lay out its pages and build the PDF */
+  /* opens the lesson hidden, only when asked, so it can lay out its pages and build the PDF */
   function startPdfBuild() {
     var address = lessonAddress()
-    if (!address || builder || pdfBlob) return
+    if (!address || builder) return
 
     builder = document.createElement('iframe')
     builder.setAttribute('aria-hidden', 'true')
@@ -148,42 +157,14 @@
     document.body.appendChild(builder)
   }
 
-  /* must run straight from the tap, so the share sheet is allowed to open */
-  function savePdf() {
-    if (!lessonAddress()) {
-      say(buttons.pdf, 'Open this lesson online to save it as a PDF')
-      return
+  function stopBuilder() {
+    if (builder) {
+      builder.remove()
+      builder = null
     }
-
-    if (!pdfBlob) {
-      say(buttons.pdf, 'Preparing your PDF. Tap again in a moment.')
-      startPdfBuild()
-      return
-    }
-
-    var file = null
-    try {
-      file = new File([pdfBlob], pdfName, { type: 'application/pdf' })
-    } catch (error) {
-      file = null
-    }
-
-    /* iPhone and Android: the share sheet has Save to Files */
-    if (file && navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-      navigator.share({ files: [file], title: pdfName }).then(function () {
-        say(buttons.pdf, 'Choose Save to Files')
-      }, function (error) {
-        if (error && error.name === 'AbortError') return
-        downloadPdf()
-      })
-      return
-    }
-
-    /* computers: a normal download */
-    downloadPdf()
-    say(buttons.pdf, 'PDF downloaded')
   }
 
+  /* downloads the PDF straight to the device, with no share sheet */
   function downloadPdf() {
     var url = URL.createObjectURL(pdfBlob)
     var link = document.createElement('a')
@@ -193,6 +174,36 @@
     link.click()
     link.remove()
     setTimeout(function () { URL.revokeObjectURL(url) }, 60000)
+  }
+
+  function savePdf() {
+    if (!lessonAddress()) {
+      say(buttons.pdf, 'Open this lesson online to save it as a PDF')
+      return
+    }
+
+    /* already built: the download is instant */
+    if (pdfBlob) {
+      downloadPdf()
+      say(buttons.pdf, 'PDF downloaded')
+      return
+    }
+
+    if (waiting) {
+      say(buttons.pdf, 'Still preparing your PDF, one moment...')
+      return
+    }
+
+    waiting = true
+    say(buttons.pdf, 'Preparing your PDF. This takes a few seconds.')
+    startPdfBuild()
+
+    waitTimer = setTimeout(function () {
+      if (!waiting) return
+      waiting = false
+      stopBuilder()
+      say(buttons.pdf, 'Could not make the PDF. Check your connection and try again.')
+    }, BUILD_TIMEOUT)
   }
 
   /* printing is no longer used for the PDF, but the browser print still tidies details for print */
@@ -252,7 +263,7 @@
     makeButton('theme', 'Switch theme', ICONS.sun + ICONS.moon, 0)
     makeButton('size', 'Change text size', ICONS.type + '<span class="zp-tool-badge" aria-hidden="true"></span>', 1)
     makeButton('terms', 'Hide key terms', ICONS.eye + ICONS.eyeOff, 2)
-    makeButton('pdf', 'Save as PDF', ICONS.pdf, 3)
+    makeButton('pdf', 'Download PDF', ICONS.pdf, 3)
 
     statusLabel = document.createElement('div')
     statusLabel.className = 'zp-tool-status'
@@ -296,9 +307,6 @@
         mainButton.focus()
       }
     })
-
-    /* start building the PDF quietly after the lesson has settled */
-    setTimeout(startPdfBuild, 2500)
   }
 
   if (buildMode) return

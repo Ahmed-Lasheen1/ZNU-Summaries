@@ -1,7 +1,8 @@
 /* PDF VIEW: when a lesson is opened with #print (the Save as PDF button does this), lay it out
-   as numbered A4 pages. A "Download PDF" button then builds the file and saves it, without
-   opening the print dialog. The pages carry their own numbers (1, 2, 3...) and have no margin
-   of their own, so the browser adds no header or footer. */
+   as numbered A4 pages. The PDF is built in the background as soon as the page is ready, so the
+   Download PDF button opens the share sheet straight away. On iPhone and Android the share sheet
+   has "Save to Files" as one tap. Elsewhere the file downloads directly. The pages carry their own
+   numbers and have no margin of their own, so the browser adds no header or footer. */
 (function () {
   var root = document.documentElement
   if (!root.classList.contains('zp-print-view')) return
@@ -16,6 +17,11 @@
     CDN + 'html2canvas/1.4.1/html2canvas.min.js',
     CDN + 'jspdf/2.5.1/jspdf.umd.min.js'
   ]
+
+  var pdfBlob = null
+  var pdfName = 'ZNU Pulse lesson.pdf'
+  var building = false
+  var waitingToSave = null
 
   function isSticky(node) {
     return STICKY.test(node.tagName) ||
@@ -142,7 +148,6 @@
     })
   }
 
-  /* loaded only when the person taps Download, so the lesson page stays light */
   function loadLibraries() {
     if (window.html2canvas && window.jspdf) return Promise.resolve()
     return LIBRARIES.reduce(function (chain, src) {
@@ -159,9 +164,10 @@
     return name + '.pdf'
   }
 
-  function downloadPdf(button, status) {
-    button.disabled = true
-    status.textContent = 'Preparing your PDF...'
+  /* builds the whole PDF once, in the background, and keeps it in memory */
+  function buildPdf(status) {
+    building = true
+    pdfName = pdfFileName()
 
     loadLibraries().then(function () {
       var pdf = new window.jspdf.jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait', compress: true })
@@ -182,15 +188,71 @@
           })
         })
       }, Promise.resolve()).then(function () {
-        pdf.save(pdfFileName())
+        pdfBlob = pdf.output('blob')
       })
     }).then(function () {
-      status.textContent = 'PDF downloaded'
+      building = false
+      status.textContent = 'Your PDF is ready. Tap Download PDF.'
+      if (waitingToSave) {
+        var next = waitingToSave
+        waitingToSave = null
+        next()
+      }
     }, function () {
+      building = false
+      pdfBlob = null
       status.textContent = 'Could not make the PDF. Check your connection and try again.'
-    }).then(function () {
-      button.disabled = false
     })
+  }
+
+  /* falls back to a normal download, or opens the file, when sharing is not available */
+  function saveWithoutShare(blob, name) {
+    var url = URL.createObjectURL(blob)
+    var link = document.createElement('a')
+    link.href = url
+    link.download = name
+    document.body.appendChild(link)
+    link.click()
+    link.remove()
+    setTimeout(function () { URL.revokeObjectURL(url) }, 60000)
+  }
+
+  function savePdf(status) {
+    if (!pdfBlob) {
+      if (building) {
+        status.textContent = 'Still preparing your PDF, one moment...'
+      } else {
+        status.textContent = 'Preparing your PDF...'
+        waitingToSave = function () { savePdf(status) }
+        buildPdf(status)
+      }
+      return
+    }
+
+    var file = null
+    try {
+      file = new File([pdfBlob], pdfName, { type: 'application/pdf' })
+    } catch (error) {
+      file = null
+    }
+
+    /* iPhone and Android: the share sheet offers "Save to Files" in one tap */
+    if (file && navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+      navigator.share({ files: [file], title: pdfName }).then(function () {
+        status.textContent = 'Choose Save to Files to keep the PDF'
+      }, function (error) {
+        if (error && error.name === 'AbortError') {
+          status.textContent = 'Saving cancelled'
+        } else {
+          saveWithoutShare(pdfBlob, pdfName)
+          status.textContent = 'PDF downloaded'
+        }
+      })
+      return
+    }
+
+    saveWithoutShare(pdfBlob, pdfName)
+    status.textContent = 'PDF downloaded'
   }
 
   function addBar(pageCount) {
@@ -203,11 +265,13 @@
     var button = document.createElement('button')
     button.type = 'button'
     button.textContent = 'Download PDF'
-    button.addEventListener('click', function () { downloadPdf(button, text) })
+    button.addEventListener('click', function () { savePdf(text) })
 
     bar.appendChild(text)
     bar.appendChild(button)
     document.body.insertBefore(bar, document.body.firstChild)
+
+    buildPdf(text)
   }
 
   function run() {

@@ -1,7 +1,9 @@
 /* TOOLS: round buttons for theme, text size, hide terms and save as PDF.
    Light theme, normal text size and visible terms are the defaults.
    Theme and text size are remembered where the browser allows it (not in offline copies).
-   Hide terms always starts switched off. */
+   Hide terms always starts switched off.
+   The PDF is built in a hidden frame while the lesson is open, so the PDF button can
+   open the share sheet (Save to Files) straight away. */
 (function () {
   var THEME_KEY = 'zp-theme'
   var SIZE_KEY = 'zp-size'
@@ -18,13 +20,13 @@
     try { localStorage.setItem(key, value) } catch (error) { /* storage blocked: lasts for this visit */ }
   }
 
-  /* Apply the saved choices straight away so the page does not flash the wrong theme. */
-  var pdfView = window.top === window && window.location.hash === '#print'
-  var theme = !pdfView && read(THEME_KEY) === 'dark' ? 'dark' : 'light'
-  var size = !pdfView && SIZES.indexOf(read(SIZE_KEY)) > -1 ? read(SIZE_KEY) : 'normal'
+  /* The hidden frame opens this same lesson with #pdf-build. It only lays out the pages and builds the PDF. */
+  var buildMode = window.top !== window && window.location.hash === '#pdf-build'
+  var theme = !buildMode && read(THEME_KEY) === 'dark' ? 'dark' : 'light'
+  var size = !buildMode && SIZES.indexOf(read(SIZE_KEY)) > -1 ? read(SIZE_KEY) : 'normal'
   root.dataset.theme = theme
   root.dataset.size = size
-  if (pdfView) root.classList.add('zp-print-view')
+  if (buildMode) root.classList.add('zp-print-view')
 
   function svg(inner, className) {
     return '<svg viewBox="0 0 24 24" aria-hidden="true"' + (className ? ' class="' + className + '"' : '') + '>' + inner + '</svg>'
@@ -53,7 +55,7 @@
     statusLabel.style.top = Math.max(0, top) + 'px'
     statusLabel.classList.add('is-shown')
     clearTimeout(statusTimer)
-    statusTimer = setTimeout(function () { statusLabel.classList.remove('is-shown') }, 1900)
+    statusTimer = setTimeout(function () { statusLabel.classList.remove('is-shown') }, 2200)
   }
 
   function setOpen(open) {
@@ -116,9 +118,84 @@
     say(buttons.terms, hide ? 'Key terms hidden. Tap one to reveal it.' : 'Key terms shown')
   }
 
-  /* ---- save as PDF ---- */
+  /* ---- PDF ---- */
+  var pdfBlob = null
+  var pdfName = 'ZNU Pulse lesson.pdf'
+  var builder = null
   var reopened = []
 
+  /* the hidden frame calls this when its PDF is ready */
+  window.zpSetPdf = function (blob, name) {
+    pdfBlob = blob
+    pdfName = name
+  }
+
+  function lessonAddress() {
+    var address = String(window.location.href)
+    return /^https?:/.test(address) ? address.split('#')[0] : null
+  }
+
+  /* opens the lesson once, hidden, so it can lay out its pages and build the PDF */
+  function startPdfBuild() {
+    var address = lessonAddress()
+    if (!address || builder || pdfBlob) return
+
+    builder = document.createElement('iframe')
+    builder.setAttribute('aria-hidden', 'true')
+    builder.tabIndex = -1
+    builder.style.cssText = 'position:fixed;left:-10000px;top:0;width:794px;height:1123px;border:0;pointer-events:none;'
+    builder.src = address + '#pdf-build'
+    document.body.appendChild(builder)
+  }
+
+  /* must run straight from the tap, so the share sheet is allowed to open */
+  function savePdf() {
+    if (!lessonAddress()) {
+      say(buttons.pdf, 'Open this lesson online to save it as a PDF')
+      return
+    }
+
+    if (!pdfBlob) {
+      say(buttons.pdf, 'Preparing your PDF. Tap again in a moment.')
+      startPdfBuild()
+      return
+    }
+
+    var file = null
+    try {
+      file = new File([pdfBlob], pdfName, { type: 'application/pdf' })
+    } catch (error) {
+      file = null
+    }
+
+    /* iPhone and Android: the share sheet has Save to Files */
+    if (file && navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+      navigator.share({ files: [file], title: pdfName }).then(function () {
+        say(buttons.pdf, 'Choose Save to Files')
+      }, function (error) {
+        if (error && error.name === 'AbortError') return
+        downloadPdf()
+      })
+      return
+    }
+
+    /* computers: a normal download */
+    downloadPdf()
+    say(buttons.pdf, 'PDF downloaded')
+  }
+
+  function downloadPdf() {
+    var url = URL.createObjectURL(pdfBlob)
+    var link = document.createElement('a')
+    link.href = url
+    link.download = pdfName
+    document.body.appendChild(link)
+    link.click()
+    link.remove()
+    setTimeout(function () { URL.revokeObjectURL(url) }, 60000)
+  }
+
+  /* printing is no longer used for the PDF, but the browser print still tidies details for print */
   function prepareForPrint() {
     var checks = document.querySelectorAll('details.zp-recall')
     reopened = []
@@ -142,31 +219,6 @@
     var onPrintChange = function (event) { if (event.matches) prepareForPrint(); else afterPrint() }
     if (printQuery.addEventListener) printQuery.addEventListener('change', onPrintChange)
     else if (printQuery.addListener) printQuery.addListener(onPrintChange)
-  }
-
-  function lessonAddress() {
-    var address = String(window.location.href)
-    return /^https?:/.test(address) ? address.split('#')[0] : null
-  }
-
-  /* The lesson is opened on its own as numbered pages (see print/pdf.js), where the Download PDF
-     button builds the file. This also works in home-screen web apps, which cannot print. */
-  function savePdf() {
-    var address = lessonAddress()
-
-    if (address) {
-      /* on a home-screen app window.open can return nothing, so move to the page in this window */
-      var opened = window.open(address + '#print', '_blank')
-      if (opened) {
-        say(buttons.pdf, 'Opening the PDF pages...')
-      } else {
-        window.location.href = address + '#print'
-      }
-      return
-    }
-
-    /* an offline copy has no web address to open its PDF pages from */
-    say(buttons.pdf, 'Open this lesson online to save it as a PDF')
   }
 
   function makeButton(name, label, markup, index) {
@@ -224,7 +276,6 @@
     buttons.pdf.addEventListener('click', function () {
       savePdf()
       setOpen(false)
-      /* keep the message readable even though the menu closes */
       statusLabel.classList.add('is-shown')
       clearTimeout(statusTimer)
       statusTimer = setTimeout(function () { statusLabel.classList.remove('is-shown') }, 2600)
@@ -245,9 +296,12 @@
         mainButton.focus()
       }
     })
+
+    /* start building the PDF quietly after the lesson has settled */
+    setTimeout(startPdfBuild, 2500)
   }
 
-  if (pdfView) return
+  if (buildMode) return
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', build)

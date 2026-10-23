@@ -1,8 +1,8 @@
 /* PDF VIEW: when a lesson is opened with #print (the Save as PDF button does this), lay it out
    as numbered A4 pages. The PDF is built in the background, and Download PDF stays disabled until
    it is ready, so each tap starts the save straight away.
-   Installed web app on a phone or tablet: the share sheet opens, with "Save to Files".
-   Everywhere else (normal browsers, Mac, computers): the file downloads directly.
+   iPhone and iPad (any browser): the share sheet opens, with "Save to Files".
+   Mac and computers: the file downloads directly.
    The pages carry their own numbers and have no margin, so the browser adds no header or footer. */
 (function () {
   var root = document.documentElement
@@ -30,17 +30,10 @@
       node.classList.contains('zp-short')
   }
 
-  /* true on phones and tablets only (iPads in desktop mode report a Mac platform with touch) */
-  function isTouchDevice() {
-    var agent = navigator.userAgent || ''
-    if (/iPhone|iPad|iPod|Android/i.test(agent)) return true
+  /* true on iPhone and iPad, in any browser (iPads in desktop mode report a Mac platform with touch) */
+  function isIOS() {
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent || '')) return true
     return navigator.maxTouchPoints > 1 && /Mac/i.test(navigator.platform || '')
-  }
-
-  /* true only when the lesson runs as an installed app (added to the home screen) */
-  function isInstalledApp() {
-    if (navigator.standalone === true) return true
-    return !!(window.matchMedia && window.matchMedia('(display-mode: standalone)').matches)
   }
 
   /* page size and a layout as wide as an A4 page, so phones lay it out like a desktop */
@@ -214,27 +207,35 @@
     })
   }
 
-  /* a normal download, used in browsers and on computers */
+  /* a normal download for Mac and computers; opens the file in a tab if downloads are not supported */
   function saveAsDownload(blob, name) {
     var url = URL.createObjectURL(blob)
     var link = document.createElement('a')
     link.href = url
     link.download = name
-    document.body.appendChild(link)
-    link.click()
-    link.remove()
+
+    if ('download' in link) {
+      document.body.appendChild(link)
+      link.click()
+      link.remove()
+      status.textContent = 'PDF downloaded'
+    } else {
+      window.open(url, '_blank')
+      status.textContent = 'PDF opened in a new tab'
+    }
+
     setTimeout(function () { URL.revokeObjectURL(url) }, 60000)
   }
 
-  /* runs inside the tap, so browsers allow the download */
+  /* runs inside the tap, so the browser allows the save or share */
   function onDownloadTap() {
     if (!pdfBlob) {
       buildPdf()
       return
     }
 
-    /* installed app on a phone or tablet: the share sheet offers "Save to Files" */
-    if (isTouchDevice() && isInstalledApp() && navigator.share) {
+    /* iPhone and iPad: the share sheet has "Save to Files" in one tap */
+    if (isIOS() && navigator.share && navigator.canShare) {
       var file = null
       try {
         file = new File([pdfBlob], pdfName, { type: 'application/pdf' })
@@ -242,7 +243,7 @@
         file = null
       }
 
-      if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
+      if (file && navigator.canShare({ files: [file] })) {
         navigator.share({ files: [file], title: pdfName }).then(function () {
           status.textContent = 'Choose Save to Files to keep the PDF'
         }, function (error) {
@@ -250,16 +251,14 @@
             status.textContent = 'Saving cancelled'
           } else {
             saveAsDownload(pdfBlob, pdfName)
-            status.textContent = 'PDF downloaded'
           }
         })
         return
       }
     }
 
-    /* browsers, Mac and computers: the file downloads straight away */
+    /* Mac and computers: the file downloads straight away */
     saveAsDownload(pdfBlob, pdfName)
-    status.textContent = 'PDF downloaded'
   }
 
   function addBar(pageCount) {

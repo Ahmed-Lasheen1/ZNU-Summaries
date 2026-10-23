@@ -155,12 +155,13 @@
     var address = lessonAddress()
 
     if (address) {
-      /* on a home-screen app window.open can return nothing, so move to the page in this window */
       var opened = window.open(address + '#print', '_blank')
       if (opened) {
         say(buttons.pdf, 'Opening the PDF pages...')
       } else {
+        /* a home-screen app can refuse a new window: open the pages in this window */
         window.location.href = address + '#print'
+        window.location.reload()
       }
       return
     }

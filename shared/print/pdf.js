@@ -2,7 +2,7 @@
    as numbered A4 pages. The PDF is built in the background, and Download PDF stays disabled until
    it is ready, so each tap starts the save straight away.
    iPhone and iPad (any browser): the share sheet opens, with "Save to Files".
-   Mac and computers: the file downloads directly.
+   Android, Mac and computers: the file downloads directly.
    The pages carry their own numbers and have no margin, so the browser adds no header or footer. */
 (function () {
   var root = document.documentElement
@@ -35,6 +35,11 @@
     if (/iPhone|iPad|iPod/i.test(navigator.userAgent || '')) return true
     return navigator.maxTouchPoints > 1 && /Mac/i.test(navigator.platform || '')
   }
+
+  /* going back from the PDF pages to the lesson in the same window */
+  window.addEventListener('hashchange', function () {
+    if (window.location.hash !== '#print') window.location.reload()
+  })
 
   /* page size and a layout as wide as an A4 page, so phones lay it out like a desktop */
   function prepare() {
@@ -191,6 +196,11 @@
           }).then(function (canvas) {
             if (index > 0) pdf.addPage()
             pdf.addImage(canvas.toDataURL('image/jpeg', 0.92), 'JPEG', 0, 0, 210, 296)
+
+            /* free the picture's memory, or iPhone may turn later pages blank */
+            canvas.width = 0
+            canvas.height = 0
+
             status.textContent = 'Preparing your PDF... ' + (index + 1) + ' of ' + sheets.length
           })
         })
@@ -207,7 +217,7 @@
     })
   }
 
-  /* a normal download for Mac and computers; opens the file in a tab if downloads are not supported */
+  /* a normal download for Android, Mac and computers */
   function saveAsDownload(blob, name) {
     var url = URL.createObjectURL(blob)
     var link = document.createElement('a')
@@ -245,7 +255,7 @@
 
       if (file && navigator.canShare({ files: [file] })) {
         navigator.share({ files: [file], title: pdfName }).then(function () {
-          status.textContent = 'Choose Save to Files to keep the PDF'
+          status.textContent = 'Done'
         }, function (error) {
           if (error && error.name === 'AbortError') {
             status.textContent = 'Saving cancelled'
@@ -257,7 +267,7 @@
       }
     }
 
-    /* Mac and computers: the file downloads straight away */
+    /* Android, Mac and computers: the file downloads straight away */
     saveAsDownload(pdfBlob, pdfName)
   }
 

@@ -1,328 +1,243 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Cortex and Speech</title>
-<style>
-/* SORA_FONT_FACE_PLACEHOLDER: paste the standard ZNU Pulse Sora @font-face block here. Fallback stack below works without it. */
-:root{
-  --zp-bg:#f5f7fa;--zp-surface:#fff;--zp-text:#101828;--zp-muted:#667085;--zp-border:rgba(16,24,40,.12);
-  --zp-accent:#315f8f;--zp-accent-soft:rgba(49,95,143,.08);
-  --zp-glass-bg:linear-gradient(160deg,rgba(255,255,255,.65),rgba(255,255,255,.35));
-  --zp-glass-border:rgba(255,255,255,.6);
-  --zp-glass-shadow:0 1px 0 rgba(255,255,255,.4) inset,0 -1px 0 rgba(16,24,40,.10) inset,0 4px 8px -2px rgba(16,24,40,.18);
-  --zp-glass-hover:rgba(16,24,40,.06);
-  --zp-space-1:8px;--zp-space-2:16px;--zp-space-3:24px;--zp-space-4:32px;--zp-space-5:48px;--zp-space-6:80px;
-  --zp-radius-sm:8px;--zp-radius-md:10px;--zp-radius-lg:14px;--zp-radius-pill:999px;
-  --zp-font:'Sora',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
-}
-html[data-theme="dark"]{
-  --zp-bg:#0a0f1e;--zp-surface:#111827;--zp-text:#f4f7fb;--zp-muted:#aab4c3;--zp-border:rgba(255,255,255,.12);
-  --zp-accent:#8bb8e8;--zp-accent-soft:rgba(139,184,232,.10);
-  --zp-glass-bg:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.03));
-  --zp-glass-border:rgba(255,255,255,.10);
-  --zp-glass-shadow:0 1px 0 rgba(255,255,255,.04) inset,0 -1px 0 rgba(0,0,0,.12) inset,0 4px 8px -2px rgba(0,0,0,.40);
-  --zp-glass-hover:rgba(255,255,255,.08);
-}
-*{box-sizing:border-box}
-body{margin:0;background:var(--zp-bg);color:var(--zp-text);font-family:var(--zp-font);font-size:16px;line-height:1.7;font-weight:400}
-p,li{font-size:16px;max-width:760px}
-p{margin:0 0 var(--zp-space-2)}
-ul,ol{margin:0 0 var(--zp-space-2);padding-left:22px}
-li{margin-bottom:4px}
-main{width:100%;margin:0 auto;padding:var(--zp-space-1) var(--zp-space-2) var(--zp-space-3)}
-@media (min-width:601px) and (max-width:1023px){main{width:90%;padding:var(--zp-space-1) 0 var(--zp-space-3)}}
-@media (min-width:1024px) and (max-width:1439px){main{width:92%;max-width:1300px;padding:var(--zp-space-1) 0 var(--zp-space-3)}}
-@media (min-width:1440px){main{width:88%;max-width:1500px;padding:var(--zp-space-1) 0 var(--zp-space-3)}}
-h2.zp-h2{font-weight:700;font-size:clamp(22px,3vw,28px);line-height:1.15;letter-spacing:-.025em;margin:var(--zp-space-5) 0 var(--zp-space-2);padding-bottom:var(--zp-space-1);border-bottom:2px solid var(--zp-border)}
-h3.zp-h3{font-weight:600;font-size:19px;line-height:1.3;letter-spacing:-.01em;margin:var(--zp-space-4) 0 var(--zp-space-1);color:var(--zp-accent)}
-h4.zp-h4{font-weight:600;font-size:16px;line-height:1.3;margin:var(--zp-space-3) 0 var(--zp-space-1)}
-.zp-keypoints h4.zp-h4{margin-top:0}
-.zp-muted,figcaption{font-weight:500;font-size:12.5px;line-height:1.4;color:var(--zp-muted)}
-.zp-callout{border-left:3px solid var(--zp-accent);background:var(--zp-accent-soft);border-radius:var(--zp-radius-sm);padding:var(--zp-space-2) var(--zp-space-3);margin:var(--zp-space-2) 0}
-.zp-callout p{margin:0;max-width:none}
-.zp-callout p+p{margin-top:var(--zp-space-1)}
-.zp-table-wrap{width:100%;overflow-x:auto;margin:var(--zp-space-2) 0;border:1px solid var(--zp-border);border-radius:var(--zp-radius-lg)}
-table.zp-table{width:100%;border-collapse:collapse;min-width:480px;font-size:14.5px}
-table.zp-table th,table.zp-table td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--zp-border);vertical-align:top}
-table.zp-table th{background:var(--zp-accent-soft);font-weight:700;white-space:nowrap}
-table.zp-table tr:last-child td{border-bottom:none}
-.zp-overview,.zp-keypoints{background:var(--zp-surface);border:1px solid var(--zp-border);border-radius:var(--zp-radius-lg);padding:var(--zp-space-3)}
-.zp-overview{background:var(--zp-accent-soft)}
-.zp-overview p{margin:0}
-.zp-keypoints-grid{display:grid;grid-template-columns:1fr;gap:4px 40px}
-@media (min-width:900px){.zp-keypoints-grid{grid-template-columns:repeat(2,1fr);row-gap:22px}}
-@media (min-width:1440px){.zp-keypoints-grid{grid-template-columns:repeat(3,1fr)}}
-.zp-keypoints-group ul{margin-bottom:0}
-.zp-meta{width:min(100%,720px);margin:0 auto;padding:28px 24px 12px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px}
-.zp-meta-icon{width:56px;height:56px;display:grid;place-items:center;margin-bottom:var(--zp-space-1)}
-.zp-meta-icon svg{width:48px;height:48px;display:block}
-#zp-module{font-weight:600;font-size:11.5px;line-height:1.3;letter-spacing:.16em;text-transform:uppercase;color:var(--zp-muted)}
-#zp-subject{font-weight:500;font-size:12.5px;line-height:1.4;color:var(--zp-muted)}
-#zp-lesson{font-weight:800;font-size:clamp(21px,3vw,24px);line-height:1.2;color:var(--zp-text);margin-top:2px}
-@media (max-width:600px){.zp-meta{padding:22px 18px 10px}}
-.zp-theme-toggle{position:fixed;top:18px;right:18px;z-index:1000;width:42px;height:42px;padding:0;display:grid;place-items:center;border:1px solid var(--zp-border);border-radius:var(--zp-radius-pill);background:var(--zp-surface);color:var(--zp-text);box-shadow:0 4px 16px rgba(0,0,0,.08);cursor:pointer;transition:background-color 180ms ease,color 180ms ease,border-color 180ms ease,transform 180ms ease}
-.zp-theme-toggle:hover{transform:translateY(-1px)}
-.zp-theme-toggle:focus-visible,.zp-footer-pill:focus-visible{outline:2px solid var(--zp-accent);outline-offset:3px}
-.zp-theme-toggle svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.zp-moon-icon{display:none}
-html[data-theme="dark"] .zp-sun-icon{display:none}
-html[data-theme="dark"] .zp-moon-icon{display:block}
-@media (max-width:600px){.zp-theme-toggle{top:14px;right:14px;width:40px;height:40px}}
-.zp-lesson-illustration{width:100%;margin-top:var(--zp-space-4);display:flex;justify-content:center}
-.zp-lesson-illustration figure{margin:0;width:100%;display:flex;flex-direction:column;align-items:center}
-.zp-lesson-illustration img{width:100%;height:auto;display:block;margin:0 auto;border-radius:var(--zp-radius-lg);border:1px solid var(--zp-border)}
-.zp-lesson-illustration figcaption{margin-top:var(--zp-space-1);text-align:center}
-.zp-footer{width:100%;margin-top:var(--zp-space-5);border-top:1px solid var(--zp-border)}
-.zp-footer-inner{width:min(100% - 40px,1400px);margin:0 auto;padding:54px 0 28px;display:flex;flex-direction:column;align-items:center;text-align:center}
-.zp-footer-brand{font-size:clamp(36px,10vw,96px);font-weight:800;letter-spacing:.02em;line-height:1;background:linear-gradient(135deg,var(--zp-muted),var(--zp-accent));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;opacity:.35}
-.zp-footer-credit{margin-top:var(--zp-space-1);font-weight:600;font-size:13px;line-height:1.5;opacity:.75}
-.zp-footer-actions{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;margin-top:var(--zp-space-3)}
-.zp-footer-pill{min-height:38px;padding:0 15px;display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:var(--zp-radius-pill);background:var(--zp-glass-bg);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid var(--zp-glass-border);box-shadow:var(--zp-glass-shadow);color:var(--zp-text);text-decoration:none;cursor:pointer;font-family:var(--zp-font);font-weight:600;font-size:13.5px;transition:transform 180ms ease,background-color 180ms ease}
-.zp-footer-pill:hover{background:var(--zp-glass-hover);transform:translateY(-1px)}
-.zp-footer-pill svg{flex-shrink:0}
-.zp-footer-copy{margin-top:var(--zp-space-3);font-weight:500;font-size:12.5px;line-height:1.5;color:var(--zp-muted)}
-@media (max-width:600px){.zp-footer{margin-top:var(--zp-space-4)}.zp-footer-inner{width:min(100% - 28px,1400px);padding:42px 0 24px}.zp-footer-actions{width:100%}}
-</style>
+<link rel="stylesheet" href="https://ahmed-lasheen1.github.io/ZNU-Summaries/shared/znu-pulse.css">
+<script src="https://ahmed-lasheen1.github.io/ZNU-Summaries/shared/znu-pulse.js"></script>
 </head>
 <body>
-<button class="zp-theme-toggle" id="zp-theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false">
-  <svg class="zp-sun-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg>
-  <svg class="zp-moon-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3 6.7 6.7 0 0 0 21 12.8Z"></path></svg>
-</button>
-
-<section class="zp-meta" aria-label="Lesson information">
-  <div class="zp-meta-icon" aria-hidden="true">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1039 1024" fill="none">
-      <defs>
-        <filter id="contactShadow" x="-12%" y="-12%" width="140%" height="145%" color-interpolation-filters="sRGB">
-          <feGaussianBlur in="SourceAlpha" stdDeviation="5.5" result="softEdge"/>
-          <feOffset in="softEdge" dx="8" dy="15" result="offset"/>
-          <feColorMatrix in="offset" type="matrix" values="0 0 0 0 0.005 0 0 0 0 0.055 0 0 0 0 0.14 0 0 0 .48 0"/>
-        </filter>
-        <filter id="ambientShadow" x="-16%" y="-16%" width="150%" height="155%" color-interpolation-filters="sRGB">
-          <feGaussianBlur in="SourceAlpha" stdDeviation="14" result="wideEdge"/>
-          <feOffset in="wideEdge" dx="10" dy="19" result="offset"/>
-          <feColorMatrix in="offset" type="matrix" values="0 0 0 0 0.005 0 0 0 0 0.045 0 0 0 0 0.12 0 0 0 .43 0"/>
-        </filter>
-        <path id="ecgCentreline" d="
-          M134 536 H193
-          C210 536 217 529 228 514
-          C235 504 240 498 246 498
-          C253 498 258 509 264 523
-          C272 542 279 564 294 566
-          C309 570 316 552 322 532
-          L342 450
-          C345 438 349 431 355 431
-          C361 431 365 442 369 455
-          L383 507
-          C386 519 392 524 403 525
-          C419 525 424 536 428 550
-          L451 624 L527 191 L607 711 L648 568
-          C651 559 656 557 664 559
-          C676 562 685 570 695 563
-          C706 554 710 531 717 510
-          C723 489 731 473 741 472
-          C753 470 761 488 769 505
-          C776 521 781 532 793 535
-          C804 538 811 528 821 526
-          C832 523 843 534 853 536
-          H909"/>
-      </defs>
-      <use href="#ecgCentreline" stroke="#02152e" stroke-width="25" stroke-linecap="round" stroke-linejoin="round" filter="url(#ambientShadow)"/>
-      <use href="#ecgCentreline" stroke="#011630" stroke-width="25" stroke-linecap="round" stroke-linejoin="round" filter="url(#contactShadow)"/>
-      <use href="#ecgCentreline" stroke="#ebf9ff" stroke-width="25" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
+<section class="zp-meta zp-meta--hero" aria-label="Lesson information">
+  <div class="zp-meta-icon" aria-hidden="true"></div>
   <div class="zp-meta-value" id="zp-module">Central Nervous System</div>
   <div class="zp-meta-value" id="zp-subject">Physiology</div>
   <div class="zp-meta-value" id="zp-lesson">Cortex and Speech</div>
 </section>
-
 <main>
 
-<section class="zp-overview" aria-label="Quick overview">
-  <p>This lesson covers the functional organization of the cerebral cortex: the frontal motor areas (4, 6 and 8), the parietal somatic sensory and association areas, the auditory areas of the temporal lobe, and the visual and interpretative areas of the occipital lobe. It then shows how these areas are linked in the nervous mechanism of speech, tracing the pathways of spoken and written speech through the sensory, interpretative and motor speech centers.</p>
+<div class="zp-glance">
+  <div class="zp-glance-title">At a glance</div>
+  <p class="zp-glance-lead">The functional areas of the cerebral cortex in each lobe, and how the sensory, interpretative and motor speech centers work together to produce spoken and written speech.</p>
+  <div class="zp-glance-grid">
+    <div class="zp-glance-item"><div class="zp-glance-value">4</div><div class="zp-glance-label">lobes</div></div>
+    <div class="zp-glance-item"><div class="zp-glance-value">50</div><div class="zp-glance-label">Brodmann areas</div></div>
+    <div class="zp-glance-item"><div class="zp-glance-value">5</div><div class="zp-glance-label">speech centers</div></div>
+  </div>
+</div>
+
+<section class="zp-section" data-icon="layers">
+  <h2 class="zp-h2">Cerebral Cortex: General Features</h2>
+  <p class="zp-lead">The cerebral cortex is the highest brain center, and its surface is greatly increased by sulci and fissures.</p>
+  <ul>
+    <li>It is formed of two cerebral hemispheres separated by the <strong class="zp-term">longitudinal fissure</strong>.</li>
+    <li>The <strong class="zp-term">corpus callosum</strong> lies in the floor of the fissure and connects the two hemispheres.</li>
+    <li>It has 4 lobes: frontal, parietal, temporal and occipital.</li>
+    <li>Brodmann divided the cortex into 50 areas, numbered 1&ndash;50, on the basis of physiological studies.</li>
+  </ul>
 </section>
 
-<h2 class="zp-h2">Cerebral Cortex: General Features</h2>
-<ul>
-  <li>The cerebral cortex is the highest brain center; its surface is greatly increased by sulci and fissures.</li>
-  <li>It is formed of two cerebral hemispheres separated by the longitudinal fissure. The corpus callosum lies in the floor of this fissure and connects the two hemispheres.</li>
-  <li>It has 4 lobes: frontal, parietal, temporal and occipital.</li>
-  <li>Brodmann divided the cortex into 50 areas, numbered 1&ndash;50, on the basis of physiological studies.</li>
-</ul>
+<section class="zp-section" data-icon="zap">
+  <h2 class="zp-h2">Frontal Lobe</h2>
+  <p>The frontal lobe contains area 4, area 6 and area 8.</p>
 
-<h2 class="zp-h2">Frontal Lobe</h2>
-<p>The frontal lobe contains area 4, area 6 and area 8.</p>
+  <h3 class="zp-h3">Motor area 4 (primary motor area)</h3>
+  <ul>
+    <li>Site: precentral gyrus, anterior to the central sulcus.</li>
+    <li>It is highly excitable because it contains large pyramidal cells, the <strong class="zp-term">Betz cells</strong>.</li>
+    <li>Representation of the body: upside down (head below, lower limbs above), although the head itself is in the correct position (eyebrows up, chin down). It is crossed (the left area controls the right side) and depends on the activity of the muscle, not its size.</li>
+  </ul>
+  <h4 class="zp-h4">Layers and connections (6 vertical columns of cells)</h4>
+  <ul>
+    <li>Layers I &amp; II: receive from non-specific thalamic nuclei.</li>
+    <li>Layers III &amp; IV: receive from the premotor and sensory areas, PVNT, VLNT and area 4 of the opposite side.</li>
+    <li>Deep layers (V &amp; VI): origin of the efferents. Betz cells of layer V give the pyramidal tracts; other efferents go to subcortical centers and the cerebellum.</li>
+  </ul>
+  <h4 class="zp-h4">Functions</h4>
+  <ul>
+    <li>Main origin of the pyramidal tracts.</li>
+    <li>Initiates fine, discrete voluntary movements.</li>
+    <li>Facilitates the stretch reflex and muscle tone.</li>
+  </ul>
+  <h4 class="zp-h4">Important notes</h4>
+  <ul>
+    <li>Area 4 shares in the extrapyramidal tract, so activating it after a pyramidal tract lesion still gives a response.</li>
+    <li>Muscles that act together, such as the respiratory muscles, are represented bilaterally in area 4 of both sides.</li>
+    <li>Area 4 represents movements, not isolated muscles: stimulating a site contracts whole flexors or extensors.</li>
+  </ul>
+  <aside class="zp-box zp-box--highyield">
+    <div class="zp-box-label">High-yield</div>
+    <p>Excitability of area 4 is increased by increased activity of other areas (sensory, visual, auditory) and by alkalosis. It is decreased by acidosis, hypoxia and the suppressor areas (4s, 8s).</p>
+  </aside>
 
-<h3 class="zp-h3">Motor Area 4 (Primary Motor Area)</h3>
-<ul>
-  <li><strong>Site:</strong> precentral gyrus, anterior to the central sulcus. It is highly excitable because it contains large pyramidal cells (Betz cells).</li>
-  <li><strong>Representation of the body:</strong> upside down (head below, lower limbs above), although the head itself is in the correct position (eyebrows up, chin down). It is crossed (the left area controls the right side of the body) and depends on the <em>activity</em> of the muscle, not its size.</li>
-</ul>
-<h4 class="zp-h4">Layers and connections (cells arranged in 6 vertical columns)</h4>
-<ul>
-  <li><strong>Layers I &amp; II:</strong> receive impulses from non-specific thalamic nuclei.</li>
-  <li><strong>Layers III &amp; IV:</strong> receive impulses from the premotor and sensory areas, from PVNT and VLNT, and from motor area 4 of the opposite side.</li>
-  <li><strong>Deep layers (V &amp; VI):</strong> origin of efferent fibers. Betz cells in layer V give the pyramidal tracts; other efferents go to subcortical centers and the cerebellum.</li>
-</ul>
-<h4 class="zp-h4">Functions</h4>
-<ul>
-  <li>Main origin of the pyramidal tracts.</li>
-  <li>Initiates fine, discrete voluntary movements.</li>
-  <li>Facilitates the stretch reflex and muscle tone.</li>
-</ul>
-<h4 class="zp-h4">Important notes</h4>
-<ul>
-  <li>Area 4 shares in the extrapyramidal tract, so activating it after a pyramidal tract lesion still gives a response.</li>
-  <li>Muscles that act together, such as the respiratory muscles, are represented bilaterally in area 4 of both sides.</li>
-  <li>Area 4 represents movements rather than isolated muscles: stimulating a site causes contraction of whole flexors or extensors, not a single muscle.</li>
-</ul>
-<div class="zp-callout">
-  <p><strong>Excitability of area 4.</strong> Increased by increased activity of other areas (sensory, visual, auditory) and by alkalosis. Decreased by acidosis, hypoxia and the suppressor areas (4s, 8s).</p>
-</div>
+  <h3 class="zp-h3">Premotor area 6</h3>
+  <ul>
+    <li>Site: in front of area 4, separated from it by area 4s.</li>
+    <li>It contains no Betz cells, so it is less excitable than area 4.</li>
+    <li>Representation: inverted and crossed, but rougher than in area 4.</li>
+  </ul>
+  <h4 class="zp-h4">Functions</h4>
+  <ul>
+    <li>Main origin of the extrapyramidal tracts (with some pyramidal origin).</li>
+    <li>Initiates generalized, coordinated gross movements on the opposite side of the body.</li>
+    <li>Initiates subconscious associated movements, such as arm swinging during walking.</li>
+    <li>Helps area 4 perform and initiate isolated skilled voluntary movements.</li>
+    <li>Inhibits muscle tone, the stretch reflex and the grasp reflex.</li>
+    <li>Produces autonomic effects on heart rate and arterial blood pressure.</li>
+  </ul>
+  <h4 class="zp-h4">Important areas within the premotor region</h4>
+  <div class="zp-table-wrap">
+    <table class="zp-table">
+      <thead><tr><th>Area</th><th>Site</th><th>Function</th></tr></thead>
+      <tbody>
+        <tr><td>Broca&rsquo;s area (area 44)</td><td>Immediately anterior to area 4 and above the sylvian fissure, in the dominant hemisphere</td><td>Connected to area 4 to control movement of the speech muscles</td></tr>
+        <tr><td>Eye movement area</td><td>Above Broca&rsquo;s area</td><td>Voluntary moving of the eye towards objects; controls eyelid movements</td></tr>
+        <tr><td>Head rotation area</td><td>Above the eye movement area</td><td>Directs the head towards different objects</td></tr>
+        <tr><td>Skilled area</td><td>Anterior to area 4, in the region of the hand and fingers</td><td>Retains the memory of voluntary skilled hand movements</td></tr>
+        <tr><td>Exner&rsquo;s area (area 45)</td><td>Above Broca&rsquo;s area</td><td>Controls arm muscle movements during writing, via area 4</td></tr>
+      </tbody>
+    </table>
+  </div>
 
-<h3 class="zp-h3">Premotor Area 6</h3>
-<ul>
-  <li><strong>Site:</strong> in front of area 4, separated from it by area 4s. It is less excitable because it contains no Betz cells.</li>
-  <li><strong>Representation:</strong> inverted and crossed, but rougher than in area 4.</li>
-</ul>
-<h4 class="zp-h4">Functions</h4>
-<ul>
-  <li>Main origin of the extrapyramidal tracts (with some pyramidal origin).</li>
-  <li>Initiates generalized, coordinated gross movements on the opposite side of the body.</li>
-  <li>Initiates subconscious associated movements, such as arm swinging during walking.</li>
-  <li>Helps area 4 perform and initiate isolated skilled voluntary movements.</li>
-  <li>Inhibits muscle tone and the stretch reflex, and inhibits the grasp reflex.</li>
-  <li>Produces autonomic effects on heart rate and arterial blood pressure.</li>
-</ul>
-<h4 class="zp-h4">Important areas within the premotor region</h4>
-<div class="zp-table-wrap">
-<table class="zp-table">
-  <thead><tr><th>Area</th><th>Site</th><th>Function</th></tr></thead>
-  <tbody>
-    <tr><td>Broca&rsquo;s area (word formation, area 44)</td><td>Immediately anterior to area 4 and above the sylvian fissure, in the dominant hemisphere</td><td>Connected to area 4 to control movement of the speech muscles</td></tr>
-    <tr><td>Eye movement area</td><td>Above Broca&rsquo;s area</td><td>Voluntary moving of the eye towards objects; controls eyelid movements</td></tr>
-    <tr><td>Head rotation area</td><td>Above the eye movement area</td><td>Directs the head towards different objects</td></tr>
-    <tr><td>Skilled area</td><td>Anterior to area 4 (region of hand and fingers)</td><td>Retains the memory for voluntary skilled movements of the hand</td></tr>
-    <tr><td>Exner&rsquo;s area (area 45, writing center)</td><td>Above Broca&rsquo;s area</td><td>Controls arm muscle movements during writing, via connection with area 4</td></tr>
-  </tbody>
-</table>
-</div>
+  <h3 class="zp-h3">Area 8 (frontal eye field)</h3>
+  <ul>
+    <li>Site: posterior part of the middle frontal gyrus.</li>
+    <li>Causes conjugate deviation of both eyes to the opposite side.</li>
+    <li>Shares in the accommodation reflex to near vision.</li>
+    <li>Origin of the cortico-nuclear tract.</li>
+  </ul>
+</section>
 
-<h3 class="zp-h3">Area 8 (Frontal Eye Field)</h3>
-<ul>
-  <li><strong>Site:</strong> posterior part of the middle frontal gyrus.</li>
-  <li><strong>Functions:</strong> conjugate deviation of both eyes to the opposite side; shares in the accommodation reflex to near vision; origin of the cortico-nuclear tract.</li>
-</ul>
+<section class="zp-section" data-icon="search">
+  <h2 class="zp-h2">Parietal Lobe</h2>
 
-<h2 class="zp-h2">Parietal Lobe</h2>
+  <h3 class="zp-h3">Somatic sensory area I (areas 3, 1, 2)</h3>
+  <ul>
+    <li>Site: postcentral gyrus.</li>
+    <li>Representation: upside down and crossed. Large areas serve the lips, face and fingers (especially the thumb), according to tactile acuity and number of receptors. All sensations from any part of the body are represented.</li>
+    <li>Layers: I &amp; II receive from non-specific thalamic nuclei; III is the interneuron layer; IV receives from different and fixed areas of the body; V &amp; VI give efferents to the thalamus, brain stem and spinal cord.</li>
+    <li>Functions: receives impulses from PVNT; center for fine touch, proprioceptive sensation, vibration and fine gradations of temperature.</li>
+  </ul>
 
-<h3 class="zp-h3">Somatic Sensory Area I (Areas 3, 1, 2)</h3>
-<ul>
-  <li><strong>Site:</strong> postcentral gyrus.</li>
-  <li><strong>Representation:</strong> upside down and crossed. Large areas are given to the lips, face and fingers (especially the thumb), according to tactile acuity and number of receptors. All sensations from any part of the body are represented.</li>
-  <li><strong>Layers:</strong> I &amp; II receive from non-specific thalamic nuclei; III acts as the interneuron layer; IV receives from different and fixed areas of the body; V &amp; VI give efferent fibers to the thalamus, brain stem and spinal cord.</li>
-  <li><strong>Functions:</strong> receives impulses from PVNT; acts as the center for fine touch, proprioceptive sensation, vibration and fine gradations of temperature.</li>
-</ul>
+  <h3 class="zp-h3">Somatic sensory area II</h3>
+  <ul>
+    <li>Site: upper wall of the lateral fissure, inferior to the postcentral gyrus.</li>
+    <li>Representation: less sharp than area I; face anteriorly, arm centrally, legs posteriorly.</li>
+    <li>Receives from both sides of the body, area I, and the visual and auditory areas.</li>
+    <li>Functions: cortical center of pain; role in sensory control of motor function.</li>
+  </ul>
 
-<h3 class="zp-h3">Somatic Sensory Area II</h3>
-<ul>
-  <li><strong>Site:</strong> upper wall of the lateral fissure, inferior to the postcentral gyrus.</li>
-  <li><strong>Representation:</strong> less sharp than area I; face anteriorly, arm centrally, legs posteriorly.</li>
-  <li><strong>Connections:</strong> receives from both sides of the body, sensory area I, and the visual and auditory areas.</li>
-  <li><strong>Functions:</strong> cortical center of pain; plays a role in sensory control of motor function.</li>
-</ul>
+  <h3 class="zp-h3">Somatic association area (areas 5 &amp; 7)</h3>
+  <ul>
+    <li>Site: parietal cortex behind sensory area I.</li>
+    <li>Receives from area I, PVNT, and the visual and auditory cortex.</li>
+    <li>Function: concerned with the meaning of sensory information (<strong class="zp-term">stereognosis</strong>).</li>
+  </ul>
+</section>
 
-<h3 class="zp-h3">Somatic Association Area (Areas 5 &amp; 7)</h3>
-<ul>
-  <li><strong>Site:</strong> parietal cortex behind sensory area I.</li>
-  <li><strong>Connections:</strong> receives from sensory area I, PVNT, and the visual and auditory cortex.</li>
-  <li><strong>Function:</strong> concerned with the meaning of sensory information (stereognosis).</li>
-</ul>
+<section class="zp-section" data-icon="eye">
+  <h2 class="zp-h2">Temporal and Occipital Lobes</h2>
 
-<h2 class="zp-h2">Temporal Lobe</h2>
-<ul>
-  <li><strong>Auditory sensory area (areas 41 &amp; 42):</strong> concerned with hearing sensation from both sides.</li>
-  <li><strong>Auditory psychic area (area 22):</strong> concerned with interpretation of auditory impulses.</li>
-</ul>
+  <h3 class="zp-h3">Temporal lobe</h3>
+  <ul>
+    <li>Auditory sensory area (areas 41 &amp; 42): hearing sensation from both sides.</li>
+    <li>Auditory psychic area (area 22): interpretation of auditory impulses.</li>
+  </ul>
 
-<h2 class="zp-h2">Occipital Lobe</h2>
-<ul>
-  <li><strong>Visual sensory area (area 17):</strong> the primary visual center.</li>
-  <li><strong>Visual association area (areas 18 &amp; 19):</strong> concerned with interpretation of visual impulses.</li>
-</ul>
+  <h3 class="zp-h3">Occipital lobe</h3>
+  <ul>
+    <li>Visual sensory area (area 17): the primary visual center.</li>
+    <li>Visual association area (areas 18 &amp; 19): interpretation of visual impulses.</li>
+  </ul>
 
-<h3 class="zp-h3">Parieto-temporo-occipital Association Area (Wernicke&rsquo;s Area, Area 37)</h3>
-<ul>
-  <li><strong>Site:</strong> supramarginal and angular gyri.</li>
-  <li><strong>Connections:</strong> receives impulses from the somatic association areas (5, 7; parietal), the visual interpretative areas (18, 19; occipital) and the auditory interpretative area (22; temporal).</li>
-  <li><strong>Function:</strong> interpretation of different sensations. It is more developed in one hemisphere (the dominant hemisphere, the left in right-handed people) and is concerned with speech.</li>
-  <li><strong>Lesion:</strong> failure to pick up the meaning of spoken and written words, with aphasia.</li>
-</ul>
+  <h3 class="zp-h3">Parieto-temporo-occipital association area (area 37)</h3>
+  <p>This is <strong class="zp-term">Wernicke&rsquo;s area</strong>, at the supramarginal and angular gyri. It receives from the somatic association areas (5, 7), the visual interpretative areas (18, 19) and the auditory interpretative area (22), and interprets the different sensations.</p>
+  <p>It is more developed in the dominant hemisphere (the left in right-handed people) and is concerned with speech.</p>
+  <aside class="zp-box zp-box--clinical">
+    <div class="zp-box-label">Clinical relevance</div>
+    <p>A lesion of Wernicke&rsquo;s area causes failure to pick up the meaning of spoken and written words, with aphasia.</p>
+  </aside>
+</section>
 
-<h2 class="zp-h2">Speech</h2>
-<p>Speech represents the highest function of the cerebral cortex and may take the form of written or spoken words.</p>
+<section class="zp-section" data-icon="pulse">
+  <h2 class="zp-h2">Speech</h2>
+  <p>Speech is the highest function of the cerebral cortex and may take the form of written or spoken words.</p>
 
-<h3 class="zp-h3">Centers of speech (dominant hemisphere)</h3>
-<div class="zp-table-wrap">
-<table class="zp-table">
-  <thead><tr><th>Center</th><th>Site</th><th>Function</th></tr></thead>
-  <tbody>
-    <tr><td>Visual speech center (sensory)</td><td>Occipital lobe, areas 18 &amp; 19</td><td>Understanding written words</td></tr>
-    <tr><td>Auditory speech center (sensory)</td><td>Temporal lobe, area 22</td><td>Understanding spoken words</td></tr>
-    <tr><td>General interpretative area (Wernicke&rsquo;s area)</td><td>Occipital lobe, area 37</td><td>Connects sensory and motor speech centers; understands the meaning of words and begins the response</td></tr>
-    <tr><td>Broca&rsquo;s area (motor)</td><td>Face region in premotor area 6</td><td>Essential for vocalization of speech</td></tr>
-    <tr><td>Exner&rsquo;s area (motor)</td><td>Hand region in premotor area 6</td><td>Essential for expression of speech by writing</td></tr>
-  </tbody>
-</table>
-</div>
+  <h3 class="zp-h3">Centers of speech (dominant hemisphere)</h3>
+  <div class="zp-table-wrap">
+    <table class="zp-table">
+      <thead><tr><th>Center</th><th>Site</th><th>Function</th></tr></thead>
+      <tbody>
+        <tr><td>Visual speech center (sensory)</td><td>Occipital lobe, areas 18 &amp; 19</td><td>Understanding written words</td></tr>
+        <tr><td>Auditory speech center (sensory)</td><td>Temporal lobe, area 22</td><td>Understanding spoken words</td></tr>
+        <tr><td>General interpretative area (Wernicke&rsquo;s)</td><td>Occipital lobe, area 37</td><td>Connects sensory and motor speech centers; understands the meaning of words and begins the response</td></tr>
+        <tr><td>Broca&rsquo;s area (motor)</td><td>Face region in premotor area 6</td><td>Essential for vocalization of speech</td></tr>
+        <tr><td>Exner&rsquo;s area (motor)</td><td>Hand region in premotor area 6</td><td>Essential for expression of speech by writing</td></tr>
+      </tbody>
+    </table>
+  </div>
 
-<h3 class="zp-h3">Act of speech</h3>
-<h4 class="zp-h4">Spoken speech</h4>
-<ol>
-  <li>Auditory sensory areas (41 &amp; 42) perceive the spoken words.</li>
-  <li>Auditory association area (22) understands the words.</li>
-  <li>General interpretative area (Wernicke&rsquo;s area) understands the meaning and begins the response.</li>
-  <li>Impulses pass to Broca&rsquo;s area to produce the words.</li>
-  <li>Face area of area 4, then the pyramidal tract to the cranial nerve nuclei, then the speech muscles (lips, tongue and larynx): spoken speech.</li>
-</ol>
-<h4 class="zp-h4">Written speech</h4>
-<ol>
-  <li>Visual sensory area (17) perceives the written words.</li>
-  <li>Visual association areas (18, 19) understand them.</li>
-  <li>General interpretative area (Wernicke&rsquo;s area) gives full comprehension.</li>
-  <li>Impulses pass to Exner&rsquo;s area, then to the hand area in the motor cortex.</li>
-  <li>Pyramidal and extrapyramidal tracts reach the A.H.Cs of the hand muscles: expression of speech by writing.</li>
-</ol>
+  <h3 class="zp-h3">Act of speech</h3>
+  <h4 class="zp-h4">Spoken speech</h4>
+  <ol class="zp-flow">
+    <li><div class="zp-flow-title">Perception</div><p>Auditory sensory areas (41 &amp; 42) perceive the spoken words.</p></li>
+    <li><div class="zp-flow-title">Word recognition</div><p>Auditory association area (22) understands the words.</p></li>
+    <li><div class="zp-flow-title">Meaning</div><p>Wernicke&rsquo;s area understands the meaning and begins the response.</p></li>
+    <li><div class="zp-flow-title">Word production</div><p>Impulses pass to Broca&rsquo;s area to produce the words.</p></li>
+    <li><div class="zp-flow-title">Execution</div><p>Face area of area 4, then the pyramidal tract to the cranial nerve nuclei, then the speech muscles (lips, tongue, larynx).</p></li>
+  </ol>
+  <h4 class="zp-h4">Written speech</h4>
+  <div class="zp-chain">
+    <div class="zp-chain-node">Area 17</div>
+    <div class="zp-chain-node">Areas 18, 19</div>
+    <div class="zp-chain-node">Wernicke&rsquo;s area</div>
+    <div class="zp-chain-node">Exner&rsquo;s area</div>
+    <div class="zp-chain-node">Hand area of motor cortex</div>
+    <div class="zp-chain-node">A.H.Cs of hand muscles</div>
+  </div>
+  <p>Area 17 perceives the written words and areas 18 &amp; 19 understand them. Wernicke&rsquo;s area gives full comprehension, Exner&rsquo;s area passes the command to the hand area in the motor cortex, and the pyramidal and extrapyramidal tracts reach the A.H.Cs of the hand muscles, giving expression of speech by writing.</p>
+</section>
 
-<h2 class="zp-h2">Key Points / Quick Review</h2>
-<section class="zp-keypoints" aria-label="Key points">
-<div class="zp-keypoints-grid">
-  <div class="zp-keypoints-group"><h4 class="zp-h4">Cortex overview</h4><ul>
-    <li>Four lobes; 50 Brodmann areas; hemispheres joined by the corpus callosum.</li></ul></div>
-  <div class="zp-keypoints-group"><h4 class="zp-h4">Area 4</h4><ul>
-    <li>Precentral gyrus; Betz cells; upside down and crossed; represents movements by activity.</li>
-    <li>Origin of the pyramidal tracts; facilitates tone and stretch reflex.</li>
-    <li>Excitability falls with acidosis, hypoxia and suppressor areas.</li></ul></div>
-  <div class="zp-keypoints-group"><h4 class="zp-h4">Area 6 and area 8</h4><ul>
-    <li>Area 6: no Betz cells; main origin of extrapyramidal tracts; inhibits tone, stretch and grasp reflexes.</li>
-    <li>Contains Broca&rsquo;s, eye movement, head rotation, skilled and Exner&rsquo;s areas.</li>
-    <li>Area 8: conjugate deviation of the eyes to the opposite side; origin of the cortico-nuclear tract.</li></ul></div>
-  <div class="zp-keypoints-group"><h4 class="zp-h4">Parietal lobe</h4><ul>
-    <li>Area I (3, 1, 2): fine touch, proprioception, vibration, fine temperature.</li>
-    <li>Area II: cortical center of pain and sensory control of motor function.</li>
-    <li>Areas 5 &amp; 7: meaning of sensory information (stereognosis).</li></ul></div>
-  <div class="zp-keypoints-group"><h4 class="zp-h4">Temporal and occipital lobes</h4><ul>
-    <li>41 &amp; 42: hearing; 22: auditory interpretation.</li>
-    <li>17: primary vision; 18 &amp; 19: visual interpretation.</li>
-    <li>Wernicke&rsquo;s area (37): supramarginal and angular gyri; lesion gives aphasia.</li></ul></div>
-  <div class="zp-keypoints-group"><h4 class="zp-h4">Speech</h4><ul>
-    <li>Spoken: 41/42 &rarr; 22 &rarr; Wernicke &rarr; Broca &rarr; area 4 face &rarr; cranial nerve nuclei &rarr; speech muscles.</li>
-    <li>Written: 17 &rarr; 18/19 &rarr; Wernicke &rarr; Exner &rarr; hand area &rarr; A.H.Cs &rarr; hand muscles.</li></ul></div>
-</div>
+<section class="zp-section" data-icon="check">
+  <h2 class="zp-h2">Check yourself</h2>
+  <details class="zp-recall">
+    <summary>Which cells make area 4 highly excitable, and where is the area?</summary>
+    <div class="zp-recall-answer"><p>Large pyramidal (Betz) cells; the precentral gyrus, anterior to the central sulcus.</p></div>
+  </details>
+  <details class="zp-recall">
+    <summary>What happens to the eyes when area 8 is activated?</summary>
+    <div class="zp-recall-answer"><p>Conjugate deviation of both eyes to the opposite side.</p></div>
+  </details>
+  <details class="zp-recall">
+    <summary>Which speech center is essential for vocalization, and which for writing?</summary>
+    <div class="zp-recall-answer"><p>Broca&rsquo;s area (face region of premotor area 6) for vocalization; Exner&rsquo;s area (hand region of premotor area 6) for writing.</p></div>
+  </details>
+</section>
+
+<section class="zp-keypoints" style="margin-top: 56px;">
+  <h2 class="zp-h2">Key Points / Quick Review</h2>
+  <div class="zp-keypoints-grid">
+    <div class="zp-keypoints-group"><h4 class="zp-h4">Cortex overview</h4><ul>
+      <li>Four lobes; 50 Brodmann areas; hemispheres joined by the corpus callosum.</li></ul></div>
+    <div class="zp-keypoints-group"><h4 class="zp-h4">Area 4</h4><ul>
+      <li>Precentral gyrus; Betz cells; upside down and crossed; represents movements by activity.</li>
+      <li>Origin of the pyramidal tracts; facilitates tone and the stretch reflex.</li>
+      <li>Excitability falls with acidosis, hypoxia and suppressor areas.</li></ul></div>
+    <div class="zp-keypoints-group"><h4 class="zp-h4">Areas 6 and 8</h4><ul>
+      <li>Area 6: no Betz cells; main origin of extrapyramidal tracts; inhibits tone, stretch and grasp reflexes.</li>
+      <li>Contains Broca&rsquo;s, eye movement, head rotation, skilled and Exner&rsquo;s areas.</li>
+      <li>Area 8: conjugate deviation of the eyes to the opposite side; origin of the cortico-nuclear tract.</li></ul></div>
+    <div class="zp-keypoints-group"><h4 class="zp-h4">Parietal lobe</h4><ul>
+      <li>Area I (3, 1, 2): fine touch, proprioception, vibration, fine temperature.</li>
+      <li>Area II: cortical center of pain and sensory control of motor function.</li>
+      <li>Areas 5 &amp; 7: meaning of sensory information (stereognosis).</li></ul></div>
+    <div class="zp-keypoints-group"><h4 class="zp-h4">Temporal and occipital lobes</h4><ul>
+      <li>41 &amp; 42: hearing; 22: auditory interpretation; 17: primary vision; 18 &amp; 19: visual interpretation.</li>
+      <li>Wernicke&rsquo;s area (37): supramarginal and angular gyri; lesion gives aphasia.</li></ul></div>
+    <div class="zp-keypoints-group"><h4 class="zp-h4">Speech</h4><ul>
+      <li>Spoken: 41/42, 22, Wernicke, Broca, area 4 face, cranial nerve nuclei, speech muscles.</li>
+      <li>Written: 17, 18/19, Wernicke, Exner, hand area, A.H.Cs, hand muscles.</li></ul></div>
+  </div>
 </section>
 
 <section class="zp-lesson-illustration" aria-label="Lesson illustration">
@@ -333,33 +248,5 @@ html[data-theme="dark"] .zp-moon-icon{display:block}
 </section>
 
 </main>
-
-<footer class="zp-footer">
-  <div class="zp-footer-inner">
-    <div class="zp-footer-brand">ZNU PULSE</div>
-    <div class="zp-footer-credit">Designed &amp; built by Ahmed Lasheen</div>
-    <div class="zp-footer-actions">
-      <a class="zp-footer-pill" href="https://wa.me/qr/AFP6XCVC2BJHO1" target="_blank" rel="noopener noreferrer" aria-label="Contact ZNU Pulse on WhatsApp">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path d="M12 3.5a8.5 8.5 0 0 0-7.3 12.8L3.5 20.5l4.3-1.2A8.5 8.5 0 1 0 12 3.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path>
-          <path d="M9 8.7c.15-.4.5-.7.9-.7h.5c.3 0 .55.2.65.5l.5 1.3c.1.25.05.55-.15.75l-.5.55c.4.95 1.2 1.75 2.15 2.15l.55-.5c.2-.2.5-.25.75-.15l1.3.5c.3.1.5.35.5.65v.5c0 .4-.3.75-.7.9-2.6.9-5.6-.5-7-3-.75-1.35-1-2.75-.45-4.03Z" fill="currentColor"></path>
-        </svg>
-        <span>Contact us</span>
-      </a>
-      <button class="zp-footer-pill" type="button" id="zp-back-top"><span aria-hidden="true">&uarr;</span><span>Back to top</span></button>
-    </div>
-    <div class="zp-footer-copy">&copy; <span id="zp-year"></span> ZNU Pulse</div>
-  </div>
-</footer>
-
-<script>
-const themeToggle=document.getElementById("zp-theme-toggle");
-function setTheme(t){document.documentElement.dataset.theme=t;const d=t==="dark";themeToggle.setAttribute("aria-label",d?"Switch to light mode":"Switch to dark mode");themeToggle.setAttribute("aria-pressed",String(d));}
-let savedTheme=null;try{savedTheme=localStorage.getItem("zp-theme");}catch(e){}
-setTheme(savedTheme||"light");
-themeToggle.addEventListener("click",()=>{const n=document.documentElement.dataset.theme==="dark"?"light":"dark";setTheme(n);try{localStorage.setItem("zp-theme",n);}catch(e){}});
-document.getElementById("zp-year").textContent=new Date().getFullYear();
-document.getElementById("zp-back-top").addEventListener("click",()=>{window.scrollTo({top:0,behavior:"smooth"});});
-</script>
 </body>
 </html>

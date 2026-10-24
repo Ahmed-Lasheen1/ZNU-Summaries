@@ -1,138 +1,15 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Eye</title>
-<style>
-:root {
-  --zp-bg:#f5f7fa;--zp-surface:#ffffff;--zp-text:#101828;--zp-muted:#667085;--zp-border:rgba(16,24,40,0.12);--zp-accent:#315f8f;--zp-accent-soft:rgba(49,95,143,0.08);
-  --zp-glass-bg:linear-gradient(160deg,rgba(255,255,255,0.65),rgba(255,255,255,0.35));
-  --zp-glass-border:rgba(255,255,255,0.6);
-  --zp-glass-shadow:0 1px 0 rgba(255,255,255,0.4) inset,0 -1px 0 rgba(16,24,40,0.10) inset,0 4px 8px -2px rgba(16,24,40,0.18);
-  --zp-glass-hover:rgba(16,24,40,0.06);
-  --zp-space-1:8px;--zp-space-2:16px;--zp-space-3:24px;--zp-space-4:32px;--zp-space-5:48px;--zp-space-6:80px;
-  --zp-radius-sm:8px;--zp-radius-md:10px;--zp-radius-lg:14px;--zp-radius-pill:999px;
-  --zp-font:'Sora',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
-}
-html[data-theme="dark"] {
-  --zp-bg:#0a0f1e;--zp-surface:#111827;--zp-text:#f4f7fb;--zp-muted:#aab4c3;--zp-border:rgba(255,255,255,0.12);--zp-accent:#8bb8e8;--zp-accent-soft:rgba(139,184,232,0.10);
-  --zp-glass-bg:linear-gradient(160deg,rgba(255,255,255,0.07),rgba(255,255,255,0.03));
-  --zp-glass-border:rgba(255,255,255,0.10);
-  --zp-glass-shadow:0 1px 0 rgba(255,255,255,0.04) inset,0 -1px 0 rgba(0,0,0,0.12) inset,0 4px 8px -2px rgba(0,0,0,0.40);
-  --zp-glass-hover:rgba(255,255,255,0.08);
-}
-*{box-sizing:border-box}
-body{margin:0;background:var(--zp-bg);color:var(--zp-text);font-family:var(--zp-font);font-size:16px;line-height:1.7;font-weight:400}
-p,li{font-size:16px;max-width:760px}
-p{margin:0 0 var(--zp-space-1)}
-ul,ol{margin:var(--zp-space-1) 0;padding-left:22px}
-li{margin-bottom:4px}
-h2.zp-h2{font-weight:700;font-size:clamp(22px,3vw,28px);line-height:1.15;letter-spacing:-0.025em;margin:var(--zp-space-5) 0 var(--zp-space-2);padding-bottom:var(--zp-space-1);border-bottom:2px solid var(--zp-border)}
-h3.zp-h3{font-weight:600;font-size:19px;line-height:1.3;letter-spacing:-0.01em;margin:var(--zp-space-4) 0 var(--zp-space-1);color:var(--zp-accent)}
-h4.zp-h4{font-weight:600;font-size:16px;line-height:1.3;margin:var(--zp-space-3) 0 var(--zp-space-1)}
-.zp-muted,figcaption{font-weight:500;font-size:12.5px;line-height:1.4;color:var(--zp-muted)}
-main{width:100%;margin:0 auto;padding:var(--zp-space-1) var(--zp-space-2) var(--zp-space-3)}
-@media (min-width:601px) and (max-width:1023px){main{width:90%;padding:var(--zp-space-1) 0 var(--zp-space-3)}}
-@media (min-width:1024px) and (max-width:1439px){main{width:92%;max-width:1300px;padding:var(--zp-space-1) 0 var(--zp-space-3)}}
-@media (min-width:1440px){main{width:88%;max-width:1500px;padding:var(--zp-space-1) 0 var(--zp-space-3)}}
-.zp-callout{border-left:3px solid var(--zp-accent);background:var(--zp-accent-soft);border-radius:var(--zp-radius-sm);padding:var(--zp-space-2) var(--zp-space-3);margin:var(--zp-space-2) 0}
-.zp-callout p{margin:0;max-width:none}
-.zp-callout p+p{margin-top:var(--zp-space-1)}
-.zp-table-wrap{width:100%;overflow-x:auto;margin:var(--zp-space-2) 0;border:1px solid var(--zp-border);border-radius:var(--zp-radius-lg)}
-table.zp-table{width:100%;border-collapse:collapse;min-width:480px;font-size:14.5px}
-table.zp-table th,table.zp-table td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--zp-border);vertical-align:top}
-table.zp-table th{background:var(--zp-accent-soft);font-weight:700;white-space:nowrap}
-table.zp-table tr:last-child td{border-bottom:none}
-.zp-overview,.zp-keypoints{background:var(--zp-surface);border:1px solid var(--zp-border);border-radius:var(--zp-radius-lg);padding:var(--zp-space-3)}
-.zp-overview{background:var(--zp-accent-soft)}
-.zp-overview p{margin:0}
-.zp-keypoints h2.zp-h2{margin-top:0}
-.zp-keypoints-grid{display:grid;grid-template-columns:1fr;gap:4px 40px}
-@media (min-width:900px){.zp-keypoints-grid{grid-template-columns:repeat(2,1fr);row-gap:22px}}
-@media (min-width:1440px){.zp-keypoints-grid{grid-template-columns:repeat(3,1fr)}}
-.zp-keypoints-group h4{margin-top:var(--zp-space-1)}
-.zp-meta-icon{width:56px;height:56px;display:grid;place-items:center;margin-bottom:var(--zp-space-1)}
-.zp-meta-icon svg{width:48px;height:48px;display:block}
-.zp-meta{width:min(100%,720px);margin:0 auto;padding:28px 24px 12px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px}
-#zp-module{font-weight:600;font-size:11.5px;line-height:1.3;letter-spacing:0.16em;text-transform:uppercase;color:var(--zp-muted)}
-#zp-subject{font-weight:500;font-size:12.5px;line-height:1.4;color:var(--zp-muted)}
-#zp-lesson{font-weight:800;font-size:clamp(21px,3vw,24px);line-height:1.2;color:var(--zp-text);margin-top:2px}
-@media (max-width:600px){.zp-meta{padding:22px 18px 10px}}
-.zp-theme-toggle{position:fixed;top:18px;right:18px;z-index:1000;width:42px;height:42px;padding:0;display:grid;place-items:center;border:1px solid var(--zp-border);border-radius:var(--zp-radius-pill);background:var(--zp-surface);color:var(--zp-text);box-shadow:0 4px 16px rgba(0,0,0,0.08);cursor:pointer;transition:background-color 180ms ease,color 180ms ease,border-color 180ms ease,transform 180ms ease}
-.zp-theme-toggle:hover{transform:translateY(-1px)}
-.zp-theme-toggle:focus-visible{outline:2px solid var(--zp-accent);outline-offset:3px}
-.zp-theme-toggle svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.zp-moon-icon{display:none}
-html[data-theme="dark"] .zp-sun-icon{display:none}
-html[data-theme="dark"] .zp-moon-icon{display:block}
-@media (max-width:600px){.zp-theme-toggle{top:14px;right:14px;width:40px;height:40px}}
-.zp-lesson-illustration{width:100%;margin-top:var(--zp-space-4);display:flex;justify-content:center}
-.zp-lesson-illustration figure{margin:0;width:100%;display:flex;flex-direction:column;align-items:center}
-.zp-lesson-illustration img{width:100%;height:auto;display:block;margin:0 auto;border-radius:var(--zp-radius-lg);border:1px solid var(--zp-border)}
-.zp-lesson-illustration figcaption{margin-top:var(--zp-space-1);text-align:center}
-.zp-footer{width:100%;margin-top:var(--zp-space-5);border-top:1px solid var(--zp-border)}
-.zp-footer-inner{width:min(100% - 40px,1400px);margin:0 auto;padding:54px 0 28px;display:flex;flex-direction:column;align-items:center;text-align:center}
-.zp-footer-brand{font-size:clamp(36px,10vw,96px);font-weight:800;letter-spacing:0.02em;line-height:1;background:linear-gradient(135deg,var(--zp-muted),var(--zp-accent));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;opacity:0.35}
-.zp-footer-credit{margin-top:var(--zp-space-1);font-weight:600;font-size:13px;line-height:1.5;opacity:0.75}
-.zp-footer-actions{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;margin-top:var(--zp-space-3)}
-.zp-footer-pill{font-family:var(--zp-font);font-weight:600;font-size:13.5px;min-height:38px;padding:0 15px;display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:var(--zp-radius-pill);background:var(--zp-glass-bg);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid var(--zp-glass-border);box-shadow:var(--zp-glass-shadow);color:var(--zp-text);text-decoration:none;cursor:pointer;transition:transform 180ms ease,background-color 180ms ease}
-.zp-footer-pill:hover{background:var(--zp-glass-hover);transform:translateY(-1px)}
-.zp-footer-pill:focus-visible{outline:2px solid var(--zp-accent);outline-offset:3px}
-.zp-footer-pill svg{flex-shrink:0}
-.zp-footer-copy{margin-top:var(--zp-space-3);font-weight:500;font-size:12.5px;line-height:1.5;color:var(--zp-muted)}
-@media (max-width:600px){.zp-footer{margin-top:var(--zp-space-4)}.zp-footer-inner{width:min(100% - 28px,1400px);padding:42px 0 24px}.zp-footer-actions{width:100%}}
-</style>
+<link rel="stylesheet" href="https://ahmed-lasheen1.github.io/ZNU-Summaries/shared/znu-pulse.css">
+<script src="https://ahmed-lasheen1.github.io/ZNU-Summaries/shared/znu-pulse.js"></script>
 </head>
 <body>
-<button class="zp-theme-toggle" id="zp-theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false">
-  <svg class="zp-sun-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg>
-  <svg class="zp-moon-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3 6.7 6.7 0 0 0 21 12.8Z"></path></svg>
-</button>
-
-<section class="zp-meta" aria-label="Lesson information">
-  <div class="zp-meta-icon" aria-hidden="true">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1039 1024" fill="none">
-      <defs>
-        <filter id="contactShadow" x="-12%" y="-12%" width="140%" height="145%" color-interpolation-filters="sRGB">
-          <feGaussianBlur in="SourceAlpha" stdDeviation="5.5" result="softEdge"/>
-          <feOffset in="softEdge" dx="8" dy="15" result="offset"/>
-          <feColorMatrix in="offset" type="matrix" values="0 0 0 0 0.005 0 0 0 0 0.055 0 0 0 0 0.14 0 0 0 .48 0"/>
-        </filter>
-        <filter id="ambientShadow" x="-16%" y="-16%" width="150%" height="155%" color-interpolation-filters="sRGB">
-          <feGaussianBlur in="SourceAlpha" stdDeviation="14" result="wideEdge"/>
-          <feOffset in="wideEdge" dx="10" dy="19" result="offset"/>
-          <feColorMatrix in="offset" type="matrix" values="0 0 0 0 0.005 0 0 0 0 0.045 0 0 0 0 0.12 0 0 0 .43 0"/>
-        </filter>
-        <path id="ecgCentreline" d="
-          M134 536 H193
-          C210 536 217 529 228 514
-          C235 504 240 498 246 498
-          C253 498 258 509 264 523
-          C272 542 279 564 294 566
-          C309 570 316 552 322 532
-          L342 450
-          C345 438 349 431 355 431
-          C361 431 365 442 369 455
-          L383 507
-          C386 519 392 524 403 525
-          C419 525 424 536 428 550
-          L451 624 L527 191 L607 711 L648 568
-          C651 559 656 557 664 559
-          C676 562 685 570 695 563
-          C706 554 710 531 717 510
-          C723 489 731 473 741 472
-          C753 470 761 488 769 505
-          C776 521 781 532 793 535
-          C804 538 811 528 821 526
-          C832 523 843 534 853 536
-          H909"/>
-      </defs>
-      <use href="#ecgCentreline" stroke="#02152e" stroke-width="25" stroke-linecap="round" stroke-linejoin="round" filter="url(#ambientShadow)"/>
-      <use href="#ecgCentreline" stroke="#011630" stroke-width="25" stroke-linecap="round" stroke-linejoin="round" filter="url(#contactShadow)"/>
-      <use href="#ecgCentreline" stroke="#ebf9ff" stroke-width="25" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
+<section class="zp-meta zp-meta--hero" aria-label="Lesson information">
+  <div class="zp-meta-icon" aria-hidden="true"></div>
   <div class="zp-meta-value" id="zp-module">Central Nervous System</div>
   <div class="zp-meta-value" id="zp-subject">Histology</div>
   <div class="zp-meta-value" id="zp-lesson">Eye</div>
@@ -140,177 +17,229 @@ html[data-theme="dark"] .zp-moon-icon{display:block}
 
 <main>
 
-<h2 class="zp-h2">Quick Overview</h2>
-<div class="zp-overview">
-<p>The eye is a complex, highly developed photosensitive organ that analyzes the form, light intensity and color of objects. This lesson covers the three layers of the eyeball wall (outer fibrous, middle vascular pigmented, inner nervous), the chambers, lens and refractive media, the ten-layered retina with its photoreceptors, and the accessory structures: conjunctiva and eyelids.</p>
+<div class="zp-glance">
+  <div class="zp-glance-title">At a glance</div>
+  <p class="zp-glance-lead">The eye is a photosensitive organ whose wall has three layers, with a ten-layered retina and accessory structures (conjunctiva and eyelids).</p>
+  <div class="zp-glance-grid">
+    <div class="zp-glance-item"><div class="zp-glance-value">3</div><div class="zp-glance-label">layers of the eyeball wall</div></div>
+    <div class="zp-glance-item"><div class="zp-glance-value">5</div><div class="zp-glance-label">layers of the cornea</div></div>
+    <div class="zp-glance-item"><div class="zp-glance-value">10</div><div class="zp-glance-label">layers of the retina</div></div>
+  </div>
 </div>
 
-<h2 class="zp-h2">Complete Lesson Content</h2>
+<section class="zp-section" data-icon="eye">
+  <h2 class="zp-h2">Outer fibrous layer</h2>
+  <p class="zp-lead">The eyeball wall has three layers: the outer fibrous layer, the middle vascular pigmented layer (uveal tract) and the inner nervous layer (retina).</p>
+  <p>The outer fibrous layer is predominantly dense white fibrous connective tissue and has two parts: the <strong class="zp-term">cornea</strong> and the <strong class="zp-term">sclera</strong>.</p>
 
-<h3 class="zp-h3">Layers of the eyeball wall</h3>
-<p>The eyeball wall has three layers:</p>
-<ol>
-<li>Outer fibrous layer</li>
-<li>Middle vascular pigmented layer (uveal tract)</li>
-<li>Inner nervous layer (retina)</li>
-</ol>
+  <h3 class="zp-h3">Cornea</h3>
+  <p>The colorless, transparent, avascular anterior one-sixth of the fibrous layer. It has five layers from outside inward:</p>
+  <div class="zp-table-wrap">
+    <table class="zp-table">
+      <thead><tr><th>Layer</th><th>Key features</th></tr></thead>
+      <tbody>
+        <tr><td>1. Corneal epithelium</td><td>Stratified squamous non-keratinized; rich in free nerve endings; always moist with tears; regenerates rapidly after abrasion.</td></tr>
+        <tr><td>2. Bowman's membrane</td><td>About 10 μm, structureless and acellular; network of fine type I collagen; injury results in corneal opacity.</td></tr>
+        <tr><td>3. Substantia propria</td><td>About 90% of corneal thickness; parallel lamellae of type I collagen; flattened stellate fibroblasts (corneal corpuscles) between the bundles.</td></tr>
+        <tr><td>4. Descemet's membrane</td><td>5–7 μm; basal lamina of the corneal endothelial cells; fine collagenous fibers in ground substance; regenerates rapidly after injury.</td></tr>
+        <tr><td>5. Endothelium</td><td>Simple squamous epithelium; its organelles support protein synthesis for forming and maintaining Descemet's membrane; takes part in metabolic exchanges that maintain transparency.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <aside class="zp-box zp-box--highyield">
+    <div class="zp-box-label">High-yield</div>
+    <p>Transparency depends on avascularity and on the regular arrangement of connective tissue cells and fibers, which share the same refractive index. Nutrition diffuses from the aqueous humor and limbal vessels; oxygen for the epithelium comes directly from the atmosphere.</p>
+  </aside>
 
-<h3 class="zp-h3">I. Outer fibrous layer</h3>
-<p>Dense white fibrous connective tissue predominates. It has two parts: the cornea and the sclera.</p>
+  <h3 class="zp-h3">Sclera</h3>
+  <p>The "white of the eye", forming the posterior 5/6 of the fibrous layer. It is made of flat bundles of type I collagen running parallel to the surface but in different directions.</p>
 
-<h4 class="zp-h4">A. Cornea</h4>
-<p>The colorless, transparent, avascular anterior one-sixth of the fibrous layer. It has five layers from outside inward:</p>
-<div class="zp-table-wrap"><table class="zp-table">
-<thead><tr><th>Layer</th><th>Key features</th></tr></thead>
-<tbody>
-<tr><td>1. Corneal epithelium</td><td>Stratified squamous non-keratinized; rich in free nerve endings; always moist with tears; regenerates rapidly after abrasion.</td></tr>
-<tr><td>2. Bowman's membrane</td><td>About 10 μm thick, structureless and acellular; network of fine type I collagen fibers; injury results in corneal opacity.</td></tr>
-<tr><td>3. Substantia propria</td><td>About 90% of corneal thickness; parallel lamellae of type I collagen; flattened stellate fibroblasts (corneal corpuscles) lie between the collagen bundles.</td></tr>
-<tr><td>4. Descemet's membrane</td><td>5–7 μm thick; basal lamina of the corneal endothelial cells; homogeneous (fine collagenous fibers in ground substance); regenerates rapidly after injury.</td></tr>
-<tr><td>5. Endothelium</td><td>Simple squamous epithelium; its organelles support protein synthesis for forming and maintaining Descemet's membrane; engaged in metabolic exchanges that maintain corneal transparency.</td></tr>
-</tbody></table></div>
-<div class="zp-callout">
-<p><strong>Corneal transparency and nutrition</strong></p>
-<p>Transparency depends on avascularity and on the regular arrangement of connective tissue cells and fibers, which share the same refractive index. Nutrition reaches the cornea by diffusion from the aqueous humor and from limbal blood vessels. Oxygen for the epithelium comes directly from the atmosphere, and the anterior surface is kept wet by tears.</p>
-</div>
+  <h3 class="zp-h3">Corneoscleral junction (<strong class="zp-term">limbus</strong>)</h3>
+  <p>The transition zone between cornea and sclera, a highly vascularized ring-like structure. At the limbus:</p>
+  <ul>
+    <li>The corneal epithelium thickens to ten or more layers and becomes continuous with the conjunctiva.</li>
+    <li>Bowman's membrane ends abruptly and is replaced by the stroma of the conjunctiva.</li>
+    <li>The regular collagen bundles of the substantia propria become irregular bundles of the sclera.</li>
+    <li>Descemet's membrane splits into the trabeculae of the pectinate ligament, forming the trabecular meshwork (spaces of Fontana).</li>
+    <li>The corneal endothelium stops abruptly.</li>
+  </ul>
+</section>
 
-<h4 class="zp-h4">B. Sclera</h4>
-<p>The "white of the eye", forming the posterior 5/6 of the fibrous layer. It is composed of flat bundles of type I collagen running parallel to the surface but in different directions.</p>
+<section class="zp-section" data-icon="layers">
+  <h2 class="zp-h2">Uveal tract, chambers and refractive media</h2>
+  <h3 class="zp-h3">Middle vascular pigmented layer (uveal tract)</h3>
+  <p>Consists of the choroid, ciliary body and iris.</p>
+  <div class="zp-map">
+    <div class="zp-map-row"><div class="zp-map-from">Choroid</div><div class="zp-map-to">Highly vascular loose connective tissue with many melanocytes, resting on Bruch's membrane; absorbs light and nourishes the outer retina.</div></div>
+    <div class="zp-map-row"><div class="zp-map-from">Ciliary body</div><div class="zp-map-to">Anterior expansion of the choroid, anterior to the ora serrata; stroma with ciliary (smooth) muscle covered by pigmented epithelium.</div></div>
+    <div class="zp-map-row"><div class="zp-map-from">Iris</div><div class="zp-map-to">Central opening (pupil); divides the space between cornea and lens into anterior and posterior chambers; vascular and rich in melanocytes that determine iris color.</div></div>
+  </div>
+  <p>The <strong class="zp-term">ora serrata</strong> is the boundary between the retina and the ciliary body. Functions of the ciliary body:</p>
+  <ul>
+    <li>Its pigmented epithelium absorbs light.</li>
+    <li>Secretes the aqueous humor.</li>
+    <li>Helps fix the lens in position.</li>
+    <li>Contraction of the ciliary muscle helps in accommodation.</li>
+  </ul>
 
-<h4 class="zp-h4">Corneoscleral junction (limbus)</h4>
-<p>The transition zone between cornea and sclera; a highly vascularized, ring-like structure. Changes at the limbus:</p>
-<ul>
-<li>The corneal epithelium thickens to ten or more layers and becomes continuous with the conjunctiva.</li>
-<li>Bowman's membrane ends abruptly and is replaced by the stroma of the conjunctiva.</li>
-<li>The regular collagen bundles of the substantia propria become the irregular bundles of the sclera.</li>
-<li>Descemet's membrane splits into the trabeculae of the pectinate ligament, forming the trabecular meshwork (spaces of Fontana).</li>
-<li>The corneal endothelium stops abruptly.</li>
-</ul>
+  <h3 class="zp-h3">Chambers and lens</h3>
+  <ul>
+    <li><strong>Anterior chamber:</strong> bounded anteriorly by the cornea and posteriorly by the iris and ciliary body.</li>
+    <li><strong>Posterior chamber:</strong> bounded anteriorly by the iris, posteriorly by the lens and suspensory ligament, and laterally by the ciliary processes.</li>
+    <li><strong>Vitreous space:</strong> between the posterior surface of the lens and the neural retina; filled with the clear jelly-like vitreous body containing few cells (hyalocytes).</li>
+    <li><strong>Lens:</strong> elastic, biconvex, transparent; behind the iris and in front of the vitreous body.</li>
+  </ul>
 
-<h3 class="zp-h3">II. Middle vascular pigmented layer (uveal tract)</h3>
-<p>Consists of three parts: choroid, ciliary body and iris.</p>
-<h4 class="zp-h4">1. Choroid</h4>
-<p>Highly vascularized loose connective tissue containing numerous melanocytes, resting on an amorphous hyaline membrane, Bruch's membrane. It absorbs light and supplies nutrition to the outer portion of the retina.</p>
-<h4 class="zp-h4">2. Ciliary body</h4>
-<p>An anterior expansion of the choroid, anterior to the ora serrata (the boundary between retina and ciliary body). It is composed of a stroma containing smooth muscle (ciliary muscle) and is covered by pigmented epithelium. Functions:</p>
-<ul>
-<li>The pigmented epithelium absorbs light.</li>
-<li>Secretes the aqueous humor.</li>
-<li>Helps fix the lens in position.</li>
-<li>Contraction of ciliary muscle fibers helps in accommodation.</li>
-</ul>
-<h4 class="zp-h4">3. Iris</h4>
-<p>Has a central opening, the pupil, and divides the space between cornea and lens into anterior and posterior chambers. Its layers are highly vascular and rich in melanocytes, which determine the color of the iris.</p>
+  <h3 class="zp-h3">Refractive media</h3>
+  <p>All transparent structures that light must pass through to reach the retina:</p>
+  <div class="zp-chain">
+    <div class="zp-chain-node">Cornea</div>
+    <div class="zp-chain-node">Aqueous humor (anterior chamber)</div>
+    <div class="zp-chain-node">Aqueous humor (posterior chamber)</div>
+    <div class="zp-chain-node">Lens</div>
+    <div class="zp-chain-node">Vitreous body</div>
+  </div>
+</section>
 
-<h3 class="zp-h3">Chambers, lens and refractive media</h3>
-<ul>
-<li><strong>Anterior chamber:</strong> bounded anteriorly by the cornea and posteriorly by the iris and ciliary body.</li>
-<li><strong>Posterior chamber:</strong> bounded anteriorly by the iris, posteriorly by the lens and suspensory ligament, and laterally by the ciliary processes.</li>
-<li><strong>Vitreous space:</strong> between the posterior surface of the lens and the neural retina; occupied by the clear, jelly-like vitreous body with few cells (hyalocytes).</li>
-<li><strong>Lens:</strong> an elastic, biconvex, transparent structure behind the iris and in front of the vitreous body.</li>
-</ul>
-<div class="zp-callout">
-<p><strong>Refractive media</strong> (all transparent structures light passes through to reach the retina): cornea, aqueous humor of the anterior chamber, aqueous humor of the posterior chamber, lens, and vitreous body.</p>
-</div>
+<section class="zp-section" data-icon="search">
+  <h2 class="zp-h2">Retina</h2>
+  <p>The <strong class="zp-term">retina</strong> is the inner nervous layer. It has a photosensitive region posterior to the ora serrata and a non-photosensitive region anterior to it, lining the ciliary body and the posterior surface of the iris. The neural retina contains three orders of neurons with associated short neurons and neuroglial cells, arranged in 10 layers from the choroid inward.</p>
 
-<h3 class="zp-h3">III. Inner nervous layer (retina)</h3>
-<p>The retina has two portions: the photosensitive region lining the inner eye posterior to the ora serrata, and the non-photosensitive region anterior to the ora serrata, lining the ciliary body and the posterior surface of the iris. The neural retina contains three orders of neurons with associated short neurons and neuroglial cells, arranged in 10 layers from the choroid inward:</p>
-<div class="zp-table-wrap"><table class="zp-table">
-<thead><tr><th>Layer</th><th>Contents / features</th></tr></thead>
-<tbody>
-<tr><td>1. Retinal pigment epithelium (RPE)</td><td>Simple cuboidal epithelium on Bruch's membrane (details below).</td></tr>
-<tr><td>2. Layer of rods and cones</td><td>Outer segments of photoreceptor cells, the first order neurons.</td></tr>
-<tr><td>3. Outer limiting membrane</td><td>Not a true membrane; a zone of adhesion (tight junctions) between photoreceptors and Müller cells.</td></tr>
-<tr><td>4. Outer nuclear layer</td><td>Nuclei of rods and cones.</td></tr>
-<tr><td>5. Outer plexiform layer</td><td>Synapses between axons of rods and cones (first order) and dendrites of bipolar cells (second order) and horizontal cells.</td></tr>
-<tr><td>6. Inner nuclear layer</td><td>Nuclei of bipolar cells (second order neurons), amacrine, horizontal and Müller cells.</td></tr>
-<tr><td>7. Inner plexiform layer</td><td>Axons of bipolar cells synapse with branched dendrites of ganglion cells; short amacrine cells synapse here.</td></tr>
-<tr><td>8. Ganglion cell layer</td><td>Cell bodies of ganglion cells (third order neurons), whose axons form the next layer.</td></tr>
-<tr><td>9. Layer of optic nerve fibers</td><td>Unmyelinated axons of ganglion cells; myelin is added as the nerve pierces the sclera.</td></tr>
-<tr><td>10. Inner limiting membrane</td><td>Basal lamina of Müller cells, separating the retina from the vitreous.</td></tr>
-</tbody></table></div>
-<p>Müller cells are functionally analogous to neuroglia: they support, nourish and insulate retinal neurons and fibers.</p>
+  <ol class="zp-layers" data-start="Outer (choroid side)" data-end="Inner (vitreous side)">
+    <li><div class="zp-layer-body"><span class="zp-layer-name">1. Retinal pigment epithelium</span><span class="zp-layer-note">Simple cuboidal, on Bruch's membrane</span></div></li>
+    <li><div class="zp-layer-body"><span class="zp-layer-name">2. Layer of rods and cones</span><span class="zp-layer-note">First order neurons</span></div></li>
+    <li><div class="zp-layer-body"><span class="zp-layer-name">3. Outer limiting membrane</span><span class="zp-layer-note">Adhesion zone, photoreceptors and Müller cells</span></div></li>
+    <li><div class="zp-layer-body"><span class="zp-layer-name">4. Outer nuclear layer</span><span class="zp-layer-note">Nuclei of rods and cones</span></div></li>
+    <li><div class="zp-layer-body"><span class="zp-layer-name">5. Outer plexiform layer</span><span class="zp-layer-note">Photoreceptor to bipolar and horizontal cell synapses</span></div></li>
+    <li><div class="zp-layer-body"><span class="zp-layer-name">6. Inner nuclear layer</span><span class="zp-layer-note">Bipolar, amacrine, horizontal, Müller nuclei</span></div></li>
+    <li><div class="zp-layer-body"><span class="zp-layer-name">7. Inner plexiform layer</span><span class="zp-layer-note">Bipolar to ganglion cell synapses</span></div></li>
+    <li><div class="zp-layer-body"><span class="zp-layer-name">8. Ganglion cell layer</span><span class="zp-layer-note">Third order neurons</span></div></li>
+    <li><div class="zp-layer-body"><span class="zp-layer-name">9. Layer of optic nerve fibers</span><span class="zp-layer-note">Unmyelinated ganglion axons</span></div></li>
+    <li><div class="zp-layer-body"><span class="zp-layer-name">10. Inner limiting membrane</span><span class="zp-layer-note">Basal lamina of Müller cells</span></div></li>
+  </ol>
 
-<h4 class="zp-h4">Pigment epithelium layer</h4>
-<ul>
-<li>Basal plasmalemma shows numerous invaginations with abundant mitochondria nearby (ion-transport activity); lateral plasmalemma shows zonula occludens, zonula adherens, desmosomes and gap junctions.</li>
-<li>Apical surface has long microvilli projecting between the rods and cones; nuclei are basal and rounded.</li>
-<li>Cytoplasm contains melanin granules, mitochondria, RER, abundant SER (site of vitamin A formation), Golgi, lysosomes and residual bodies.</li>
-<li><strong>Functions:</strong> absorption of light; phagocytosis of the tips of rod cells during turnover; storage and release of vitamin A (rhodopsin formation).</li>
-</ul>
+  <h3 class="zp-h3">Pigment epithelium</h3>
+  <ul>
+    <li>Basal plasmalemma has numerous invaginations with abundant mitochondria nearby (ion-transport activity); lateral plasmalemma shows zonula occludens, zonula adherens, desmosomes and gap junctions.</li>
+    <li>Apical part has long microvilli projecting between rods and cones; nuclei are basal and rounded.</li>
+    <li>Cytoplasm contains melanin granules, mitochondria, RER, abundant SER (site of vitamin A formation), Golgi, lysosomes and residual bodies.</li>
+    <li><strong>Functions:</strong> absorption of light; phagocytosis of the tips of rod cells during turnover; storage and release of vitamin A (rhodopsin formation).</li>
+  </ul>
 
-<h4 class="zp-h4">Rods</h4>
-<ul>
-<li>More numerous than cones (about 120 million in the human retina); sensitive to dim light.</li>
-<li>Four parts: outer segment, inner segment, nuclear region, synaptic region.</li>
-<li><strong>Outer segment:</strong> photosensitive, rod-shaped; a series of uniform flattened membranous discs formed by plasmalemma invaginations, containing rhodopsin. The discs are phagocytosed by the pigment epithelium.</li>
-<li><strong>Inner segment:</strong> joined to the outer segment by a connecting stalk containing a modified cilium (nine peripheral microtubule doublets, no central singlet); rich in mitochondria, polysomes, SER, RER, Golgi and glycogen.</li>
-<li><strong>Nuclear region:</strong> contains the nucleus. <strong>Synaptic region:</strong> the inner rod fiber ends in rod spherules that synapse with the next neuron.</li>
-</ul>
+  <h3 class="zp-h3">Photoreceptors, plexiform layers and Müller cells</h3>
+  <p>Rods and cones are the outer segments of the photoreceptor cells, the first order neurons. The outer limiting membrane is not a true membrane but a zone of adhesion (tight junctions) between photoreceptors and <strong class="zp-term">Müller cells</strong>, which are functionally analogous to neuroglia: they support, nourish and insulate retinal neurons and fibers. In the optic nerve fiber layer, myelin is added only as the nerve pierces the sclera.</p>
 
-<h4 class="zp-h4">Cones</h4>
-<ul>
-<li>Fewer than rods (about 7 million); similar in structure, but the outer segment is conical with fewer membranous lamellae.</li>
-<li>The lamellae are continuous with the plasmalemma and permanent; they are not phagocytosed by the pigment epithelium.</li>
-<li>Sensitive to bright light and color vision; photopigment is iodopsin.</li>
-<li>The inner cone fiber ends in an expanded pedicle that synapses with the second order neuron.</li>
-<li>Each cone synapses with one bipolar neuron, whereas more than one rod synapses with one bipolar neuron.</li>
-</ul>
+  <div class="zp-compare">
+    <div class="zp-compare-card">
+      <h4 class="zp-compare-title">Rods</h4>
+      <ul>
+        <li>About 120 million; more numerous than cones</li>
+        <li>Sensitive to dim light</li>
+        <li>Four parts: outer segment, inner segment, nuclear region, synaptic region</li>
+        <li>Outer segment: stacked flattened membranous discs (plasmalemma invaginations) containing rhodopsin; phagocytosed by the pigment epithelium</li>
+        <li>Inner segment joined by a connecting stalk with a modified cilium (nine peripheral doublets, no central singlet); rich in mitochondria, polysomes, SER, RER, Golgi, glycogen</li>
+        <li>Inner rod fiber ends in rod spherules</li>
+        <li>More than one rod synapses with one bipolar neuron</li>
+      </ul>
+    </div>
+    <div class="zp-compare-card">
+      <h4 class="zp-compare-title">Cones</h4>
+      <ul>
+        <li>About 7 million</li>
+        <li>Sensitive to bright light; color vision; photopigment iodopsin</li>
+        <li>Outer segment conical with fewer membranous lamellae</li>
+        <li>Lamellae continuous with the plasmalemma, permanent, not phagocytosed by the pigment epithelium</li>
+        <li>Inner cone fiber ends in an expanded pedicle synapsing with the second order neuron</li>
+        <li>Each cone synapses with one bipolar neuron</li>
+      </ul>
+    </div>
+  </div>
 
-<h4 class="zp-h4">Specialized areas of the retina</h4>
-<ul>
-<li><strong>Macula lutea (yellow spot) / fovea centralis:</strong> central retina opposite the center of the lens, with yellow pigment. Formed only of cones; greatest visual acuity and sharpest color discrimination.</li>
-<li><strong>Optic disc and papilla (blind spot):</strong> all retinal layers except the optic nerve fibers cease abruptly at its margin. The absence of photoreceptors accounts for the term "blind spot".</li>
-</ul>
+  <h3 class="zp-h3">Specialized areas</h3>
+  <div class="zp-map">
+    <div class="zp-map-row"><div class="zp-map-from">Macula lutea (fovea centralis)</div><div class="zp-map-to">Central retina opposite the center of the lens, with yellow pigment; formed only of cones; greatest visual acuity and sharpest color discrimination.</div></div>
+    <div class="zp-map-row"><div class="zp-map-from">Optic disc (blind spot)</div><div class="zp-map-to">All retinal layers except the optic nerve fibers cease abruptly at its margin; no photoreceptors, hence the "blind spot".</div></div>
+  </div>
+</section>
 
-<h3 class="zp-h3">Accessory structures of the eye</h3>
-<h4 class="zp-h4">Conjunctiva</h4>
-<p>A thin, transparent mucous membrane.</p>
-<ul>
-<li><strong>Bulbar conjunctiva:</strong> covers the sclera; stratified squamous non-keratinized epithelium with lamina propria.</li>
-<li><strong>Palpebral conjunctiva:</strong> covers the inner surface of the eyelid; stratified columnar epithelium with numerous goblet cells; lamina propria of loose connective tissue.</li>
-</ul>
-<h4 class="zp-h4">Eyelids</h4>
-<p>Movable tissue folds that protect the eye. Layers:</p>
-<ul>
-<li><strong>Skin:</strong> thin, with few fine hairs and sweat and sebaceous glands; delicate dermis rich in elastic fibers. At the lid margin the dermis contains 3–4 rows of long, stiff hairs (eyelashes) without erector pili muscles.</li>
-<li><strong>Orbicularis oculi:</strong> striated muscle supplied by the 7th cranial nerve; closes the lids.</li>
-<li><strong>Tarsus:</strong> dense fibrous plate containing the Meibomian (tarsal) gland, a modified sebaceous gland secreting an oily lubricant that prevents rapid evaporation of tears.</li>
-<li><strong>Palpebral conjunctiva:</strong> covers the inner surface of the eyelid.</li>
-</ul>
+<section class="zp-section" data-icon="shield">
+  <h2 class="zp-h2">Accessory structures</h2>
+  <h3 class="zp-h3">Conjunctiva</h3>
+  <p>A thin, transparent mucous membrane with two parts:</p>
+  <div class="zp-compare">
+    <div class="zp-compare-card">
+      <h4 class="zp-compare-title">Bulbar conjunctiva</h4>
+      <ul><li>Covers the sclera</li><li>Stratified squamous non-keratinized epithelium</li><li>Lamina propria</li></ul>
+    </div>
+    <div class="zp-compare-card">
+      <h4 class="zp-compare-title">Palpebral conjunctiva</h4>
+      <ul><li>Covers the inner surface of the eyelid</li><li>Stratified columnar epithelium with numerous goblet cells</li><li>Lamina propria of loose connective tissue</li></ul>
+    </div>
+  </div>
 
-<section class="zp-keypoints" aria-label="Key points">
-<h2 class="zp-h2">Key Points / Quick Review</h2>
-<div class="zp-keypoints-grid">
-<div class="zp-keypoints-group"><h4 class="zp-h4">Wall of the eyeball</h4><ul>
-<li>Three layers: outer fibrous, middle vascular pigmented (uveal), inner nervous (retina).</li></ul></div>
-<div class="zp-keypoints-group"><h4 class="zp-h4">Cornea</h4><ul>
-<li>Avascular anterior 1/6; five layers: epithelium, Bowman's, substantia propria (90%), Descemet's, endothelium.</li>
-<li>Bowman's injury causes opacity; Descemet's is the endothelial basal lamina.</li>
-<li>Oxygen for epithelium from the atmosphere.</li></ul></div>
-<div class="zp-keypoints-group"><h4 class="zp-h4">Sclera and limbus</h4><ul>
-<li>Sclera: posterior 5/6, irregular type I collagen.</li>
-<li>Limbus: Descemet's splits into pectinate trabeculae (spaces of Fontana); Bowman's and endothelium end.</li></ul></div>
-<div class="zp-keypoints-group"><h4 class="zp-h4">Uveal tract</h4><ul>
-<li>Choroid: vascular, melanocytes, Bruch's membrane; nourishes outer retina.</li>
-<li>Ciliary body: secretes aqueous humor, fixes lens, accommodation.</li>
-<li>Iris: pupil; separates anterior and posterior chambers.</li></ul></div>
-<div class="zp-keypoints-group"><h4 class="zp-h4">Refractive media</h4><ul>
-<li>Cornea, aqueous humor (both chambers), lens, vitreous body.</li></ul></div>
-<div class="zp-keypoints-group"><h4 class="zp-h4">Retina</h4><ul>
-<li>10 layers from RPE to inner limiting membrane; three neuron orders: photoreceptor, bipolar, ganglion.</li>
-<li>RPE: absorbs light, phagocytoses rod tips, stores vitamin A.</li>
-<li>Müller cells support and insulate; form the inner limiting membrane.</li></ul></div>
-<div class="zp-keypoints-group"><h4 class="zp-h4">Rods vs. cones</h4><ul>
-<li>Rods: about 120 million, dim light, rhodopsin, discs phagocytosed.</li>
-<li>Cones: about 7 million, bright light and color, iodopsin, permanent lamellae, one cone per bipolar cell.</li></ul></div>
-<div class="zp-keypoints-group"><h4 class="zp-h4">Special retinal areas</h4><ul>
-<li>Fovea: cones only, greatest acuity.</li>
-<li>Optic disc: no photoreceptors, blind spot.</li></ul></div>
-<div class="zp-keypoints-group"><h4 class="zp-h4">Accessory structures</h4><ul>
-<li>Bulbar conjunctiva: stratified squamous; palpebral: stratified columnar with goblet cells.</li>
-<li>Eyelid: skin, orbicularis oculi (CN VII), tarsus with Meibomian glands, palpebral conjunctiva.</li></ul></div>
-</div>
+  <h3 class="zp-h3">Eyelids</h3>
+  <p>Movable tissue folds that protect the eye. A section shows these layers:</p>
+  <div class="zp-map">
+    <div class="zp-map-row"><div class="zp-map-from">Skin</div><div class="zp-map-to">Thin, with few fine hairs and sweat and sebaceous glands; delicate dermis rich in elastic fibers. At the lid margin: 3–4 rows of long stiff hairs (eyelashes) without erector pili muscles.</div></div>
+    <div class="zp-map-row"><div class="zp-map-from">Orbicularis oculi</div><div class="zp-map-to">Striated muscle supplied by the 7th cranial nerve; closes the lids.</div></div>
+    <div class="zp-map-row"><div class="zp-map-from">Tarsus</div><div class="zp-map-to">Dense fibrous plate containing the Meibomian (tarsal) gland, a modified sebaceous gland whose oily secretion prevents rapid evaporation of tears.</div></div>
+    <div class="zp-map-row"><div class="zp-map-from">Palpebral conjunctiva</div><div class="zp-map-to">Covers the inner surface of the lid.</div></div>
+  </div>
+</section>
+
+<section class="zp-section" data-icon="check">
+  <h2 class="zp-h2">Check yourself</h2>
+  <details class="zp-recall">
+    <summary>Which corneal layer is the basal lamina of the corneal endothelium?</summary>
+    <div class="zp-recall-answer"><p>Descemet's membrane.</p></div>
+  </details>
+  <details class="zp-recall">
+    <summary>What happens to Descemet's membrane at the limbus?</summary>
+    <div class="zp-recall-answer"><p>It splits into trabeculae of the pectinate ligament, forming the trabecular meshwork (spaces of Fontana).</p></div>
+  </details>
+  <details class="zp-recall">
+    <summary>Why is the optic disc called the blind spot?</summary>
+    <div class="zp-recall-answer"><p>It contains no photoreceptors; all retinal layers except the optic nerve fibers end at its margin.</p></div>
+  </details>
+</section>
+
+<section class="zp-keypoints" style="margin-top: 56px;">
+  <h2 class="zp-h2">Key Points / Quick Review</h2>
+  <div class="zp-keypoints-grid">
+    <div class="zp-keypoints-group">
+      <h4 class="zp-h4">Fibrous layer</h4>
+      <ul>
+        <li>Cornea (anterior 1/6, avascular) and sclera (posterior 5/6).</li>
+        <li>Corneal layers: epithelium, Bowman's, substantia propria (90%), Descemet's, endothelium.</li>
+        <li>Bowman's injury causes opacity; epithelium oxygen comes from the atmosphere.</li>
+        <li>Limbus: Descemet's splits into pectinate trabeculae.</li>
+      </ul>
+    </div>
+    <div class="zp-keypoints-group">
+      <h4 class="zp-h4">Uveal tract and media</h4>
+      <ul>
+        <li>Choroid nourishes the outer retina; ciliary body secretes aqueous humor and aids accommodation.</li>
+        <li>Iris separates anterior and posterior chambers.</li>
+        <li>Refractive media: cornea, aqueous humor, lens, vitreous body.</li>
+      </ul>
+    </div>
+    <div class="zp-keypoints-group">
+      <h4 class="zp-h4">Retina</h4>
+      <ul>
+        <li>10 layers, from pigment epithelium to inner limiting membrane.</li>
+        <li>Pigment epithelium: absorbs light, phagocytoses rod tips, stores vitamin A.</li>
+        <li>Rods: about 120 million, rhodopsin, dim light. Cones: about 7 million, iodopsin, bright light and color.</li>
+        <li>Fovea: cones only, greatest acuity. Optic disc: blind spot.</li>
+      </ul>
+    </div>
+    <div class="zp-keypoints-group">
+      <h4 class="zp-h4">Accessory structures</h4>
+      <ul>
+        <li>Bulbar conjunctiva: stratified squamous; palpebral: stratified columnar with goblet cells.</li>
+        <li>Eyelid: skin, orbicularis oculi (CN VII), tarsus with Meibomian glands, palpebral conjunctiva.</li>
+      </ul>
+    </div>
+  </div>
 </section>
 
 <section class="zp-lesson-illustration" aria-label="Lesson illustration">
@@ -321,45 +250,5 @@ html[data-theme="dark"] .zp-moon-icon{display:block}
 </section>
 
 </main>
-
-<footer class="zp-footer">
-  <div class="zp-footer-inner">
-    <div class="zp-footer-brand">ZNU PULSE</div>
-    <div class="zp-footer-credit">Designed &amp; built by Ahmed Lasheen</div>
-    <div class="zp-footer-actions">
-      <a class="zp-footer-pill" href="https://wa.me/qr/AFP6XCVC2BJHO1" target="_blank" rel="noopener noreferrer" aria-label="Contact ZNU Pulse on WhatsApp">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path d="M12 3.5a8.5 8.5 0 0 0-7.3 12.8L3.5 20.5l4.3-1.2A8.5 8.5 0 1 0 12 3.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path>
-          <path d="M9 8.7c.15-.4.5-.7.9-.7h.5c.3 0 .55.2.65.5l.5 1.3c.1.25.05.55-.15.75l-.5.55c.4.95 1.2 1.75 2.15 2.15l.55-.5c.2-.2.5-.25.75-.15l1.3.5c.3.1.5.35.5.65v.5c0 .4-.3.75-.7.9-2.6.9-5.6-.5-7-3-.75-1.35-1-2.75-.45-4.03Z" fill="currentColor"></path>
-        </svg>
-        <span>Contact us</span>
-      </a>
-      <button class="zp-footer-pill" type="button" id="zp-back-top"><span aria-hidden="true">↑</span><span>Back to top</span></button>
-    </div>
-    <div class="zp-footer-copy">© <span id="zp-year"></span> ZNU Pulse</div>
-  </div>
-</footer>
-
-<script>
-const themeToggle = document.getElementById("zp-theme-toggle");
-function setTheme(theme) {
-  document.documentElement.dataset.theme = theme;
-  const dark = theme === "dark";
-  themeToggle.setAttribute("aria-label", dark ? "Switch to light mode" : "Switch to dark mode");
-  themeToggle.setAttribute("aria-pressed", String(dark));
-}
-let savedTheme = null;
-try { savedTheme = localStorage.getItem("zp-theme"); } catch (e) {}
-setTheme(savedTheme || "light");
-themeToggle.addEventListener("click", () => {
-  const nextTheme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
-  setTheme(nextTheme);
-  try { localStorage.setItem("zp-theme", nextTheme); } catch (e) {}
-});
-document.getElementById("zp-year").textContent = new Date().getFullYear();
-document.getElementById("zp-back-top").addEventListener("click", () => {
-  window.scrollTo({ top: 0, behavior: "smooth" });
-});
-</script>
 </body>
 </html>

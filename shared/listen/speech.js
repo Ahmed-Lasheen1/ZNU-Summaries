@@ -79,6 +79,30 @@
     return points
   }
 
+  /* Voices that sound good for study. To always keep another voice, add its name here, for example Karen. */
+  var PREFERRED = /^(Samantha|Daniel)\b/i
+  var GOOD_WORDS = /natural|neural|premium|enhanced|google/i
+
+  function isGood(voice) {
+    var name = voice.name || ''
+    return !NOVELTY.test(name) && (PREFERRED.test(name) || GOOD_WORDS.test(name))
+  }
+
+  /* The voices worth showing the student: only the good ones when there are any,
+     otherwise every normal English voice, otherwise whatever the device has. Best first. */
+  function recommended(list) {
+    var pool = english(list)
+    if (!pool.length) pool = list.slice()
+    var good = pool.filter(isGood)
+    if (!good.length) {
+      good = pool.filter(function (voice) { return !NOVELTY.test(voice.name || '') })
+    }
+    if (!good.length) good = pool
+    return good.sort(function (a, b) {
+      return score(b) - score(a) || ((a.name || '') < (b.name || '') ? -1 : 1)
+    })
+  }
+
   /* ---------- cutting text into sentences ---------- */
   function splitLong(piece) {
     var parts = []
@@ -358,6 +382,7 @@
     voices: voices,
     onVoices: onVoices,
     english: english,
+    recommended: recommended,
     score: score,
     split: split,
     createPlayer: createPlayer

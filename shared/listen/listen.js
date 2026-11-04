@@ -190,11 +190,7 @@
   }
 
   function fillVoices(list) {
-    var pool = speech.english(list)
-    if (!pool.length) pool = list.slice()
-    pool.sort(function (a, b) {
-      return speech.score(b) - speech.score(a) || (a.name < b.name ? -1 : 1)
-    })
+    var pool = speech.recommended(list)
     voicePool = pool
 
     parts.select.innerHTML = ''

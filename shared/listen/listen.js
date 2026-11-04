@@ -15,7 +15,7 @@
 
   var RATE_KEY = 'zp-listen-rate'
   var VOICE_KEY = 'zp-listen-voice'
-  var RATES = [0.75, 1, 1.25, 1.5]
+  var RATES = [0.75, 1, 1.25, 1.5, 2]
 
   window.zpListen = {
     supported: supported,
@@ -38,6 +38,7 @@
   var rate = 1
   var voicePool = []
   var messageTimer = null
+  var justOpened = false
 
   /* ---------- small helpers ---------- */
   function read(key) {
@@ -99,14 +100,23 @@
     }
   }
 
-  /* scrolls only when the passage is outside the comfortable part of the screen */
-  function ensureVisible(el) {
+  /* Scrolls only when the passage has left the screen, so the page never jumps for nothing.
+     When the player has just opened (quiet), nothing moves at all if the passage is already in view. */
+  function ensureVisible(el, quiet) {
     var rect = el.getBoundingClientRect()
-    var top = 76
-    var bottom = window.innerHeight - (bar ? bar.offsetHeight : 0) - 16
-    if (rect.top >= top && rect.bottom <= bottom) return
-    var room = bottom - top
-    var wanted = rect.height > room ? top : top + (room - rect.height) / 2
+    var top = 70
+    var bottom = window.innerHeight - (bar ? bar.offsetHeight : 0) - 24
+
+    if (quiet) {
+      if (rect.bottom > 40 && rect.top < bottom) return
+    } else if (rect.top >= 8 && rect.bottom <= bottom) {
+      return
+    }
+
+    /* put the passage in the upper part of the screen, or at the top if it is taller than the screen */
+    var wanted = rect.height > bottom - top
+      ? top
+      : Math.max(top, Math.min(bottom - rect.height, window.innerHeight * 0.3))
     var delta = rect.top - wanted
     try {
       window.scrollBy({ top: delta, left: 0, behavior: reducedMotion() ? 'auto' : 'smooth' })
@@ -145,7 +155,9 @@
     var color = section ? window.getComputedStyle(section.el).getPropertyValue('--sec').trim() : ''
     bar.style.setProperty('--sec', color || 'var(--zp-accent)')
 
-    if (follow) ensureVisible(item.el)
+    var quiet = justOpened
+    justOpened = false
+    if (follow) ensureVisible(item.el, quiet)
   }
 
   function updatePlay(state) {
@@ -421,6 +433,7 @@
     announce(true)
 
     /* this runs inside the tap, which iPhone requires for the first sound */
+    justOpened = true
     player.play(start)
   }
 

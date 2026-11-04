@@ -90,6 +90,9 @@
   transition-delay: 0s;
 }
 
+/* while the Listen player is open it shows the current section itself, so this pill steps aside */
+html.zp-listening .zp-here { display: none; }
+
 .zp-here-num {
   flex: 0 0 auto;
   min-width: 28px;

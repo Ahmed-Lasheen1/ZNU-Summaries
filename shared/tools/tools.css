@@ -1,5 +1,5 @@
 /* TOOLS: a small column of round buttons in the top corner.
-   Tap the main button and the others slide out: theme, text size, hide terms, save as PDF.
+   Tap the main button and the others slide out: theme, text size, hide terms, save as PDF, listen.
    Each is a single tap. A small label says what just changed. */
 
 .zp-tools {
@@ -66,12 +66,13 @@
 .zp-tools.is-open .zp-tool--main .zp-ico-open { opacity: 0; transform: rotate(90deg) scale(0.6); }
 .zp-tools.is-open .zp-tool--main .zp-ico-close { opacity: 1; transform: none; }
 
-/* the action buttons wait behind the main one, then slide out in turn */
+/* the action buttons wait behind the main one, then slide out in turn
+   (the 4 is the position of the last button: raise it by one for every button added) */
 .zp-tool:not(.zp-tool--main) {
   visibility: hidden;
   opacity: 0;
   transform: translateY(0) scale(0.5);
-  transition-delay: calc((3 - var(--k)) * 35ms);
+  transition-delay: calc((4 - var(--k)) * 35ms);
 }
 
 .zp-tools.is-open .zp-tool:not(.zp-tool--main) {

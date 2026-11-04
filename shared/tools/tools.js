@@ -1,7 +1,8 @@
-/* TOOLS: round buttons for theme, text size, hide terms and save as PDF.
+/* TOOLS: round buttons for theme, text size, hide terms, save as PDF and listen.
    Light theme, normal text size and visible terms are the defaults.
    Theme and text size are remembered where the browser allows it (not in offline copies).
-   Hide terms always starts switched off. */
+   Hide terms always starts switched off.
+   The listen button opens the read-aloud player (listen/listen.js). */
 (function () {
   var THEME_KEY = 'zp-theme'
   var SIZE_KEY = 'zp-size'
@@ -38,7 +39,8 @@
     type: svg('<polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/>'),
     eye: svg('<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>', 'zp-ico-eye'),
     eyeOff: svg('<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>', 'zp-ico-eye-off'),
-    pdf: svg('<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><polyline points="9 15 12 18 15 15"/>')
+    pdf: svg('<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><polyline points="9 15 12 18 15 15"/>'),
+    listen: svg('<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>')
   }
 
   var holder, mainButton, statusLabel
@@ -115,6 +117,36 @@
     setTermsHidden(hide)
     say(buttons.terms, hide ? 'Key terms hidden. Tap one to reveal it.' : 'Key terms shown')
   }
+
+  /* ---- listen (read aloud) ---- */
+  function listenReady() {
+    return !!(window.zpListen && window.zpListen.supported)
+  }
+
+  /* greyed out when this browser cannot speak, like hide terms when a lesson has too few terms */
+  function refreshListen() {
+    var usable = listenReady()
+    buttons.listen.classList.toggle('is-unavailable', !usable)
+    buttons.listen.setAttribute('aria-disabled', String(!usable))
+  }
+
+  function toggleListen() {
+    if (!listenReady()) {
+      say(buttons.listen, 'Listening is not supported in this browser')
+      return
+    }
+    window.zpListen.toggle()
+    setOpen(false)
+  }
+
+  /* the player tells us when it opens or closes, so the button can light up */
+  document.addEventListener('zp-listen-state', function (event) {
+    if (!buttons.listen) return
+    var open = !!(event.detail && event.detail.open)
+    buttons.listen.classList.toggle('is-active', open)
+    buttons.listen.setAttribute('aria-pressed', String(open))
+    buttons.listen.setAttribute('aria-label', open ? 'Stop listening' : 'Listen to this lesson')
+  })
 
   /* ---- save as PDF ---- */
   var reopened = []
@@ -202,6 +234,7 @@
     makeButton('size', 'Change text size', ICONS.type + '<span class="zp-tool-badge" aria-hidden="true"></span>', 1)
     makeButton('terms', 'Hide key terms', ICONS.eye + ICONS.eyeOff, 2)
     makeButton('pdf', 'Save as PDF', ICONS.pdf, 3)
+    makeButton('listen', 'Listen to this lesson', ICONS.listen, 4)
 
     statusLabel = document.createElement('div')
     statusLabel.className = 'zp-tool-status'
@@ -213,15 +246,20 @@
 
     describeTheme()
     refreshTerms()
+    refreshListen()
 
     mainButton.addEventListener('click', function () {
-      if (!holder.classList.contains('is-open')) refreshTerms()
+      if (!holder.classList.contains('is-open')) {
+        refreshTerms()
+        refreshListen()
+      }
       setOpen(!holder.classList.contains('is-open'))
     })
 
     buttons.theme.addEventListener('click', toggleTheme)
     buttons.size.addEventListener('click', cycleSize)
     buttons.terms.addEventListener('click', toggleTerms)
+    buttons.listen.addEventListener('click', toggleListen)
     buttons.pdf.addEventListener('click', function () {
       savePdf()
       setOpen(false)

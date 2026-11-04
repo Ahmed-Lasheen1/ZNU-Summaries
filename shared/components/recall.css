@@ -118,6 +118,9 @@
   pointer-events: none;
 }
 
+/* kept above the Listen player while it is open */
+html.zp-listening .zp-toast { bottom: calc(176px + env(safe-area-inset-bottom, 0px)); }
+
 .zp-confetti {
   position: fixed;
   top: -14px;

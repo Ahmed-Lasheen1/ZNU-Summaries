@@ -60,9 +60,12 @@
   }
 
   .zp-tools, .zp-progress, .zp-toast, .zp-confetti, .zp-zoom, .zp-recall-progress, .zp-footer-actions,
-  .zp-lesson-illustration figure::after, .zp-flip-front::after, .zp-here, .zp-done-btn, .zp-tool-status {
+  .zp-lesson-illustration figure::after, .zp-flip-front::after, .zp-here, .zp-done-btn, .zp-tool-status, .zp-listen {
     display: none !important;
   }
+
+  /* the space kept for the Listen player is not needed on paper */
+  html.zp-listening body { padding-bottom: 0; }
 
   .zp-flip-on .zp-flip-inner {
     display: block !important; transform: none !important;
@@ -114,7 +117,8 @@ html.zp-print-view .zp-lesson-illustration figure::after,
 html.zp-print-view .zp-flip-front::after,
 html.zp-print-view .zp-here,
 html.zp-print-view .zp-done-btn,
-html.zp-print-view .zp-tool-status {
+html.zp-print-view .zp-tool-status,
+html.zp-print-view .zp-listen {
   display: none !important;
 }
 

@@ -1,0 +1,290 @@
+/* LISTEN: the read-aloud player at the bottom of the screen and the highlight on the passage being read.
+   It uses only the colours and spacing of core/theme.css, so light and dark both work.
+   The player takes the colour of the section being read (--sec), like the other parts of the lesson. */
+
+.zp-listen {
+  position: fixed;
+  left: 50%;
+  bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  z-index: 950;
+  width: min(560px, calc(100% - 24px));
+  padding: 10px 12px 12px;
+  border: 1px solid var(--zp-border);
+  border-radius: 20px;
+  background: var(--zp-surface);
+  box-shadow: 0 14px 34px -14px rgba(16, 24, 40, 0.6);
+  font-family: var(--zp-font);
+  color: var(--zp-text);
+  transform: translateX(-50%);
+  animation: zp-listen-in 260ms ease both;
+}
+
+.zp-listen[hidden],
+.zp-listen-panel[hidden] { display: none; }
+
+@keyframes zp-listen-in {
+  from { opacity: 0; transform: translate(-50%, 16px); }
+  to   { opacity: 1; transform: translate(-50%, 0); }
+}
+
+/* room at the end of the lesson so the footer is never hidden behind the player */
+html.zp-listening body { padding-bottom: calc(150px + env(safe-area-inset-bottom, 0px)); }
+
+.zp-listen button {
+  font-family: var(--zp-font);
+  color: var(--zp-text);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.zp-listen button:focus-visible,
+.zp-listen-select:focus-visible {
+  outline: 2px solid var(--zp-accent);
+  outline-offset: 3px;
+}
+
+.zp-listen svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.zp-listen svg.zp-listen-fill { fill: currentColor; }
+
+/* top row: where we are, speed, voice, close */
+.zp-listen-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.zp-listen-where {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 8px 4px 4px;
+  border: 0;
+  border-radius: 14px;
+  background: transparent;
+  text-align: left;
+}
+
+.zp-listen-num {
+  flex: 0 0 auto;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 6px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  background: var(--sec, var(--zp-accent));
+  font-weight: 800;
+  font-size: 12px;
+  line-height: 1;
+  color: var(--zp-bg);
+}
+
+.zp-listen-num:empty { display: none; }
+
+.zp-listen-title {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1.3;
+}
+
+/* after the student scrolls away by hand, the title is replaced by a way back */
+.zp-listen-where.is-away .zp-listen-title { display: none; }
+
+.zp-listen-where.is-away::after {
+  content: "Back to reading";
+  padding: 5px 12px;
+  border-radius: var(--zp-radius-pill);
+  background: var(--zp-accent-soft);
+  font-weight: 700;
+  font-size: 12.5px;
+  line-height: 1.3;
+  color: var(--zp-accent);
+}
+
+.zp-listen-chip {
+  flex: 0 0 auto;
+  min-width: 44px;
+  height: 32px;
+  padding: 0 10px;
+  border: 1px solid var(--zp-border);
+  border-radius: var(--zp-radius-pill);
+  background: transparent;
+  font-weight: 700;
+  font-size: 12.5px;
+  line-height: 1;
+}
+
+.zp-listen-chip[hidden] { display: none; }
+
+.zp-listen-chip[aria-expanded="true"] {
+  border-color: var(--zp-accent);
+  background: var(--zp-accent-soft);
+  color: var(--zp-accent);
+}
+
+.zp-listen-icon {
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--zp-border);
+  border-radius: 50%;
+  background: transparent;
+}
+
+/* progress through the lesson */
+.zp-listen-track {
+  height: 4px;
+  margin: 8px 2px 0;
+  border-radius: 4px;
+  background: var(--zp-border);
+  overflow: hidden;
+}
+
+.zp-listen-track span {
+  display: block;
+  width: 0;
+  height: 100%;
+  border-radius: 4px;
+  background: var(--sec, var(--zp-accent));
+  transition: width 240ms ease;
+}
+
+/* buttons */
+.zp-listen-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.zp-listen-btn {
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--zp-border);
+  border-radius: 50%;
+  background: transparent;
+  transition: background-color 180ms ease, transform 180ms ease;
+}
+
+.zp-listen-btn:active { transform: scale(0.95); }
+
+.zp-listen-play {
+  width: 52px;
+  height: 52px;
+  border-color: var(--sec, var(--zp-accent));
+  background: var(--sec, var(--zp-accent));
+  color: var(--zp-bg);
+}
+
+.zp-listen .zp-listen-play { color: var(--zp-bg); }
+.zp-listen-play svg { width: 22px; height: 22px; }
+
+@media (hover: hover) {
+  .zp-listen-btn:not(.zp-listen-play):hover,
+  .zp-listen-chip:hover,
+  .zp-listen-icon:hover { border-color: var(--zp-accent); }
+}
+
+/* voice picker, opens above the player */
+.zp-listen-panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(100% + 8px);
+  padding: 12px 14px 14px;
+  border: 1px solid var(--zp-border);
+  border-radius: 16px;
+  background: var(--zp-surface);
+  box-shadow: 0 14px 34px -14px rgba(16, 24, 40, 0.6);
+}
+
+.zp-listen-label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 700;
+  font-size: 11.5px;
+  line-height: 1.3;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--zp-accent);
+}
+
+.zp-listen-select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--zp-border);
+  border-radius: var(--zp-radius-md);
+  background: var(--zp-bg);
+  font-family: var(--zp-font);
+  font-size: 14px;
+  color: var(--zp-text);
+}
+
+.zp-listen-hint {
+  margin-top: 8px;
+  font-weight: 500;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--zp-muted);
+}
+
+/* messages such as "speech did not start" */
+.zp-listen-msg {
+  display: none;
+  margin-top: 8px;
+  font-weight: 600;
+  font-size: 12.5px;
+  line-height: 1.4;
+  text-align: center;
+  color: var(--zp-warn);
+}
+
+.zp-listen.has-msg .zp-listen-msg { display: block; }
+
+/* the highlight on the passage being read (added and removed by listen.js) */
+.zp-reading {
+  outline: 2px solid var(--zp-accent);
+  outline-offset: 5px;
+  border-radius: 6px;
+}
+
+.zp-reading--tint { background-color: var(--zp-accent-soft); }
+
+/* table rows sit inside a scrolling box, so they are marked from the inside */
+tr.zp-reading { outline-offset: -2px; }
+tr.zp-reading > td { background-color: var(--zp-accent-soft) !important; }
+
+@media (max-width: 420px) {
+  .zp-listen { padding: 8px 10px 10px; }
+  .zp-listen-controls { gap: 8px; }
+  .zp-listen-btn { width: 40px; height: 40px; }
+  .zp-listen-play { width: 50px; height: 50px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .zp-listen { animation: none; }
+  .zp-listen-track span,
+  .zp-listen-btn { transition: none; }
+}

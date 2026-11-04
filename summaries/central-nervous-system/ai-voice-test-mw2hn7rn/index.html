@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI voice test</title>
+<style>
+  body { font-family: -apple-system, "Segoe UI", Roboto, sans-serif; margin: 0 auto; padding: 16px; max-width: 640px; line-height: 1.5; background: #f5f7fa; color: #101828; }
+  h1 { font-size: 22px; margin: 0 0 8px; }
+  p { margin: 0 0 12px; }
+  label { display: block; margin: 12px 0 4px; font-weight: 700; font-size: 14px; }
+  textarea, select { width: 100%; box-sizing: border-box; padding: 10px; font: inherit; border: 1px solid #c7cdd6; border-radius: 10px; background: #fff; }
+  textarea { min-height: 110px; }
+  .row { display: flex; flex-direction: column; gap: 10px; margin: 16px 0; }
+  button { padding: 14px; font: inherit; font-weight: 700; border: 0; border-radius: 12px; background: #315f8f; color: #fff; }
+  button.alt { background: #fff; color: #315f8f; border: 2px solid #315f8f; }
+  button:disabled { opacity: 0.45; }
+  audio { width: 100%; margin: 4px 0 12px; }
+  pre { white-space: pre-wrap; word-break: break-word; padding: 12px; border-radius: 10px; background: #101828; color: #e6edf7; font-size: 13px; min-height: 80px; }
+</style>
+</head>
+<body>
+<h1>AI voice test</h1>
+<p>This page tries a free AI voice (Kokoro) that runs inside your phone. Nothing here is part of the lessons. Use it to hear the voice and to measure how heavy it is.</p>
+
+<label for="text">Text to read</label>
+<textarea id="text">The receptor potential is a local change in the membrane potential of a receptor. It grows larger as the stimulus gets stronger, and when it reaches threshold it starts action potentials in the sensory nerve.</textarea>
+
+<label for="voice">AI voice</label>
+<select id="voice">
+  <option value="af_heart">af_heart (female, best rated)</option>
+  <option value="af_bella">af_bella (female)</option>
+  <option value="af_nicole">af_nicole (female)</option>
+  <option value="am_fenrir">am_fenrir (male)</option>
+  <option value="am_michael">am_michael (male)</option>
+  <option value="bm_fable">bm_fable (British male)</option>
+  <option value="bm_george">bm_george (British male)</option>
+</select>
+
+<label for="engine">Engine</label>
+<select id="engine">
+  <option value="wasm">wasm (works on most phones)</option>
+  <option value="webgpu">webgpu (only if the phone supports it)</option>
+</select>
+
+<div class="row">
+  <button id="load" type="button">1. Download the AI voice (about 90 MB, once)</button>
+  <button id="speak" type="button" disabled>2. Speak with the AI voice</button>
+  <button id="device" type="button" class="alt">Compare: speak with the phone's own voice</button>
+</div>
+
+<audio id="player" controls></audio>
+<pre id="log"></pre>
+
+<script type="module">
+  const $ = (id) => document.getElementById(id)
+  const logBox = $('log')
+  const log = (text) => { logBox.textContent += text + '\n' }
+  const seconds = (since) => ((performance.now() - since) / 1000).toFixed(1) + ' s'
+
+  log('Device: ' + navigator.userAgent)
+  log('WebGPU: ' + (navigator.gpu ? 'yes' : 'no') + ' | memory hint: ' + (navigator.deviceMemory || 'not shown by this browser'))
+  log('If this page reloads or goes blank, the phone ran out of memory. Please tell me.\n')
+
+  let tts = null
+
+  /* the audio comes back as raw numbers, so they are wrapped into a WAV file the player can play */
+  function toWav(samples, rate) {
+    const buffer = new ArrayBuffer(44 + samples.length * 2)
+    const view = new DataView(buffer)
+    const write = (offset, text) => { for (let i = 0; i < text.length; i++) view.setUint8(offset + i, text.charCodeAt(i)) }
+    write(0, 'RIFF'); view.setUint32(4, 36 + samples.length * 2, true); write(8, 'WAVE')
+    write(12, 'fmt '); view.setUint32(16, 16, true); view.setUint16(20, 1, true); view.setUint16(22, 1, true)
+    view.setUint32(24, rate, true); view.setUint32(28, rate * 2, true); view.setUint16(32, 2, true); view.setUint16(34, 16, true)
+    write(36, 'data'); view.setUint32(40, samples.length * 2, true)
+    for (let i = 0; i < samples.length; i++) {
+      const value = Math.max(-1, Math.min(1, samples[i]))
+      view.setInt16(44 + i * 2, value < 0 ? value * 0x8000 : value * 0x7fff, true)
+    }
+    return new Blob([buffer], { type: 'audio/wav' })
+  }
+
+  $('load').onclick = async () => {
+    $('load').disabled = true
+    try {
+      log('Loading the voice code...')
+      let mark = performance.now()
+      const { KokoroTTS } = await import('https://cdn.jsdelivr.net/npm/kokoro-js@1.2.1/+esm')
+      log('Code loaded in ' + seconds(mark))
+
+      log('Downloading the voice model (first time only)...')
+      mark = performance.now()
+      let lastShown = -20
+      const webgpu = $('engine').value === 'webgpu'
+      tts = await KokoroTTS.from_pretrained('onnx-community/Kokoro-82M-v1.0-ONNX', {
+        dtype: webgpu ? 'fp32' : 'q8',
+        device: $('engine').value,
+        progress_callback: (info) => {
+          if (info && info.status === 'progress' && info.progress - lastShown >= 20) {
+            lastShown = info.progress
+            log('  ' + Math.round(info.progress) + '% of ' + (info.file || 'a file'))
+          }
+        }
+      })
+      log('Voice ready in ' + seconds(mark) + '\n')
+      $('speak').disabled = false
+    } catch (error) {
+      log('FAILED to load: ' + (error && error.message ? error.message : error))
+      $('load').disabled = false
+    }
+  }
+
+  $('speak').onclick = async () => {
+    if (!tts) return
+    $('speak').disabled = true
+    try {
+      const mark = performance.now()
+      const audio = await tts.generate($('text').value, { voice: $('voice').value })
+      const took = (performance.now() - mark) / 1000
+      const samples = audio.audio || audio.data
+      const rate = audio.sampling_rate || 24000
+      const length = samples.length / rate
+      log('Made ' + length.toFixed(1) + ' s of speech in ' + took.toFixed(1) + ' s (' + (length / took).toFixed(2) + 'x real time; above 1 means faster than speaking)')
+      $('player').src = URL.createObjectURL(toWav(samples, rate))
+      $('player').play().catch(() => log('Tap play on the player above to hear it.'))
+    } catch (error) {
+      log('FAILED to speak: ' + (error && error.message ? error.message : error))
+    }
+    $('speak').disabled = false
+  }
+
+  $('device').onclick = () => {
+    if (!window.speechSynthesis) { log('This browser has no built-in voices.'); return }
+    const voices = speechSynthesis.getVoices()
+    const pick = voices.find((v) => /^(Samantha|Daniel)/i.test(v.name)) || voices.find((v) => /^en/i.test(v.lang))
+    const utterance = new SpeechSynthesisUtterance($('text').value)
+    if (pick) { utterance.voice = pick; utterance.lang = pick.lang }
+    log('Phone voice: ' + (pick ? pick.name : 'default'))
+    speechSynthesis.cancel()
+    speechSynthesis.speak(utterance)
+  }
+</script>
+</body>
+</html>

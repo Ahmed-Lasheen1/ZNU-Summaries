@@ -88,6 +88,28 @@
     return !NOVELTY.test(name) && (PREFERRED.test(name) || GOOD_WORDS.test(name))
   }
 
+  /* Some devices list the same voice more than once (for example a standard and an enhanced copy).
+     Only one of each name and language is kept, preferring the enhanced or on-device copy. */
+  function copyQuality(voice) {
+    var text = (voice.voiceURI || '') + ' ' + (voice.name || '')
+    return (/premium|enhanced|siri/i.test(text) ? 2 : 0) + (voice.localService ? 1 : 0)
+  }
+
+  function withoutCopies(list) {
+    var kept = {}
+    var order = []
+    list.forEach(function (voice) {
+      var key = String(voice.name || '').toLowerCase() + '|' + String(voice.lang || '').replace('_', '-').toLowerCase()
+      if (kept[key] === undefined) {
+        order.push(key)
+        kept[key] = voice
+      } else if (copyQuality(voice) > copyQuality(kept[key])) {
+        kept[key] = voice
+      }
+    })
+    return order.map(function (key) { return kept[key] })
+  }
+
   /* The voices worth showing the student: only the good ones when there are any,
      otherwise every normal English voice, otherwise whatever the device has. Best first. */
   function recommended(list) {
@@ -98,7 +120,7 @@
       good = pool.filter(function (voice) { return !NOVELTY.test(voice.name || '') })
     }
     if (!good.length) good = pool
-    return good.sort(function (a, b) {
+    return withoutCopies(good).sort(function (a, b) {
       return score(b) - score(a) || ((a.name || '') < (b.name || '') ? -1 : 1)
     })
   }

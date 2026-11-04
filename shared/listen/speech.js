@@ -61,10 +61,15 @@
     return list.filter(isEnglish)
   }
 
+  /* Novelty and joke voices that Apple devices list (the "Eloquence" group on iPhone and iPad and the old
+     Mac fun voices). They sound bad for study, so they are pushed to the bottom of the list. */
+  var NOVELTY = /^(Albert|Bad News|Bahh|Bells|Boing|Bubbles|Cellos|Deranged|Good News|Hysterical|Junior|Organ|Princess|Ralph|Trinoids|Whisper|Wobble|Zarvox|Fred|Superstar|Eddy|Flo|Grandma|Grandpa|Reed|Rocko|Sandy|Shelley)\b/i
+
   /* A rough quality guess used to put the best voices first. The student can always pick another. */
   function score(voice) {
     var points = 0
     var name = voice.name || ''
+    if (NOVELTY.test(name)) points -= 20
     var lang = String(voice.lang || '').replace('_', '-')
     if (/natural|neural|premium|enhanced/i.test(name)) points += 5
     if (/google/i.test(name)) points += 2

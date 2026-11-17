@@ -16,7 +16,8 @@
   var SKIP = [
     '.zp-done-btn', '.zp-recall-progress', '.zp-source', '.zp-lesson-illustration', '.zp-toast',
     '.zp-confetti', '.zp-zoom', '.zp-here', '.zp-listen', '.zp-tools', '.zp-progress', '.zp-footer',
-    '.zp-pdf-bar', 'script', 'style', 'noscript', 'svg', 'template', '[hidden]', '[data-zp-listen="skip"]'
+    '.zp-pdf-bar', '.zp-ink', '.zp-draw-surface', '.zp-draw-bar', '.zp-resume', '.zp-ospe-ui', '.zp-ospe-foot',
+    'script', 'style', 'noscript', 'svg', 'template', '[hidden]', '[data-zp-listen="skip"]'
   ].join(', ')
 
   var INLINE = {
@@ -155,6 +156,12 @@
     var label = el.firstElementChild
     var isLabel = function (n) { return n === label }
     push(el, (label ? val(label) + '. ' : '') + textOf(el, isLabel))
+  }
+
+  /* the picture is not read, only its caption */
+  function figure(el) {
+    var caption = el.querySelector('figcaption')
+    if (caption) push(el, 'Figure. ' + textOf(caption))
   }
 
   function chain(el) {
@@ -296,6 +303,7 @@
     ['.zp-meta', meta],
     ['.zp-glance', glance],
     ['.zp-short', short],
+    ['figure.zp-figure', figure],
     ['.zp-chain', chain],
     ['.zp-effect', effect],
     ['.zp-cycle', cycle],

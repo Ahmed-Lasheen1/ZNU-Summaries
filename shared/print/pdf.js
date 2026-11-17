@@ -3,7 +3,9 @@
    it is ready, so each tap starts the save straight away.
    iPhone and iPad (any browser): the share sheet opens, with "Save to Files".
    Android, Mac and computers: the file downloads directly.
-   The pages carry their own numbers and have no margin, so the browser adds no header or footer. */
+   The pages carry their own numbers and have no margin, so the browser adds no header or footer.
+   The PDF is always a clean version: the student's own notes (pen and highlighter) are not in it.
+   A station page (.zp-ospe) is split so that each station is one part that is never cut across two pages. */
 (function () {
   var root = document.documentElement
   if (!root.classList.contains('zp-print-view')) return
@@ -66,6 +68,12 @@
     var children = main ? [].slice.call(main.children) : []
 
     children.forEach(function (child) {
+      if (child.classList.contains('zp-ospe')) {
+        /* a station page: one unit per station */
+        ;[].slice.call(child.children).forEach(function (station) { units.push({ nodes: [station] }) })
+        return
+      }
+
       if (!child.classList.contains('zp-section')) {
         units.push({ nodes: [child] })
         return

@@ -1,8 +1,10 @@
-/* TOOLS: round buttons for theme, text size, hide terms, save as PDF and listen.
+/* TOOLS: round buttons for listen and draw (always visible), and for theme, text size,
+   hide terms and save as PDF (in the menu that slides out from the main button).
    Light theme, normal text size and visible terms are the defaults.
    Theme and text size are remembered where the browser allows it (not in offline copies).
    Hide terms always starts switched off.
-   The listen button opens the read-aloud player (listen/listen.js). */
+   The listen button opens the read-aloud player (listen/listen.js).
+   The draw button opens the pen, highlighter and eraser (draw/draw.js). */
 (function () {
   var THEME_KEY = 'zp-theme'
   var SIZE_KEY = 'zp-size'
@@ -40,7 +42,8 @@
     eye: svg('<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>', 'zp-ico-eye'),
     eyeOff: svg('<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>', 'zp-ico-eye-off'),
     pdf: svg('<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><polyline points="9 15 12 18 15 15"/>'),
-    listen: svg('<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>')
+    listen: svg('<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>'),
+    draw: svg('<path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>')
   }
 
   var holder, mainButton, statusLabel
@@ -49,9 +52,18 @@
 
   function say(button, text) {
     statusLabel.textContent = text
-    var holderTop = holder.getBoundingClientRect().top
+    var inRow = button.classList.contains('zp-tool--row')
+    var holderBox = holder.getBoundingClientRect()
     var box = button.getBoundingClientRect()
-    var top = box.top - holderTop + (box.height - statusLabel.offsetHeight) / 2
+    var top
+    if (inRow) {
+      /* the row buttons sit at the top, so their message goes just below the row, at the right edge */
+      statusLabel.style.right = '0px'
+      top = holderBox.height + 8
+    } else {
+      statusLabel.style.right = ''
+      top = box.top - holderBox.top + (box.height - statusLabel.offsetHeight) / 2
+    }
     statusLabel.style.top = Math.max(0, top) + 'px'
     statusLabel.classList.add('is-shown')
     clearTimeout(statusTimer)
@@ -148,6 +160,34 @@
     buttons.listen.setAttribute('aria-label', open ? 'Stop listening' : 'Listen to this lesson')
   })
 
+  /* ---- draw (pen, highlighter, eraser) ---- */
+  function drawReady() {
+    return !!(window.zpDraw && window.zpDraw.supported)
+  }
+
+  function refreshDraw() {
+    var usable = drawReady()
+    buttons.draw.classList.toggle('is-unavailable', !usable)
+    buttons.draw.setAttribute('aria-disabled', String(!usable))
+  }
+
+  function toggleDraw() {
+    if (!drawReady()) {
+      say(buttons.draw, 'Drawing is not supported in this browser')
+      return
+    }
+    window.zpDraw.toggle()
+    setOpen(false)
+  }
+
+  document.addEventListener('zp-draw-state', function (event) {
+    if (!buttons.draw) return
+    var open = !!(event.detail && event.detail.open)
+    buttons.draw.classList.toggle('is-active', open)
+    buttons.draw.setAttribute('aria-pressed', String(open))
+    buttons.draw.setAttribute('aria-label', open ? 'Stop drawing' : 'Draw and highlight')
+  })
+
   /* ---- save as PDF ---- */
   var reopened = []
 
@@ -202,14 +242,17 @@
     say(buttons.pdf, 'Open this lesson online to save it as a PDF')
   }
 
-  function makeButton(name, label, markup, index) {
+  /* index places a setting in the slide-out menu (0 is the first).
+     row places an always-visible button to the left of the main button (1 is the nearest). */
+  function makeButton(name, label, markup, index, row) {
     var button = document.createElement('button')
-    button.className = 'zp-tool'
+    button.className = 'zp-tool' + (row ? ' zp-tool--row' : '')
     button.type = 'button'
     button.setAttribute('data-tool', name)
     button.setAttribute('aria-label', label)
     button.title = label
-    button.style.setProperty('--k', String(index))
+    if (row) button.style.setProperty('--r', String(row))
+    else button.style.setProperty('--k', String(index))
     button.innerHTML = markup
     holder.appendChild(button)
     buttons[name] = button
@@ -234,7 +277,8 @@
     makeButton('size', 'Change text size', ICONS.type + '<span class="zp-tool-badge" aria-hidden="true"></span>', 1)
     makeButton('terms', 'Hide key terms', ICONS.eye + ICONS.eyeOff, 2)
     makeButton('pdf', 'Save as PDF', ICONS.pdf, 3)
-    makeButton('listen', 'Listen to this lesson', ICONS.listen, 4)
+    makeButton('listen', 'Listen to this lesson', ICONS.listen, 0, 1)
+    makeButton('draw', 'Draw and highlight', ICONS.draw, 0, 2)
 
     statusLabel = document.createElement('div')
     statusLabel.className = 'zp-tool-status'
@@ -247,11 +291,20 @@
     describeTheme()
     refreshTerms()
     refreshListen()
+    refreshDraw()
+
+    /* Listen and Draw are always visible, so their state is checked once every shared script has loaded,
+       and again whenever the menu opens */
+    window.addEventListener('load', function () {
+      refreshListen()
+      refreshDraw()
+    })
 
     mainButton.addEventListener('click', function () {
       if (!holder.classList.contains('is-open')) {
         refreshTerms()
         refreshListen()
+        refreshDraw()
       }
       setOpen(!holder.classList.contains('is-open'))
     })
@@ -260,6 +313,7 @@
     buttons.size.addEventListener('click', cycleSize)
     buttons.terms.addEventListener('click', toggleTerms)
     buttons.listen.addEventListener('click', toggleListen)
+    buttons.draw.addEventListener('click', toggleDraw)
     buttons.pdf.addEventListener('click', function () {
       savePdf()
       setOpen(false)

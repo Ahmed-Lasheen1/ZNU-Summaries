@@ -1,0 +1,53 @@
+/* RESUME: the small note shown when a lesson reopens where the student stopped reading. */
+
+.zp-resume {
+  position: fixed;
+  left: 50%;
+  bottom: calc(68px + env(safe-area-inset-bottom, 0px));
+  z-index: 920;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: min(92%, 420px);
+  padding: 8px 8px 8px 16px;
+  border: 1px solid var(--zp-border);
+  border-radius: var(--zp-radius-pill);
+  background: var(--zp-surface);
+  box-shadow: 0 10px 26px -12px rgba(16, 24, 40, 0.55);
+  font-family: var(--zp-font);
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 1.3;
+  color: var(--zp-text);
+  transform: translateX(-50%);
+  animation: zp-resume-in 260ms ease both;
+}
+
+.zp-resume button {
+  flex: 0 0 auto;
+  padding: 6px 12px;
+  border: 0;
+  border-radius: var(--zp-radius-pill);
+  background: var(--zp-accent-soft);
+  font-family: var(--zp-font);
+  font-weight: 700;
+  font-size: 12.5px;
+  color: var(--zp-accent);
+  cursor: pointer;
+}
+
+.zp-resume button:focus-visible {
+  outline: 2px solid var(--zp-accent);
+  outline-offset: 2px;
+}
+
+html.zp-listening .zp-resume { bottom: calc(190px + env(safe-area-inset-bottom, 0px)); }
+
+@keyframes zp-resume-in {
+  from { opacity: 0; transform: translate(-50%, 12px); }
+  to   { opacity: 1; transform: translate(-50%, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .zp-resume { animation: none; }
+}

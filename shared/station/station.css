@@ -1,0 +1,368 @@
+/* STATION: the OSPE station page (study all, or a timed mock).
+   The lesson file holds every station as plain markup. station/station.js adds the small control bar
+   and shows one station at a time. Without the script, every station is shown one under the other.
+
+   <div class="zp-ospe" data-mock-stations="10" data-mock-questions="4" data-mock-minutes="2">
+     <article class="zp-station" data-topic="Topic name">
+       <h2 class="zp-station-title"><span class="zp-st-name">Station 1</span> <small class="zp-st-marks">(6 marks)</small></h2>
+       <div class="zp-station-media">
+         <div class="zp-sfig"><img src="data:image/webp;base64,..." alt="..." width="800" height="600">
+           <span class="zp-cover" style="left:10%;top:20%;width:30%;height:8%"></span></div>
+       </div>
+       <ol class="zp-sq">
+         <li data-marks="1"><div class="zp-sq-text">Question <span class="zp-sq-marks">(1 mark)</span></div>
+           <div class="zp-sq-answer"><p>Answer.</p></div></li>
+       </ol>
+     </article>
+   </div>
+
+   zp-cover boxes hide label text on a picture until "Show answers" is tapped. */
+
+.zp-ospe {
+  width: 100%;
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+/* ---------- the control bar ---------- */
+.zp-ospe-ui {
+  max-width: 860px;
+  margin: 0 auto var(--zp-space-2);
+  padding: 14px 16px 16px;
+  border: 1px solid var(--zp-border);
+  border-radius: var(--zp-radius-lg);
+  background: var(--zp-surface);
+}
+
+.zp-ospe-modes {
+  display: inline-flex;
+  padding: 3px;
+  border: 1px solid var(--zp-border);
+  border-radius: var(--zp-radius-pill);
+  background: var(--zp-accent-soft);
+}
+
+.zp-ospe-modes button {
+  padding: 7px 16px;
+  border: 0;
+  border-radius: var(--zp-radius-pill);
+  background: transparent;
+  font-family: var(--zp-font);
+  font-weight: 700;
+  font-size: 13.5px;
+  color: var(--zp-muted);
+  cursor: pointer;
+}
+
+.zp-ospe-modes button.is-on {
+  background: var(--zp-accent);
+  color: var(--zp-bg);
+}
+
+.zp-ospe-bar { margin-top: 12px; }
+
+.zp-ospe-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+}
+
+.zp-ospe-pick,
+.zp-ospe-form input {
+  padding: 9px 12px;
+  border: 1px solid var(--zp-border);
+  border-radius: var(--zp-radius-md);
+  background: var(--zp-bg);
+  font-family: var(--zp-font);
+  font-size: 14px;
+  color: var(--zp-text);
+}
+
+.zp-ospe-pick { flex: 1 1 220px; min-width: 0; }
+
+.zp-ospe-score {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--zp-clin);
+}
+
+.zp-ospe-note {
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--zp-muted);
+}
+
+.zp-ospe-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.zp-ospe-form label {
+  display: block;
+  font-weight: 600;
+  font-size: 12.5px;
+  line-height: 1.35;
+  color: var(--zp-muted);
+}
+
+.zp-ospe-form input { display: block; width: 100%; margin-top: 4px; }
+
+.zp-btn {
+  padding: 10px 20px;
+  border: 1.5px solid var(--zp-accent);
+  border-radius: var(--zp-radius-pill);
+  background: transparent;
+  font-family: var(--zp-font);
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1.3;
+  color: var(--zp-accent);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.zp-btn--main {
+  background: var(--zp-accent);
+  color: var(--zp-bg);
+}
+
+.zp-btn[disabled] { opacity: 0.4; cursor: default; }
+
+.zp-btn:focus-visible,
+.zp-ospe-modes button:focus-visible,
+.zp-ospe-pick:focus-visible,
+.zp-ospe-form input:focus-visible {
+  outline: 2px solid var(--zp-accent);
+  outline-offset: 2px;
+}
+
+.zp-ospe-foot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  max-width: 860px;
+  margin: var(--zp-space-2) auto var(--zp-space-1);
+}
+
+/* the timer */
+.zp-ospe-clock {
+  font-weight: 800;
+  font-size: 24px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--zp-text);
+}
+
+.zp-ospe-clock.is-low { color: var(--zp-warn); }
+
+.zp-ospe-track {
+  height: 6px;
+  margin-top: 10px;
+  border-radius: 6px;
+  background: var(--zp-border);
+  overflow: hidden;
+}
+
+.zp-ospe-track span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 6px;
+  background: var(--zp-accent);
+  transition: width 250ms linear;
+}
+
+/* ---------- a station ---------- */
+.zp-station {
+  margin: 0 0 var(--zp-space-3);
+  padding: 18px 18px 8px;
+  border: 1px solid var(--zp-border);
+  border-left: 5px solid var(--zp-accent);
+  border-radius: var(--zp-radius-lg);
+  background: var(--zp-surface);
+}
+
+.zp-station[hidden],
+.zp-sq > li[hidden] { display: none !important; }
+
+.zp-station-title {
+  margin: 0 0 var(--zp-space-2);
+  font-family: var(--zp-font);
+  font-weight: 800;
+  font-size: 20px;
+  line-height: 1.3;
+  color: var(--zp-accent);
+}
+
+.zp-station-title small {
+  margin-left: 6px;
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--zp-muted);
+}
+
+.zp-station-media {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 12px;
+  margin: 0 0 var(--zp-space-2);
+}
+
+/* shrinks to the picture, so the cover boxes (percentages) always sit on the picture */
+.zp-sfig {
+  position: relative;
+  width: fit-content;
+  max-width: 100%;
+  line-height: 0;
+}
+
+.zp-sfig img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  max-height: 460px;
+  height: auto;
+  border: 1px solid var(--zp-border);
+  border-radius: var(--zp-radius-md);
+  background: #ffffff;
+}
+
+.zp-cover {
+  position: absolute;
+  display: none;
+  box-sizing: border-box;
+  border: 2px solid var(--zp-accent);
+  border-radius: 4px;
+  background: var(--zp-surface);
+  line-height: 1;
+}
+
+.zp-cover::after {
+  content: "?";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--zp-font);
+  font-weight: 800;
+  font-size: 12px;
+  color: var(--zp-accent);
+}
+
+html.zp-station-page .zp-station:not(.is-revealed) .zp-cover { display: block; }
+
+.zp-sq { margin: 0 0 var(--zp-space-2); }
+
+.zp-sq > li { margin-bottom: 14px; }
+
+.zp-sq-text {
+  font-weight: 600;
+  line-height: 1.55;
+}
+
+.zp-sq-marks {
+  margin-left: 6px;
+  font-weight: 600;
+  font-size: 12.5px;
+  color: var(--zp-muted);
+  white-space: nowrap;
+}
+
+.zp-sq-answer {
+  margin-top: 8px;
+  padding: 10px 14px;
+  border-left: 4px solid var(--zp-clin);
+  border-radius: var(--zp-radius-md);
+  background: var(--zp-clin-soft);
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.zp-sq-answer::before {
+  content: "Answer";
+  display: block;
+  margin-bottom: 2px;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--zp-clin);
+}
+
+.zp-sq-answer p,
+.zp-sq-answer ul { margin: 0; max-width: none; }
+
+html.zp-station-page .zp-station:not(.is-revealed) .zp-sq-answer { display: none; }
+
+.zp-sq-tick {
+  margin-top: 8px;
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--zp-text);
+}
+
+.zp-sq-tick label { cursor: pointer; }
+.zp-sq-tick input[type="checkbox"] { margin-right: 6px; transform: scale(1.15); accent-color: var(--zp-clin); }
+.zp-sq-tick select {
+  margin-left: 6px;
+  padding: 3px 6px;
+  border: 1px solid var(--zp-border);
+  border-radius: 6px;
+  background: var(--zp-bg);
+  font-family: var(--zp-font);
+  font-size: 13px;
+  color: var(--zp-text);
+}
+
+/* ---------- mock results ---------- */
+.zp-ospe-result h3 {
+  margin: 0 0 6px;
+  font-family: var(--zp-font);
+  font-weight: 800;
+  font-size: 26px;
+  line-height: 1.2;
+  color: var(--zp-text);
+}
+
+.zp-ospe-result h3 span { color: var(--zp-accent); }
+
+.zp-ospe-topic {
+  display: grid;
+  grid-template-columns: minmax(90px, 34%) 1fr auto;
+  align-items: center;
+  gap: 10px;
+  margin: 8px 0;
+  font-size: 14px;
+}
+
+.zp-ospe-topic .zp-ospe-bar-track {
+  height: 10px;
+  border-radius: 10px;
+  background: var(--zp-border);
+  overflow: hidden;
+}
+
+.zp-ospe-topic .zp-ospe-bar-track span {
+  display: block;
+  height: 100%;
+  border-radius: 10px;
+  background: var(--zp-clin);
+}
+
+.zp-ospe-topic.is-weak .zp-ospe-bar-track span { background: var(--zp-warn); }
+.zp-ospe-topic b { font-weight: 700; white-space: nowrap; }
+
+@media (max-width: 600px) {
+  .zp-station { padding: 14px 14px 4px; }
+  .zp-sfig img { max-height: 340px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .zp-ospe-track span { transition: none; }
+}

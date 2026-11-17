@@ -1,0 +1,38 @@
+/* FIGURE: a photo or picture from the handout, placed next to the information it explains.
+   No zoom. The picture is never stretched past its own size, so it stays sharp.
+
+   <figure class="zp-figure">
+     <img src="data:image/webp;base64,..." alt="What the picture shows" width="900" height="600">
+     <figcaption>Short caption</figcaption>
+   </figure>
+
+   Small version (for narrow pictures): add the class zp-figure--small. */
+
+.zp-figure {
+  width: 100%;
+  max-width: 640px;
+  margin: var(--zp-space-3) auto;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.zp-figure--small { max-width: 380px; }
+
+.zp-figure img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+  border: 1px solid var(--zp-border);
+  border-radius: var(--zp-radius-md);
+  background: #ffffff;
+}
+
+.zp-figure figcaption {
+  margin-top: var(--zp-space-1);
+  max-width: 560px;
+  text-align: center;
+}

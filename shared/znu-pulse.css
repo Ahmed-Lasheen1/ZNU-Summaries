@@ -16,11 +16,14 @@
 @import url("components/cycle.css");
 @import url("components/flip.css");
 @import url("components/recall.css");
-@import url("components/zoom.css");
+@import url("components/figure.css");
 @import url("tools/tools.css");
+@import url("draw/draw.css");
 @import url("listen/listen.css");
+@import url("station/station.css");
 @import url("motion/motion.css");
 @import url("study/study.css");
+@import url("resume/resume.css");
 @import url("progress/progress.css");
 @import url("footer/footer.css");
 @import url("print/print.css");

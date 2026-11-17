@@ -10,7 +10,7 @@
   var SELECTOR = [
     '.zp-glance', '.zp-glance-item', '.zp-section > h2.zp-h2', '.zp-box',
     '.zp-flow > li', '.zp-chain-node', '.zp-cycle', '.zp-compare-card', '.zp-flip',
-    '.zp-recall', '.zp-keypoints-group', '.zp-table-wrap', '.zp-lesson-illustration',
+    '.zp-recall', '.zp-keypoints-group', '.zp-table-wrap', '.zp-lesson-illustration', '.zp-figure',
     '.zp-layers > li', '.zp-tree-root', '.zp-tree-branch > li', '.zp-bignum', '.zp-map-row',
     '.zp-range', '.zp-effect-step', '.zp-rule', '.zp-short'
   ].join(', ')

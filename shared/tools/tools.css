@@ -1,5 +1,6 @@
-/* TOOLS: a small column of round buttons in the top corner.
-   Tap the main button and the others slide out: theme, text size, hide terms, save as PDF, listen.
+/* TOOLS: round buttons in the top corner.
+   Always visible, in a row beside the main button: Listen and Draw.
+   Tap the main button and the settings slide out below it: theme, text size, hide terms, save as PDF.
    Each is a single tap. A small label says what just changed. */
 
 .zp-tools {
@@ -66,13 +67,13 @@
 .zp-tools.is-open .zp-tool--main .zp-ico-open { opacity: 0; transform: rotate(90deg) scale(0.6); }
 .zp-tools.is-open .zp-tool--main .zp-ico-close { opacity: 1; transform: none; }
 
-/* the action buttons wait behind the main one, then slide out in turn
-   (the 4 is the position of the last button: raise it by one for every button added) */
+/* the settings wait behind the main button, then slide out in turn
+   (the 3 is the position of the last setting: raise it by one for every setting added) */
 .zp-tool:not(.zp-tool--main) {
   visibility: hidden;
   opacity: 0;
   transform: translateY(0) scale(0.5);
-  transition-delay: calc((4 - var(--k)) * 35ms);
+  transition-delay: calc((3 - var(--k)) * 35ms);
 }
 
 .zp-tools.is-open .zp-tool:not(.zp-tool--main) {
@@ -80,6 +81,18 @@
   opacity: 1;
   transform: translateY(calc((var(--zp-tool) + var(--zp-tool-gap)) * (var(--k) + 1))) scale(1);
   transition-delay: calc(var(--k) * 55ms), calc(var(--k) * 55ms), 0s, 0s, 0s, 0s;
+}
+
+/* the always-visible buttons (Listen, Draw) sit in a row to the left of the main button,
+   --r is how many places to the left of it */
+.zp-tools .zp-tool.zp-tool--row,
+.zp-tools.is-open .zp-tool.zp-tool--row {
+  visibility: visible;
+  opacity: 1;
+  right: calc((var(--zp-tool) + var(--zp-tool-gap)) * var(--r));
+  transform: none;
+  transition-delay: 0s;
+  z-index: 1;
 }
 
 @media (hover: hover) {
@@ -162,7 +175,7 @@ html[data-size="larger"] .zp-tool-badge::before { content: "++"; }
 }
 
 @media (max-width: 600px) {
-  .zp-tools { --zp-tool: 40px; top: 14px; right: 14px; }
+  .zp-tools { --zp-tool: 40px; --zp-tool-gap: 8px; top: 14px; right: 14px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -183,6 +196,9 @@ html.zp-hide-terms .zp-term:not(.is-shown) {
   user-select: none;
   -webkit-user-select: none;
 }
+
+/* the station pages build their own pages, so Listen and Draw are not offered there */
+html.zp-station-page .zp-tool--row { display: none; }
 
 /* the PDF view has its own pages and no tool buttons */
 html.zp-print-view .zp-tools { display: none; }

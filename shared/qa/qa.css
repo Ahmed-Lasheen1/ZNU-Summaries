@@ -1,0 +1,457 @@
+/* QA: the written-questions study page. A whole subject of questions, each a card that opens
+   smoothly to show a short exam-ready answer. qa/qa.js adds the search and filter bar, the self-rating
+   under each answer and the counts. Without the script, or in the PDF and printed page, every answer is shown.
+
+   <article class="zp-qa">
+     <p class="zp-qa-q">Question text?</p>
+     <div class="zp-qa-panel"><div class="zp-qa-inner"><div class="zp-qa-body">
+       <p class="zp-qa-core">One-line core answer with <strong class="zp-term">key terms</strong>.</p>
+       <ul><li>Point</li></ul>
+       <p class="zp-qa-keys"><span>Key words</span> word, word, word</p>
+       <p class="zp-qa-src">Source: page 192</p>
+     </div></div></div>
+   </article> */
+
+.zp-qa {
+  --q: var(--sec, var(--zp-accent));
+  --q-soft: var(--sec-soft, var(--zp-accent-soft));
+  position: relative;
+  margin: 0 0 12px;
+  border: 1px solid var(--zp-border);
+  border-left: 5px solid var(--q);
+  border-radius: var(--zp-radius-lg);
+  background: var(--zp-surface);
+  overflow: hidden;
+  transition: border-color 260ms ease, box-shadow 260ms ease, background-color 260ms ease;
+}
+
+.zp-qa.r-k { --q: var(--zp-clin); --q-soft: var(--zp-clin-soft); }
+.zp-qa.r-s { --q: var(--zp-hy); --q-soft: var(--zp-hy-soft); }
+.zp-qa.r-d { --q: var(--zp-warn); --q-soft: var(--zp-warn-soft); }
+
+.zp-qa.is-open { box-shadow: 0 12px 28px -18px rgba(16, 24, 40, 0.5); }
+.zp-qa.is-filtered { display: none; }
+
+/* ---------- the question ---------- */
+.zp-qa-q {
+  position: relative;
+  max-width: none;
+  margin: 0;
+  padding: 16px 62px 16px 18px;
+  font-family: var(--zp-font);
+  font-weight: 700;
+  font-size: 16.5px;
+  line-height: 1.5;
+  color: var(--zp-text);
+}
+
+.zp-qa-on .zp-qa-q { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.zp-qa.is-open .zp-qa-q { background: var(--q-soft); }
+
+@media (hover: hover) {
+  .zp-qa-on .zp-qa:not(.is-open) .zp-qa-q:hover { background: var(--zp-accent-soft); }
+}
+
+.zp-qa-q:focus-visible {
+  outline: 2px solid var(--zp-accent);
+  outline-offset: -2px;
+}
+
+/* the round arrow button on the right */
+.zp-qa-on .zp-qa-q::after {
+  content: "";
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  width: 28px;
+  height: 28px;
+  margin-top: -14px;
+  border-radius: 50%;
+  background: var(--q);
+  transition: background-color 260ms ease;
+}
+
+.zp-qa-on .zp-qa-q::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  right: 26px;
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  margin-top: -6px;
+  border-right: 2.5px solid var(--zp-bg);
+  border-bottom: 2.5px solid var(--zp-bg);
+  transform: rotate(45deg);
+  transition: transform 320ms cubic-bezier(0.3, 1.4, 0.5, 1);
+}
+
+.zp-qa.is-open .zp-qa-q::before { transform: translateY(4px) rotate(-135deg); }
+
+/* ---------- the answer: opens by growing, not by jumping ---------- */
+.zp-qa-panel { display: grid; grid-template-rows: 1fr; }
+.zp-qa-inner { min-height: 0; overflow: hidden; }
+
+@media (scripting: enabled) {
+  .zp-qa-panel {
+    grid-template-rows: 0fr;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      grid-template-rows 380ms cubic-bezier(0.2, 0.7, 0.2, 1),
+      opacity 260ms ease,
+      visibility 0s linear 380ms;
+  }
+}
+
+html.zp-qa-on .zp-qa-panel {
+  grid-template-rows: 0fr;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    grid-template-rows 380ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    opacity 260ms ease,
+    visibility 0s linear 380ms;
+}
+
+.zp-qa.is-open .zp-qa-panel {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0s, 60ms, 0s;
+}
+
+.zp-qa-body {
+  padding: 6px 18px 18px;
+  border-top: 1px solid var(--zp-border);
+}
+
+/* the answer lines settle in one after another */
+.zp-qa.is-open .zp-qa-body > * { animation: zp-qa-line 420ms cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+.zp-qa.is-open .zp-qa-body > :nth-child(2) { animation-delay: 70ms; }
+.zp-qa.is-open .zp-qa-body > :nth-child(3) { animation-delay: 140ms; }
+.zp-qa.is-open .zp-qa-body > :nth-child(4) { animation-delay: 210ms; }
+.zp-qa.is-open .zp-qa-body > :nth-child(n+5) { animation-delay: 280ms; }
+
+@keyframes zp-qa-line {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.zp-qa-body > :first-child { margin-top: 12px; }
+.zp-qa-body p,
+.zp-qa-body ul,
+.zp-qa-body ol { max-width: none; }
+.zp-qa-body > :last-child { margin-bottom: 0; }
+
+.zp-qa-core {
+  margin: 0 0 var(--zp-space-1);
+  font-weight: 600;
+  font-size: 16.5px;
+  line-height: 1.55;
+}
+
+.zp-qa-keys {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+  margin: var(--zp-space-1) 0;
+  padding: 8px 12px;
+  border-radius: var(--zp-radius-md);
+  background: var(--q-soft);
+  font-weight: 600;
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
+.zp-qa-keys > span {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--q);
+}
+
+.zp-qa-src {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 10px 0 0;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+  color: var(--zp-muted);
+}
+
+.zp-qa-src::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 12px;
+  height: 12px;
+  background: currentColor;
+  -webkit-mask: var(--zp-ic-book) center / contain no-repeat;
+  mask: var(--zp-ic-book) center / contain no-repeat;
+}
+
+/* ---------- the self-rating under each answer ---------- */
+.zp-qa-rate {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--zp-border);
+}
+
+.zp-qa-rate > span {
+  margin-right: 4px;
+  font-weight: 700;
+  font-size: 12.5px;
+  color: var(--zp-muted);
+}
+
+.zp-qa-rate button {
+  --r: var(--zp-clin);
+  padding: 7px 14px;
+  border: 1.5px solid var(--r);
+  border-radius: var(--zp-radius-pill);
+  background: transparent;
+  font-family: var(--zp-font);
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 1.2;
+  color: var(--r);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 180ms ease, color 180ms ease, transform 180ms ease;
+}
+
+.zp-qa-rate button[data-r="s"] { --r: var(--zp-hy); }
+.zp-qa-rate button[data-r="d"] { --r: var(--zp-warn); }
+.zp-qa-rate button:active { transform: scale(0.96); }
+.zp-qa-rate button.is-on { background: var(--r); color: var(--zp-bg); }
+
+.zp-qa-rate button:focus-visible {
+  outline: 2px solid var(--zp-accent);
+  outline-offset: 2px;
+}
+
+/* ---------- the search and filter bar ---------- */
+.zp-qa-bar {
+  position: sticky;
+  top: 8px;
+  z-index: 40;
+  max-width: 860px;
+  margin: 0 auto var(--zp-space-3);
+  padding: 12px 14px 12px;
+  border: 1px solid var(--zp-border);
+  border-radius: var(--zp-radius-lg);
+  background: var(--zp-surface);
+  box-shadow: 0 10px 26px -16px rgba(16, 24, 40, 0.5);
+  transition: transform 260ms cubic-bezier(0.2, 0.7, 0.2, 1), opacity 200ms ease;
+}
+
+.zp-qa-bar.is-hidden {
+  transform: translateY(-140%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.zp-qa-bar-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.zp-qa-search {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 10px 14px;
+  border: 1px solid var(--zp-border);
+  border-radius: var(--zp-radius-pill);
+  background: var(--zp-bg);
+  font-family: var(--zp-font);
+  font-size: 14px;
+  color: var(--zp-text);
+}
+
+.zp-qa-search:focus-visible {
+  outline: 2px solid var(--zp-accent);
+  outline-offset: 2px;
+}
+
+.zp-qa-tool {
+  flex: 0 0 auto;
+  padding: 9px 13px;
+  border: 1px solid var(--zp-border);
+  border-radius: var(--zp-radius-pill);
+  background: transparent;
+  font-family: var(--zp-font);
+  font-weight: 700;
+  font-size: 12.5px;
+  line-height: 1.2;
+  color: var(--zp-text);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.zp-qa-tool:focus-visible,
+.zp-qa-chip:focus-visible {
+  outline: 2px solid var(--zp-accent);
+  outline-offset: 2px;
+}
+
+@media (hover: hover) {
+  .zp-qa-tool:hover { border-color: var(--zp-accent); }
+}
+
+.zp-qa-chips {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  padding-bottom: 2px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.zp-qa-chips::-webkit-scrollbar { display: none; }
+
+.zp-qa-chip {
+  --c: var(--zp-accent);
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 12px;
+  border: 1.5px solid var(--c);
+  border-radius: var(--zp-radius-pill);
+  background: transparent;
+  font-family: var(--zp-font);
+  font-weight: 700;
+  font-size: 12.5px;
+  line-height: 1.2;
+  color: var(--c);
+  white-space: nowrap;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 180ms ease, color 180ms ease;
+}
+
+.zp-qa-chip[data-filter="k"] { --c: var(--zp-clin); }
+.zp-qa-chip[data-filter="s"] { --c: var(--zp-hy); }
+.zp-qa-chip[data-filter="d"] { --c: var(--zp-warn); }
+.zp-qa-chip[data-filter="new"] { --c: var(--zp-muted); }
+.zp-qa-chip.is-on { background: var(--c); color: var(--zp-bg); }
+
+.zp-qa-chip b {
+  min-width: 20px;
+  padding: 1px 6px;
+  border-radius: 10px;
+  background: var(--zp-accent-soft);
+  font-weight: 800;
+  font-size: 11.5px;
+  text-align: center;
+  color: inherit;
+}
+
+.zp-qa-chip.is-on b { background: rgba(255, 255, 255, 0.25); }
+
+.zp-qa-meter {
+  height: 5px;
+  margin-top: 10px;
+  border-radius: 5px;
+  background: var(--zp-border);
+  overflow: hidden;
+}
+
+.zp-qa-meter span {
+  display: block;
+  width: 0;
+  height: 100%;
+  border-radius: 5px;
+  background: linear-gradient(90deg, var(--zp-accent), var(--zp-clin));
+  transition: width 360ms ease;
+}
+
+.zp-qa-none {
+  max-width: 860px;
+  margin: 0 auto var(--zp-space-3);
+  padding: 18px;
+  border: 1px dashed var(--zp-border);
+  border-radius: var(--zp-radius-lg);
+  text-align: center;
+  font-weight: 600;
+  color: var(--zp-muted);
+}
+
+.zp-qa-none[hidden] { display: none; }
+
+/* ---------- per-lesson counts and filtered-out lessons ---------- */
+.zp-qa-count {
+  display: inline-block;
+  margin: 0 0 var(--zp-space-2);
+  padding: 4px 12px;
+  border-radius: var(--zp-radius-pill);
+  background: var(--sec-soft, var(--zp-accent-soft));
+  font-family: var(--zp-font);
+  font-weight: 700;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--sec, var(--zp-accent));
+}
+
+/* a lesson with no matching question keeps its banner (so the numbers do not change) but shows nothing else */
+.zp-section.zp-qa-empty > :not(h2) { display: none; }
+.zp-section.zp-qa-empty > h2.zp-h2 { opacity: 0.45; margin-bottom: 0; }
+
+@media (max-width: 900px) {
+  .zp-qa-bar { top: 62px; }
+}
+
+@media (max-width: 600px) {
+  .zp-qa-q { padding: 14px 58px 14px 14px; font-size: 16px; }
+  .zp-qa-body { padding: 4px 14px 16px; }
+  .zp-qa-tool { padding: 9px 10px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .zp-qa,
+  .zp-qa-panel,
+  .zp-qa-q::before,
+  .zp-qa-bar,
+  .zp-qa-meter span { transition-duration: 0.01ms !important; transition-delay: 0s !important; }
+  .zp-qa.is-open .zp-qa-body > * { animation: none; }
+}
+
+/* the PDF and the printed page show every answer and none of the controls */
+@media print {
+  .zp-qa-panel {
+    display: grid !important;
+    grid-template-rows: 1fr !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+  .zp-qa-body > * { animation: none !important; }
+  .zp-qa-bar, .zp-qa-rate, .zp-qa-count, .zp-qa-none { display: none !important; }
+  .zp-qa, .zp-qa.is-filtered { display: block !important; box-shadow: none; }
+  .zp-qa { break-inside: avoid; page-break-inside: avoid; }
+  .zp-qa-q::before, .zp-qa-q::after { display: none !important; }
+  .zp-section.zp-qa-empty > :not(h2) { display: block; }
+}
+
+html.zp-print-view .zp-qa-panel {
+  display: grid !important;
+  grid-template-rows: 1fr !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+html.zp-print-view .zp-qa-bar,
+html.zp-print-view .zp-qa-rate,
+html.zp-print-view .zp-qa-count,
+html.zp-print-view .zp-qa-none { display: none !important; }
+html.zp-print-view .zp-qa-q::before,
+html.zp-print-view .zp-qa-q::after { display: none !important; }
+html.zp-print-view .zp-qa-body > * { animation: none !important; }

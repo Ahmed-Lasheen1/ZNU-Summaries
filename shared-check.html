@@ -43,6 +43,8 @@ var FILES = [
   'components/recall.css',
   'components/recall.js',
   'components/figure.css',
+  'qa/qa.css',
+  'qa/qa.js',
   'tools/tools.css',
   'tools/tools.js',
   'draw/draw.css',
@@ -101,11 +103,11 @@ Promise.all(FILES.map(load)).then(function (texts) {
     byName['core/font.css'].length > 20000)
 
   var imports = (byName['znu-pulse.css'].match(/@import\s+url\(\s*["']?[^"')\s;]+["']?\s*\)\s*;/g) || []).length
-  show('znu-pulse.css lists ' + imports + ' style files (should be 25)', imports === 25)
+  show('znu-pulse.css lists ' + imports + ' style files (should be 26)', imports === 26)
 
   var match = byName['znu-pulse.js'].match(/ZNU_PULSE_FILES\s*=\s*\[([^\]]*)\]/)
   var scripts = match ? (match[1].match(/["'][^"']+["']/g) || []).length : 0
-  show('znu-pulse.js lists ' + scripts + ' script files (should be 18)', scripts === 18)
+  show('znu-pulse.js lists ' + scripts + ' script files (should be 19)', scripts === 19)
 
   var summary = document.getElementById('summary')
   summary.innerHTML = problems === 0

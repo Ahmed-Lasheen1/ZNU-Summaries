@@ -16,7 +16,7 @@
   var SKIP = [
     '.zp-done-btn', '.zp-recall-progress', '.zp-source', '.zp-lesson-illustration', '.zp-toast',
     '.zp-confetti', '.zp-zoom', '.zp-here', '.zp-listen', '.zp-tools', '.zp-progress', '.zp-footer',
-    '.zp-pdf-bar', '.zp-ink', '.zp-draw-surface', '.zp-draw-bar', '.zp-resume', '.zp-ospe-ui', '.zp-ospe-foot',
+    '.zp-pdf-bar', '.zp-qa-rate', '.zp-qa-src', '.zp-qa-bar', '.zp-qa-count', '.zp-qa-none', '.zp-ink', '.zp-draw-surface', '.zp-draw-bar', '.zp-resume', '.zp-ospe-ui', '.zp-ospe-foot',
     'script', 'style', 'noscript', 'svg', 'template', '[hidden]', '[data-zp-listen="skip"]'
   ].join(', ')
 
@@ -213,6 +213,27 @@
     if (answer) push(el, 'Answer. ' + textOf(answer))
   }
 
+
+  /* a written question: the question is read, then a short silence to think, then the answer line by line.
+     The card is opened by qa/qa.js when the reading reaches the answer. */
+  function qa(el) {
+    var q = el.querySelector('.zp-qa-q')
+    var body = el.querySelector('.zp-qa-body')
+    push(q || el, 'Question. ' + (q ? textOf(q) : ''), body ? RECALL_WAIT : 0)
+    if (!body) return
+    var pending = true
+    each(body.children, function (child) {
+      if (child.matches(SKIP)) return
+      if (pending && child.tagName === 'P') {
+        push(child, 'Answer. ' + textOf(child))
+        pending = false
+        return
+      }
+      pending = false
+      visit(child)
+    })
+  }
+
   function layers(el) {
     var start = el.getAttribute('data-start')
     var end = el.getAttribute('data-end')
@@ -310,6 +331,7 @@
     ['ol.zp-flow', flow],
     ['.zp-flip', flip],
     ['details.zp-recall', recall],
+    ['.zp-qa', qa],
     ['.zp-layers', layers],
     ['.zp-tree', tree],
     ['.zp-bignum', bignum],

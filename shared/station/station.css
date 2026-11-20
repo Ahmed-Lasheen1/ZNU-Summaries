@@ -1,8 +1,9 @@
 /* STATION: the OSPE station page (study all, or a timed mock), built like the MCQ screen.
    The lesson file holds every station as plain markup. station/station.js adds, around it:
-   - a centered header: text size on the left, the title, station and timer in the middle, Mock exam or Exit on the right;
+   - a tab row (Study and Mock exam) with an animated thumb, under the at-a-glance card;
+   - a centered header with the title, the station (tap it to pick one) and the timer;
    - a segmented progress rail (tap a segment to jump to that station);
-   - a dark glass bar fixed at the bottom of the screen: previous, show answers, next.
+   - a bar fixed at the bottom of the screen with the same buttons as the rest of the page: previous, show answers, next.
    Without the script, every station is shown one under the other with its answers.
 
    <div class="zp-ospe" data-mock-stations="10" data-mock-questions="4" data-mock-minutes="2">
@@ -52,19 +53,76 @@ html[data-theme="dark"] .zp-ospe {
 .zp-sq-marks { display: none !important; }
 
 /* ---------- the header (the same layout as the MCQ screen) ---------- */
-.zp-ospe-ui { margin-bottom: 4px; scroll-margin-top: 12px; }
+.zp-ospe-ui { margin-top: 28px; margin-bottom: 4px; scroll-margin-top: 12px; }
 
 .zp-st-head {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-  align-items: center;
-  column-gap: 8px;
   padding-bottom: 14px;
+  text-align: center;
 }
 
-.zp-st-l { display: flex; justify-content: flex-start; }
-.zp-st-r { display: flex; justify-content: flex-end; }
-.zp-st-c { text-align: center; min-width: 0; }
+/* ---------- the tab row: Study and Mock exam, symmetric, with a thumb that slides ---------- */
+.zp-tabs {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: min(360px, 100%);
+  margin: 0 auto 20px;
+  padding: 4px;
+  box-sizing: border-box;
+  border: 1px solid var(--zp-border);
+  border-radius: 999px;
+  background: var(--zp-surface);
+  box-shadow: 0 6px 18px -12px rgba(16, 24, 40, 0.35);
+}
+
+.zp-tabs-thumb {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: calc(50% - 4px);
+  border-radius: 999px;
+  background: var(--zp-accent);
+  box-shadow: 0 6px 14px -6px rgba(16, 24, 40, 0.55);
+  transition: transform 420ms cubic-bezier(0.3, 1.25, 0.4, 1);
+}
+
+.zp-tabs[data-active="mock"] .zp-tabs-thumb { transform: translateX(100%); }
+
+.zp-tab {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  font-family: var(--zp-font);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--zp-muted);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: color 240ms ease;
+}
+
+.zp-tab.is-on { color: var(--zp-bg); }
+.zp-tab:focus-visible { outline: 2px solid var(--zp-accent); outline-offset: 2px; }
+
+/* a small dot on Mock exam while a mock is in progress */
+.zp-tab.has-run::after {
+  content: "";
+  width: 7px;
+  height: 7px;
+  margin-left: 8px;
+  border-radius: 50%;
+  background: var(--zp-hy);
+  animation: zp-ospe-pulse 1.6s ease-in-out infinite;
+}
 
 .zp-st-eyebrow {
   max-width: min(56vw, 360px);
@@ -158,55 +216,11 @@ html[data-theme="dark"] .zp-ospe {
   50%      { transform: scale(1.1); }
 }
 
-/* the glass pills at the sides of the header */
-.zp-st-btn {
-  min-width: 96px;
-  height: 44px;
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 0 14px;
-  border: 1px solid var(--zp-glass-border);
-  border-radius: 999px;
-  background: var(--zp-glass-bg);
-  box-shadow: var(--zp-glass-shadow);
-  -webkit-backdrop-filter: blur(24px);
-  backdrop-filter: blur(24px);
-  font-family: var(--zp-font);
-  font-weight: 700;
-  font-size: 14px;
-  white-space: nowrap;
-  color: var(--zp-muted);
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-  transition: transform 160ms ease, background-color 160ms ease;
-}
-
-.zp-st-btn:active { transform: scale(0.96); }
-.zp-st-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.zp-st-aa { font-size: 17px; font-weight: 800; }
-.zp-st-lbl { font-size: 12px; opacity: 0.85; }
-
-@media (hover: hover) {
-  .zp-st-btn:hover { background-color: var(--zp-glass-hover); }
-}
-
-@media (max-width: 460px) {
-  .zp-st-btn { min-width: 44px; width: 44px; padding: 0; }
-  .zp-st-lbl { display: none; }
-}
-
-.zp-st-btn:focus-visible,
 .zp-st-status:focus-within {
   outline: 2px solid var(--zp-accent);
   outline-offset: 3px;
   border-radius: 8px;
 }
-
-.zp-st-btn:focus-visible { border-radius: 999px; }
 
 .zp-st-divider {
   height: 1px;
@@ -367,9 +381,51 @@ html[data-theme="dark"] .zp-rail-seg span { background: rgba(255, 255, 255, 0.14
   outline-offset: 2px;
 }
 
-/* ---------- the dark glass bar fixed at the bottom (the same as the MCQ screen) ---------- */
+/* ---------- buttons: the same pills as the rest of the page ---------- */
+.zp-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 20px;
+  box-sizing: border-box;
+  border: 1.5px solid var(--zp-accent);
+  border-radius: var(--zp-radius-pill);
+  background: transparent;
+  font-family: var(--zp-font);
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1.3;
+  white-space: nowrap;
+  color: var(--zp-accent);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: transform 180ms ease, background-color 180ms ease, color 180ms ease, opacity 180ms ease;
+}
+
+.zp-btn:active { transform: scale(0.96); }
+.zp-btn--main { background: var(--zp-accent); color: var(--zp-bg); }
+.zp-btn[disabled] { opacity: 0.4; cursor: default; }
+.zp-btn[disabled]:active { transform: none; }
+
+.zp-btn svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@media (hover: hover) {
+  .zp-btn:not([disabled]):not(.zp-btn--main):hover { background: var(--zp-accent-soft); }
+}
+
+/* ---------- the bar fixed at the bottom: the same surface as the Listen player and the Draw tools ---------- */
 .zp-ospe-foot {
-  --zp-bar-accent: #8bb8e8;
   position: fixed;
   left: 0;
   right: 0;
@@ -383,17 +439,14 @@ html[data-theme="dark"] .zp-rail-seg span { background: rgba(255, 255, 255, 0.14
 }
 
 .zp-ospe-strip {
-  width: min(1080px, 92vw);
+  width: min(720px, calc(100% - 24px));
   box-sizing: border-box;
-  margin: 0 clamp(16px, 3vw, 36px);
   padding: 8px 10px;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 24px;
-  background: rgba(1, 12, 74, 0.84);
-  box-shadow: 0 14px 34px -14px rgba(1, 12, 74, 0.7);
-  -webkit-backdrop-filter: blur(22px) saturate(1.3);
-  backdrop-filter: blur(22px) saturate(1.3);
-  color: #ffffff;
+  border: 1px solid var(--zp-border);
+  border-radius: 20px;
+  background: var(--zp-surface);
+  box-shadow: 0 14px 34px -14px rgba(16, 24, 40, 0.6);
+  color: var(--zp-text);
   pointer-events: auto;
   animation: zp-ospe-foot-in 300ms cubic-bezier(0.2, 0.9, 0.3, 1.1) both;
 }
@@ -414,50 +467,8 @@ html[data-theme="dark"] .zp-rail-seg span { background: rgba(255, 255, 255, 0.14
 .zp-bar-r { display: flex; justify-content: flex-end; }
 .zp-bar-c { display: flex; align-items: center; justify-content: center; gap: 8px; }
 
-.zp-bar-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  height: 46px;
-  box-sizing: border-box;
-  padding: 0 16px;
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
-  font-family: var(--zp-font);
-  font-weight: 700;
-  font-size: 13px;
-  white-space: nowrap;
-  color: #ffffff;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-  transition: transform 160ms ease, background-color 160ms ease, opacity 160ms ease;
-}
-
-.zp-bar-btn:active { transform: scale(0.96); }
-.zp-bar-btn[disabled] { opacity: 0.4; cursor: not-allowed; }
-.zp-bar-btn[disabled]:active { transform: none; }
-.zp-bar-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
-
-.zp-bar-ghost { background: transparent; border-color: rgba(255, 255, 255, 0.22); color: rgba(255, 255, 255, 0.8); }
-
-.zp-bar-solid {
-  border-color: var(--zp-bar-accent);
-  background: var(--zp-bar-accent);
-  box-shadow: 0 6px 20px rgba(139, 184, 232, 0.35);
-  color: #0f172a;
-}
-
-.zp-bar-nav { width: 124px; }
-.zp-bar-wide { min-width: 124px; padding: 0 20px; }
-
-.zp-bar-btn:focus-visible { outline: 2px solid var(--zp-bar-accent); outline-offset: 2px; }
-
-@media (hover: hover) {
-  .zp-bar-btn:not([disabled]):not(.zp-bar-solid):hover { background: rgba(255, 255, 255, 0.16); }
-}
+.zp-bar-nav { min-width: 116px; }
+.zp-bar-wide { min-width: 124px; }
 
 .zp-bar-count {
   min-width: 34px;
@@ -466,7 +477,7 @@ html[data-theme="dark"] .zp-rail-seg span { background: rgba(255, 255, 255, 0.14
   text-align: center;
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--zp-muted);
 }
 
 .zp-ospe-hint { display: none; }
@@ -474,18 +485,17 @@ html[data-theme="dark"] .zp-rail-seg span { background: rgba(255, 255, 255, 0.14
 @media (hover: hover) and (pointer: fine) and (min-width: 900px) {
   .zp-ospe-hint {
     display: block;
-    margin-top: 4px;
+    margin-top: 6px;
     text-align: center;
     font-weight: 600;
-    font-size: 10px;
-    letter-spacing: 0.3px;
-    color: rgba(255, 255, 255, 0.7);
+    font-size: 11px;
+    color: var(--zp-muted);
   }
   .zp-ospe-hint:empty { display: none; }
 }
 
 @media (max-width: 460px) {
-  .zp-bar-nav { width: 46px; padding: 0; }
+  .zp-bar-nav { min-width: 46px; width: 46px; padding: 0; }
   .zp-bar-nav .zp-bar-label { display: none; }
   .zp-bar-wide { min-width: 96px; padding: 0 14px; }
 }
@@ -503,52 +513,6 @@ html.zp-station-page.zp-drawing body { padding-bottom: calc(var(--zp-ospe-pad, 1
 html.zp-station-page.zp-listening.zp-drawing body { padding-bottom: calc(var(--zp-ospe-pad, 110px) + 300px); }
 
 html.zp-station-page .zp-toast { bottom: calc(var(--zp-ospe-pad, 110px) + 4px); }
-
-/* ---------- a confirmation dialog ---------- */
-.zp-dlg {
-  position: fixed;
-  inset: 0;
-  z-index: 1600;
-  display: grid;
-  place-items: center;
-  padding: 20px;
-  background: rgba(1, 12, 40, 0.5);
-  -webkit-backdrop-filter: blur(4px);
-  backdrop-filter: blur(4px);
-  animation: zp-ospe-rise 220ms ease both;
-}
-
-.zp-dlg-card {
-  width: min(380px, 100%);
-  padding: 22px 22px 18px;
-  border: 1px solid var(--zp-border);
-  border-radius: 20px;
-  background: var(--zp-surface);
-  box-shadow: 0 24px 60px -20px rgba(1, 12, 40, 0.7);
-  font-family: var(--zp-font);
-  color: var(--zp-text);
-}
-
-.zp-dlg-card h3 { margin: 0 0 6px; font-weight: 800; font-size: 18px; line-height: 1.3; }
-.zp-dlg-card p { margin: 0 0 18px; font-size: 14px; line-height: 1.5; color: var(--zp-muted); }
-.zp-dlg-row { display: flex; gap: 10px; justify-content: flex-end; }
-
-.zp-btn {
-  min-height: 44px;
-  padding: 0 20px;
-  border: 1.5px solid var(--zp-accent);
-  border-radius: 999px;
-  background: transparent;
-  font-family: var(--zp-font);
-  font-weight: 700;
-  font-size: 14px;
-  color: var(--zp-accent);
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-}
-
-.zp-btn--main { background: var(--zp-accent); color: var(--zp-bg); }
 
 /* ---------- a station: one card ---------- */
 .zp-station {
@@ -932,6 +896,24 @@ html.zp-station-page .zp-sq > li.is-open .zp-sq-answer {
   user-select: none;
 }
 
+.zp-station.is-paused { position: relative; }
+
+.zp-station.is-paused::after {
+  content: "Paused";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 90px;
+  text-align: center;
+  font-family: var(--zp-font);
+  font-weight: 800;
+  font-size: 22px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--zp-text);
+  pointer-events: none;
+}
+
 /* ---------- mock results ---------- */
 .zp-ospe-result h3 {
   margin: 0 0 6px;
@@ -1015,11 +997,12 @@ html.zp-station-page .zp-sq > li.is-open .zp-sq-answer {
   .zp-sq-answer { font-size: 14.5px; }
   .zp-ospe-topic { grid-template-columns: minmax(70px, 30%) 1fr auto; gap: 8px; }
   .zp-sq-tick button { flex: 1 1 0; padding: 0 10px; }
-  .zp-ospe-strip { margin: 0 12px; width: auto; padding: 6px 8px; border-radius: 22px; }
-  .zp-bar-btn { height: 44px; }
+  .zp-ospe-strip { padding: 6px 8px; border-radius: 18px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .zp-tabs-thumb,
+  .zp-tab,
   .zp-rail-seg span,
   .zp-st-timebar span,
   .zp-ospe-topic .zp-ospe-bar-track span,
@@ -1028,10 +1011,10 @@ html.zp-station-page .zp-sq > li.is-open .zp-sq-answer {
   html.zp-station-page .zp-sq-text::before { transition-duration: 0.01ms !important; transition-delay: 0s !important; }
   .zp-ospe-bar.is-in > *,
   .zp-ospe-strip,
-  .zp-dlg,
   .zp-st-in-next,
   .zp-st-in-prev,
   .zp-st-timer.is-low,
+  .zp-tab.has-run::after,
   .zp-sq-tick button.is-on { animation: none; }
 }
 
@@ -1052,7 +1035,6 @@ html.zp-station-page .zp-sq > li.is-open .zp-sq-answer {
   .zp-sq-text::before,
   .zp-sq-text::after { display: none !important; }
   .zp-station.is-paused > * { filter: none !important; }
-  .zp-dlg { display: none !important; }
   html.zp-station-page body { padding-bottom: 0 !important; }
 }
 

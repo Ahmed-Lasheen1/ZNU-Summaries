@@ -1,17 +1,19 @@
 /* STATION: makes an OSPE station page work (see station/station.css for the markup).
-   It builds the same kind of screen as the MCQ exam:
-   - a centered header: text size on the left, the title, the station (tap it to pick one) and the timer in the middle,
-     Mock exam or Exit on the right;
+   It builds, above the stations:
+   - a tab row, Study and Mock exam, with an animated thumb;
+   - a centered header with the title, the station (tap it to pick one) and the timer;
    - a segmented rail with one segment per station (tap a segment to jump, a dot marks stations missed in the last mock);
-   - a dark glass bar fixed at the bottom: previous, show answers, next.
+   and a bar fixed at the bottom of the screen with the page's own pill buttons: previous, show answers, next.
    Two modes:
-   - Study all (the default): one station at a time. Tap a question to show or hide its answer, or tap Show answers for
+   - Study: one station at a time. Tap a question to show or hide its answer, or tap Show answers for
      the whole station. Under each answer the student taps "Got it" or "Missed it". The row turns green or red.
    - Mock exam: a timed run. The number of stations, questions per station and minutes per station start at the values
      written on the page (data-mock-stations, data-mock-questions, data-mock-minutes) and the student can change them.
      Stations are drawn from every topic in proportion to its size, never purely at random. During a station the
-     answers are locked and the timer runs (Pause hides the station). Then the answers open and the student marks each one.
+     answers are locked and the timer runs. Then the answers open and the student marks each one.
      At the end there is a score by topic. Stations below 60 percent are remembered on this device.
+     Switching to Study, switching to another browser tab or closing the page pauses the clock by itself,
+     and the Mock exam tab returns exactly where the student stopped (tap Resume).
    Every question is worth one point. Marks written in the markup (data-marks, zp-st-marks, zp-sq-marks) are ignored.
    Keyboard: left and right arrows change station, Space shows or hides all the answers, 1 to 9 show one answer.
    Listen and Draw work here too. While Listen reads, the answers open when it reaches them.
@@ -23,9 +25,6 @@
   if (window.top === window && window.location.hash === '#print') return
 
   var KEY = 'zp-ospe:' + String(window.location.pathname || '')
-  var SIZE_KEY = 'zp-size'
-  var SIZES = ['normal', 'large', 'larger']
-  var PERCENT = { normal: 100, large: 115, larger: 130 }
   var PASS = 0.6
   var CELEBRATE = 0.8
 
@@ -34,12 +33,10 @@
   var ICON = {
     left: svg('<polyline points="15 18 9 12 15 6"/>'),
     right: svg('<polyline points="9 18 15 12 9 6"/>'),
-    check: svg('<polyline points="20 6 9 17 4 12"/>'),
-    close: svg('<line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/>'),
-    clock: svg('<circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/>')
+    check: svg('<polyline points="20 6 9 17 4 12"/>')
   }
 
-  var wrap, ui, head, railEl, barEl, selectEl
+  var wrap, ui, tabsEl, head, railEl, barEl, selectEl
   var foot, slotL, slotC, slotR, hintEl
   var headEls = {}
   var segs = []
@@ -99,7 +96,7 @@
     return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)
   }
 
-  /* when the page has been scrolled down, a new station starts at the header. Otherwise nothing moves. */
+  /* when the page has been scrolled down, a new station starts at the tab row. Otherwise nothing moves. */
   function toTop() {
     var rect = ui.getBoundingClientRect()
     if (rect.top >= 0) return
@@ -137,102 +134,61 @@
     window.requestAnimationFrame(step)
   }
 
-  /* ---------- the confirmation dialog ---------- */
-  function confirmDialog(o) {
-    var back = el('div', 'zp-dlg',
-      '<div class="zp-dlg-card"><h3>' + esc(o.title) + '</h3><p>' + esc(o.message) + '</p>' +
-      '<div class="zp-dlg-row"><button type="button" class="zp-btn" data-d="no">' + esc(o.cancel) + '</button>' +
-      '<button type="button" class="zp-btn zp-btn--main" data-d="yes">' + esc(o.confirm) + '</button></div></div>')
-    back.setAttribute('role', 'dialog')
-    back.setAttribute('aria-modal', 'true')
-    back.setAttribute('aria-label', o.title)
-
-    function close() {
-      document.removeEventListener('keydown', onEsc, true)
-      if (back.parentNode) back.parentNode.removeChild(back)
-    }
-
-    function onEsc(event) {
-      if (event.key === 'Escape') {
-        event.stopPropagation()
-        close()
-      }
-    }
-
-    back.addEventListener('click', function (event) {
-      var choice = event.target.getAttribute ? event.target.getAttribute('data-d') : null
-      if (event.target === back || choice === 'no') close()
-      else if (choice === 'yes') {
-        close()
-        o.onConfirm()
-      }
+  /* ---------- the tab row ---------- */
+  function syncTabs() {
+    tabsEl.setAttribute('data-active', mode)
+    ;[].forEach.call(tabsEl.querySelectorAll('.zp-tab'), function (tab) {
+      var on = tab.getAttribute('data-act') === 'tab-' + mode
+      tab.classList.toggle('is-on', on)
+      tab.setAttribute('aria-selected', String(on))
     })
-    document.addEventListener('keydown', onEsc, true)
-    document.body.appendChild(back)
-    back.querySelector('[data-d="yes"]').focus()
+    /* a dot on Mock exam while a mock is waiting for the student */
+    tabsEl.querySelector('[data-act="tab-mock"]').classList.toggle('has-run', !!(plan && plan.phase !== 'results'))
   }
 
-  /* leaving a running mock asks first. Everything else leaves at once. */
-  function askLeave(then) {
-    if (mode === 'mock' && plan && plan.phase !== 'results') {
-      confirmDialog({
-        title: 'Leave this mock exam?',
-        message: 'Your progress in this mock will not be saved.',
-        confirm: 'Leave',
-        cancel: 'Keep going',
-        onConfirm: then
-      })
-    } else {
-      then()
+  /* the clock stops by itself whenever the student leaves the running station */
+  function autoPause() {
+    if (mode === 'mock' && plan && plan.phase === 'answer' && plan.minutes > 0 && !plan.paused) togglePause()
+  }
+
+  function showStudy() {
+    if (mode === 'study') return
+    autoPause()
+    study(idx, true)
+  }
+
+  /* the mock comes back exactly where it was left */
+  function showMock() {
+    if (mode === 'mock') return
+    if (!plan) {
+      mockSetup()
+      return
     }
+    if (plan.phase === 'answer') renderAnswer(null, false)
+    else if (plan.phase === 'mark') renderMark(false)
+    else renderResults(false)
+    toTop()
   }
 
   /* ---------- the header ---------- */
   function buildHead() {
     head = el('div', 'zp-st-head',
-      '<div class="zp-st-l"><button type="button" class="zp-st-btn" data-act="size">' +
-        '<span class="zp-st-aa">Aa</span><span class="zp-st-lbl zp-st-pct">100%</span></button></div>' +
-      '<div class="zp-st-c"><div class="zp-st-eyebrow"></div>' +
-        '<div class="zp-st-statusrow"><label class="zp-st-status"><span class="zp-st-status-text"></span>' +
-          '<svg class="zp-st-caret" viewBox="0 0 24 24" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>' +
-          '<select aria-label="Choose a station"></select></label></div>' +
-        '<div class="zp-st-timer" hidden></div><div class="zp-st-timebar" hidden><span></span></div></div>' +
-      '<div class="zp-st-r"><button type="button" class="zp-st-btn" data-act="side"></button></div>')
+      '<div class="zp-st-eyebrow"></div>' +
+      '<div class="zp-st-statusrow"><label class="zp-st-status"><span class="zp-st-status-text"></span>' +
+        '<svg class="zp-st-caret" viewBox="0 0 24 24" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>' +
+        '<select aria-label="Choose a station"></select></label></div>' +
+      '<div class="zp-st-timer" hidden></div><div class="zp-st-timebar" hidden><span></span></div>')
     headEls = {
-      size: head.querySelector('[data-act="size"]'),
-      pct: head.querySelector('.zp-st-pct'),
       eyebrow: head.querySelector('.zp-st-eyebrow'),
       statusLabel: head.querySelector('.zp-st-status'),
       statusText: head.querySelector('.zp-st-status-text'),
       timer: head.querySelector('.zp-st-timer'),
-      timebar: head.querySelector('.zp-st-timebar'),
-      side: head.querySelector('[data-act="side"]')
+      timebar: head.querySelector('.zp-st-timebar')
     }
     selectEl = head.querySelector('select')
   }
 
-  function updateSizeLabel() {
-    var size = root.dataset.size || 'normal'
-    var percent = PERCENT[size] || 100
-    headEls.pct.textContent = percent + '%'
-    headEls.size.setAttribute('aria-label', 'Adjust text size (currently ' + percent + '%)')
-  }
-
-  /* the tools menu keeps its own copy of the text size, so its button is used when it is there */
-  function cycleSize() {
-    var tools = document.querySelector('[data-tool="size"]')
-    if (tools) {
-      tools.click()
-    } else {
-      var size = root.dataset.size || 'normal'
-      var next = SIZES[(SIZES.indexOf(size) + 1) % SIZES.length]
-      root.dataset.size = next
-      try { window.localStorage.setItem(SIZE_KEY, next) } catch (error) { /* blocked: lasts for this visit */ }
-    }
-    updateSizeLabel()
-  }
-
-  /* o: eyebrow, status, select (the status opens a station list), timer, side ('mock' or 'exit') */
+  /* o: eyebrow, status, select (the status opens a station list), timer */
   function setHead(o) {
     headEls.eyebrow.textContent = o.eyebrow
     headEls.statusText.textContent = o.status
@@ -240,14 +196,6 @@
     headEls.timer.hidden = !o.timer
     headEls.timebar.hidden = !o.timer
     if (!o.timer) headEls.timer.classList.remove('is-low')
-    if (o.side === 'exit') {
-      headEls.side.innerHTML = ICON.close + '<span class="zp-st-lbl">Exit</span>'
-      headEls.side.setAttribute('aria-label', 'Exit the mock exam')
-    } else {
-      headEls.side.innerHTML = ICON.clock + '<span class="zp-st-lbl">Mock exam</span>'
-      headEls.side.setAttribute('aria-label', 'Start a mock exam')
-    }
-    updateSizeLabel()
   }
 
   function rebuildSelect() {
@@ -306,7 +254,7 @@
   /* o: cls (extra classes), title, aria, disabled, iconL, iconR */
   function bbtn(act, label, o) {
     o = o || {}
-    return '<button type="button" class="zp-bar-btn ' + (o.cls || '') + '" data-act="' + act + '"' +
+    return '<button type="button" class="zp-btn ' + (o.cls || '') + '" data-act="' + act + '"' +
       (o.title ? ' title="' + o.title + '"' : '') +
       (o.aria ? ' aria-label="' + o.aria + '"' : '') +
       (o.disabled ? ' disabled' : '') + '>' +
@@ -486,17 +434,16 @@
     syncStation(st)
   }
 
-  /* ---------- study all ---------- */
+  /* ---------- study ---------- */
   function study(index, scroll, dir) {
-    stopTimer()
-    plan = null
     mode = 'study'
     var before = idx
     idx = Math.max(0, Math.min(stations.length - 1, index))
     if (!dir && idx !== before) dir = idx > before ? 'next' : 'prev'
     ui.setAttribute('data-view', 'study')
+    syncTabs()
 
-    setHead({ eyebrow: lessonName, status: 'Station ' + (idx + 1) + ' / ' + stations.length, select: true, timer: false, side: 'mock' })
+    setHead({ eyebrow: lessonName, status: 'Station ' + (idx + 1) + ' / ' + stations.length, select: true, timer: false })
     rebuildSelect()
     buildRail(
       stations.length, idx, true,
@@ -510,8 +457,8 @@
 
     setFoot(
       bbtn('prev', 'Previous', { cls: 'zp-bar-nav', iconL: ICON.left, aria: 'Previous station', title: 'Previous station (\u2190)', disabled: idx === 0 }),
-      bbtn('reveal', 'Show answers', { cls: 'zp-bar-wide', title: 'Show or hide all the answers (Space)' }) + countChip(),
-      bbtn('next', 'Next', { cls: 'zp-bar-nav zp-bar-solid', iconR: ICON.right, aria: 'Next station', title: 'Next station (\u2192)', disabled: idx === stations.length - 1 }),
+      bbtn('reveal', 'Show answers', { cls: 'zp-bar-wide zp-btn--main', title: 'Show or hide all the answers (Space)' }) + countChip(),
+      bbtn('next', 'Next', { cls: 'zp-bar-nav', iconR: ICON.right, aria: 'Next station', title: 'Next station (\u2192)', disabled: idx === stations.length - 1 }),
       '\u2190 \u2192 navigate \u00B7 Space show answers \u00B7 1\u20139 one answer'
     )
     showStation(stations[idx], { dir: dir })
@@ -596,8 +543,9 @@
     plan = null
     mode = 'mock'
     ui.setAttribute('data-view', 'setup')
+    syncTabs()
     hideAll()
-    setHead({ eyebrow: lessonName, status: 'Mock exam', select: false, timer: false, side: 'exit' })
+    setHead({ eyebrow: lessonName, status: 'Mock exam', select: false, timer: false })
     buildRail(0, -1, false)
     var d = defaults()
     var maxQ = stations.reduce(function (most, st) { return Math.max(most, st._qs.length) }, 1)
@@ -612,9 +560,9 @@
       '<p class="zp-ospe-note">Stations are drawn from all ' + topics.length + (topics.length === 1 ? ' topic' : ' topics') + ', in proportion to their size. Every question is one point.</p>'
     )
     setFoot(
-      saved.missed.length ? bbtn('retry', 'Retry missed (' + saved.missed.length + ')', { cls: 'zp-bar-wide zp-bar-ghost' }) : '',
+      saved.missed.length ? bbtn('retry', 'Retry missed (' + saved.missed.length + ')', { cls: 'zp-bar-wide' }) : '',
       '',
-      bbtn('start', 'Start mock', { cls: 'zp-bar-wide zp-bar-solid' }),
+      bbtn('start', 'Start mock', { cls: 'zp-bar-wide zp-btn--main' }),
       ''
     )
   }
@@ -638,11 +586,12 @@
       k: 0,
       phase: 'answer',
       results: [],
+      summary: null,
       endAt: null,
       left: 0,
       paused: false
     }
-    answerPhase('next')
+    renderAnswer('next', true)
     toTop()
   }
 
@@ -673,23 +622,31 @@
     buildRail(plan.items.length, current, false, function (i) { return i < plan.k })
   }
 
-  function answerPhase(dir) {
+  /* draws the running station. fresh is true for a new station (the clock starts) and false when the student
+     comes back from Study (the clock stays paused until Resume). */
+  function renderAnswer(dir, fresh) {
     stopTimer()
     var item = plan.items[plan.k]
     var timed = plan.minutes > 0
+    mode = 'mock'
     plan.phase = 'answer'
     ui.setAttribute('data-view', 'run')
-    setHead({ eyebrow: lessonName + ' \u00B7 mock', status: 'Station ' + (plan.k + 1) + ' / ' + plan.items.length, select: false, timer: timed, side: 'exit' })
+    syncTabs()
+    setHead({ eyebrow: lessonName + ' \u00B7 mock', status: 'Station ' + (plan.k + 1) + ' / ' + plan.items.length, select: false, timer: timed })
     mockRail(plan.k)
     swapBar('<p class="zp-ospe-note">Answer from the picture, then tap I\u2019m done.</p>')
     setFoot(
-      timed ? bbtn('pause', 'Pause', { cls: 'zp-bar-wide' }) : '',
+      timed ? bbtn('pause', fresh ? 'Pause' : 'Resume', { cls: 'zp-bar-wide' }) : '',
       '',
-      bbtn('done', 'I\u2019m done', { cls: 'zp-bar-wide zp-bar-solid', iconR: ICON.check }),
+      bbtn('done', 'I\u2019m done', { cls: 'zp-bar-wide zp-btn--main', iconR: ICON.check }),
       ''
     )
     showStation(item.st, { reset: true, only: item.qs, name: 'Station ' + (plan.k + 1), dir: dir, locked: true, mock: true })
-    if (timed) {
+    if (!timed) {
+      plan.endAt = null
+      return
+    }
+    if (fresh) {
       plan.left = plan.minutes * 60000
       plan.endAt = Date.now() + plan.left
       plan.paused = false
@@ -697,7 +654,10 @@
       setClock(plan.left)
       timer = setInterval(tick, 250)
     } else {
+      plan.paused = true
       plan.endAt = null
+      setClock(plan.left)
+      shown.classList.add('is-paused')
     }
   }
 
@@ -722,21 +682,29 @@
 
   function markPhase(timeUp) {
     stopTimer()
-    var item = plan.items[plan.k]
-    var last = plan.k === plan.items.length - 1
     plan.phase = 'mark'
     plan.paused = false
+    plan.timeUp = !!timeUp
+    renderMark(true)
+  }
+
+  /* draws the marking step: every answer open, a Got it or Missed it under each */
+  function renderMark(fresh) {
+    var item = plan.items[plan.k]
+    var last = plan.k === plan.items.length - 1
+    mode = 'mock'
     ui.setAttribute('data-view', 'run')
-    setHead({ eyebrow: lessonName + ' \u00B7 mock', status: 'Station ' + (plan.k + 1) + ' / ' + plan.items.length, select: false, timer: false, side: 'exit' })
+    syncTabs()
+    setHead({ eyebrow: lessonName + ' \u00B7 mock', status: 'Station ' + (plan.k + 1) + ' / ' + plan.items.length, select: false, timer: false })
     mockRail(plan.k)
-    swapBar('<p class="zp-ospe-note">' + (timeUp ? 'Time is up. ' : '') + 'Check each answer, then tap Got it or Missed it.</p>')
+    swapBar('<p class="zp-ospe-note">' + (plan.timeUp ? 'Time is up. ' : '') + 'Check each answer, then tap Got it or Missed it.</p>')
     setFoot(
       '',
       countChip(),
-      bbtn('next-station', last ? 'See results' : 'Next station', { cls: 'zp-bar-wide zp-bar-solid', iconR: last ? ICON.check : ICON.right }),
+      bbtn('next-station', last ? 'See results' : 'Next station', { cls: 'zp-bar-wide zp-btn--main', iconR: last ? ICON.check : ICON.right }),
       ''
     )
-    item.st.classList.remove('is-paused', 'is-locked')
+    showStation(item.st, { reset: false, only: item.qs, name: 'Station ' + (plan.k + 1), locked: false, mock: true })
     visibleQs(item.st).forEach(function (li) { setQ(li, true) })
     refreshBar()
   }
@@ -747,7 +715,8 @@
     plan.results.push({ n: item.st._n, topic: item.st._topic, got: score.got, total: score.total })
     if (plan.k + 1 < plan.items.length) {
       plan.k += 1
-      answerPhase('next')
+      plan.timeUp = false
+      renderAnswer('next', true)
       toTop()
     } else {
       results()
@@ -757,12 +726,7 @@
   /* ---------- mock: the results ---------- */
   function results() {
     stopTimer()
-    hideAll()
     plan.phase = 'results'
-    ui.setAttribute('data-view', 'results')
-    setHead({ eyebrow: lessonName + ' \u00B7 mock', status: 'Results', select: false, timer: false, side: 'exit' })
-    buildRail(plan.items.length, -1, false, function () { return true })
-
     var got = 0
     var total = 0
     var byTopic = {}
@@ -779,34 +743,49 @@
       byTopic[r.topic].total += r.total
       if (r.total > 0 && r.got / r.total < PASS) missed.push(r.n)
     })
-    var percent = total ? Math.round(got / total * 100) : 0
+    plan.summary = { got: got, total: total, percent: total ? Math.round(got / total * 100) : 0, missed: missed, order: order, byTopic: byTopic }
 
-    var rows = order.map(function (topic) {
-      var t = byTopic[topic]
+    saved.missed = missed
+    saved.last = { got: got, total: total, date: new Date().toISOString().slice(0, 10) }
+    writeSaved()
+    renderResults(true)
+  }
+
+  function renderResults(first) {
+    var s = plan.summary
+    mode = 'mock'
+    hideAll()
+    ui.setAttribute('data-view', 'results')
+    syncTabs()
+    setHead({ eyebrow: lessonName + ' \u00B7 mock', status: 'Results', select: false, timer: false })
+    buildRail(plan.items.length, -1, false, function () { return true })
+
+    var rows = s.order.map(function (topic) {
+      var t = s.byTopic[topic]
       var p = t.total ? Math.round(t.got / t.total * 100) : 0
       return '<div class="zp-ospe-topic' + (p < PASS * 100 ? ' is-weak' : '') + '"><span>' + esc(topic) + '</span>' +
         '<div class="zp-ospe-bar-track"><span data-w="' + p + '" style="width:0"></span></div><b>' + t.got + ' / ' + t.total + '</b></div>'
     }).join('')
 
     swapBar(
-      '<div class="zp-ospe-result"><h3><span class="zp-ospe-got">' + got + '</span> / ' + total + ' <small class="zp-ospe-pct">(' + percent + '%)</small></h3>' +
+      '<div class="zp-ospe-result"><h3><span class="zp-ospe-got">' + s.got + '</span> / ' + s.total + ' <small class="zp-ospe-pct">(' + s.percent + '%)</small></h3>' +
       '<p class="zp-ospe-note">Every question was one point. Score by topic:</p>' + rows +
-      (missed.length
-        ? '<p class="zp-ospe-note">Below 60 percent: station ' + missed.join(', ') + '. They are marked with a dot in the station list.</p>'
+      (s.missed.length
+        ? '<p class="zp-ospe-note">Below 60 percent: station ' + s.missed.join(', ') + '. They are marked with a dot in the station list.</p>'
         : '<p class="zp-ospe-note">No station below 60 percent. Well done.</p>') +
       '</div>'
     )
     setFoot(
-      bbtn('mode-study', 'Study all', { cls: 'zp-bar-wide zp-bar-ghost' }),
-      missed.length ? bbtn('newmock', 'New mock', { cls: 'zp-bar-wide' }) : '',
-      missed.length
-        ? bbtn('retry-now', 'Retry missed', { cls: 'zp-bar-wide zp-bar-solid' })
-        : bbtn('newmock', 'New mock', { cls: 'zp-bar-wide zp-bar-solid' }),
+      bbtn('mode-study', 'Study', { cls: 'zp-bar-wide' }),
+      s.missed.length ? bbtn('newmock', 'New mock', { cls: 'zp-bar-wide' }) : '',
+      s.missed.length
+        ? bbtn('retry-now', 'Retry missed', { cls: 'zp-bar-wide zp-btn--main' })
+        : bbtn('newmock', 'New mock', { cls: 'zp-bar-wide zp-btn--main' }),
       ''
     )
 
     /* the numbers count up and the bars fill in */
-    countUp(barEl.querySelector('.zp-ospe-got'), got)
+    countUp(barEl.querySelector('.zp-ospe-got'), s.got)
     window.requestAnimationFrame(function () {
       window.requestAnimationFrame(function () {
         ;[].forEach.call(barEl.querySelectorAll('.zp-ospe-bar-track span'), function (bar) {
@@ -814,11 +793,7 @@
         })
       })
     })
-    if (total && got / total >= CELEBRATE && window.zpCelebrate) window.zpCelebrate('Score ' + percent + '%. Excellent work!')
-
-    saved.missed = missed
-    saved.last = { got: got, total: total, date: new Date().toISOString().slice(0, 10) }
-    writeSaved()
+    if (first && s.total && s.got / s.total >= CELEBRATE && window.zpCelebrate) window.zpCelebrate('Score ' + s.percent + '%. Excellent work!')
     toTop()
   }
 
@@ -836,11 +811,8 @@
     var target = event.target.closest ? event.target.closest('[data-act]') : null
     if (!target || target.disabled) return
     var act = target.getAttribute('data-act')
-    if (act === 'size') cycleSize()
-    else if (act === 'side') {
-      if (mode === 'study') mockSetup()
-      else askLeave(function () { study(idx, true) })
-    } else if (act === 'mode-study') study(idx, true)
+    if (act === 'tab-study' || act === 'mode-study') showStudy()
+    else if (act === 'tab-mock') showMock()
     else if (act === 'prev') study(idx - 1, true, 'prev')
     else if (act === 'next') study(idx + 1, true, 'next')
     else if (act === 'reveal') toggleReveal()
@@ -875,12 +847,11 @@
 
   function onKey(event) {
     if (event.ctrlKey || event.metaKey || event.altKey) return
-    if (document.querySelector('.zp-dlg')) return
     var tag = event.target && event.target.tagName
     if (tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA') return
     if (window.zpDraw && window.zpDraw.isOpen && window.zpDraw.isOpen()) return
     var role = event.target && event.target.getAttribute ? event.target.getAttribute('role') : null
-    var onButton = tag === 'BUTTON' || role === 'button'
+    var onButton = tag === 'BUTTON' || role === 'button' || role === 'tab'
     var key = event.key
 
     if (mode === 'study' && shown) {
@@ -921,11 +892,18 @@
     readSaved()
     prepare()
 
-    /* the header, the rail and the panel for the mock setup and results sit above the stations */
+    /* the tab row, the header, the rail and the panel for the mock setup and results sit above the stations */
     ui = el('div', 'zp-ospe-ui')
+    tabsEl = el('div', 'zp-tabs',
+      '<span class="zp-tabs-thumb" aria-hidden="true"></span>' +
+      '<button type="button" role="tab" class="zp-tab" data-act="tab-study">Study</button>' +
+      '<button type="button" role="tab" class="zp-tab" data-act="tab-mock">Mock exam</button>')
+    tabsEl.setAttribute('role', 'tablist')
+    tabsEl.setAttribute('aria-label', 'Study or mock exam')
     buildHead()
     railEl = el('div', 'zp-rail')
     barEl = el('div', 'zp-ospe-bar')
+    ui.appendChild(tabsEl)
     ui.appendChild(head)
     ui.appendChild(el('div', 'zp-st-divider'))
     ui.appendChild(railEl)
@@ -955,6 +933,12 @@
     window.addEventListener('scroll', onScroll, { passive: true })
     window.addEventListener('load', syncPad)
     if (window.ResizeObserver) new window.ResizeObserver(syncPad).observe(foot)
+
+    /* leaving the page, or the browser tab, pauses a running mock */
+    document.addEventListener('visibilitychange', function () {
+      if (document.visibilityState === 'hidden') autoPause()
+    })
+    window.addEventListener('pagehide', autoPause)
 
     /* while Listen reads an answer, that answer opens by itself (not during a timed station) */
     if (window.MutationObserver) {

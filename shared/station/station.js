@@ -7,6 +7,10 @@
      and the student can change them. Stations are drawn from every topic in proportion to its size,
      never purely at random. After each station the student marks their own answers, and at the end
      there is a score by topic. Stations below 60 percent are remembered on this device.
+   The small satisfying things: the mode switch has a sliding thumb, stations slide in from the side you are
+   moving towards, answers grow open and the cover boxes fade away, ticks pop, the timer pulses in the last
+   seconds, and the results count up and fill in (a score of 80 percent or more celebrates).
+   Listen and Draw work here too. While Listen reads, the answers open when it reaches them.
    Without this script, or in the PDF view, every station is simply shown one under the other.
    Storage is wrapped so the page keeps working where storage is blocked. */
 (function () {
@@ -16,6 +20,7 @@
 
   var KEY = 'zp-ospe:' + String(window.location.pathname || '')
   var PASS = 0.6
+  var CELEBRATE = 0.8
 
   var wrap, ui, modesEl, barEl, foot
   var stations = []
@@ -63,9 +68,37 @@
     return isNaN(n) ? fallback : n
   }
 
+  function reduced() {
+    return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+  }
+
   function scrollToTop() {
-    var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    try { ui.scrollIntoView({ block: 'start', behavior: reduced ? 'auto' : 'smooth' }) } catch (error) { ui.scrollIntoView() }
+    try { ui.scrollIntoView({ block: 'start', behavior: reduced() ? 'auto' : 'smooth' }) } catch (error) { ui.scrollIntoView() }
+  }
+
+  /* puts new content in the bar and plays its entrance again */
+  function swapBar(html) {
+    barEl.innerHTML = html
+    barEl.classList.remove('is-in')
+    void barEl.offsetWidth
+    barEl.classList.add('is-in')
+  }
+
+  /* counts a number up (used for the score) */
+  function countUp(node, target, suffix) {
+    if (reduced() || target <= 0) {
+      node.textContent = target + (suffix || '')
+      return
+    }
+    var begin = null
+    function step(now) {
+      if (begin === null) begin = now
+      var t = Math.min(1, (now - begin) / 800)
+      node.textContent = Math.round(target * (1 - Math.pow(1 - t, 3))) + (suffix || '')
+      if (t < 1) window.requestAnimationFrame(step)
+    }
+    node.textContent = '0' + (suffix || '')
+    window.requestAnimationFrame(step)
   }
 
   /* ---------- the stations ---------- */
@@ -88,10 +121,18 @@
       st._name = st.querySelector('.zp-st-name')
       st._marksEl = st.querySelector('.zp-st-marks')
       st._qs = [].slice.call(st.querySelectorAll('.zp-sq > li'))
+      if (!st.querySelector('.zp-station-media')) st.classList.add('zp-station--nomedia')
       st._qs.forEach(function (li) {
         li._marks = Math.max(1, number(li.getAttribute('data-marks'), 1))
         var answer = li.querySelector('.zp-sq-answer')
-        if (answer && !li.querySelector('.zp-sq-tick')) answer.appendChild(tickFor(li._marks))
+        if (!answer) return
+        /* the answer grows open: its content sits in two wrappers */
+        var inner = el('div', 'zp-sq-answer-in')
+        var body = el('div', 'zp-sq-answer-body')
+        while (answer.firstChild) body.appendChild(answer.firstChild)
+        inner.appendChild(body)
+        answer.appendChild(inner)
+        if (!body.querySelector('.zp-sq-tick')) body.appendChild(tickFor(li._marks))
       })
     })
   }
@@ -131,10 +172,16 @@
     shown = null
   }
 
+  /* dir is 'next' or 'prev': the station slides in from the side you are moving towards */
   function showStation(st, options) {
     hideAll()
     st.hidden = false
     shown = st
+    st.classList.remove('zp-st-in-next', 'zp-st-in-prev')
+    if (options.dir && !reduced()) {
+      void st.offsetWidth
+      st.classList.add('zp-st-in-' + options.dir)
+    }
     st.classList.toggle('is-revealed', !!options.revealed)
     if (options.reset) resetTicks(st)
     st._qs.forEach(function (li) { li.hidden = !!(options.only && options.only.indexOf(li) < 0) })
@@ -155,17 +202,22 @@
   }
 
   function setModes() {
+    modesEl.setAttribute('data-mode', mode)
     ;[].forEach.call(modesEl.querySelectorAll('button'), function (button) {
-      button.classList.toggle('is-on', button.getAttribute('data-act') === 'mode-' + mode)
+      var on = button.getAttribute('data-act') === 'mode-' + mode
+      button.classList.toggle('is-on', on)
+      button.setAttribute('aria-selected', String(on))
     })
   }
 
   /* ---------- study all ---------- */
-  function study(index, scroll) {
+  function study(index, scroll, dir) {
     stopTimer()
     plan = null
     mode = 'study'
+    var before = idx
     idx = Math.max(0, Math.min(stations.length - 1, index))
+    if (!dir && idx !== before) dir = idx > before ? 'next' : 'prev'
     setModes()
 
     var options = ''
@@ -173,26 +225,32 @@
       var missed = saved.missed.indexOf(st._n) > -1
       options += '<option value="' + i + '"' + (i === idx ? ' selected' : '') + '>Station ' + st._n + ' \u00B7 ' + st._topic + (missed ? ' \u2022' : '') + '</option>'
     })
-    barEl.innerHTML =
-      '<div class="zp-ospe-row"><select class="zp-ospe-pick" aria-label="Choose a station">' + options + '</select>' +
-      '<span class="zp-ospe-score"></span></div>' +
+    swapBar(
+      '<div class="zp-ospe-row"><select class="zp-ospe-pick" aria-label="Choose a station">' + options + '</select></div>' +
+      '<div class="zp-ospe-meter"><span class="zp-ospe-meter-label">Station ' + (idx + 1) + ' of ' + stations.length + '</span>' +
+      '<div class="zp-ospe-track" aria-hidden="true"><span style="width:' + ((idx + 1) / stations.length * 100) + '%"></span></div></div>' +
+      '<div class="zp-ospe-row"><span class="zp-ospe-score"></span></div>' +
       (saved.missed.length ? '<p class="zp-ospe-note">A dot marks stations you scored below 60 percent on in your last mock.</p>' : '')
+    )
     foot.innerHTML =
       '<button type="button" class="zp-btn" data-act="prev"' + (idx === 0 ? ' disabled' : '') + '>Previous</button>' +
       '<button type="button" class="zp-btn zp-btn--main" data-act="reveal">Show answers</button>' +
       '<button type="button" class="zp-btn" data-act="next"' + (idx === stations.length - 1 ? ' disabled' : '') + '>Next</button>'
-    showStation(stations[idx], { revealed: false, reset: true })
+    showStation(stations[idx], { revealed: false, reset: true, dir: dir })
     updateScore()
     if (scroll) scrollToTop()
   }
 
-  function toggleReveal() {
-    if (!shown) return
-    var revealed = !shown.classList.contains('is-revealed')
-    shown.classList.toggle('is-revealed', revealed)
+  function setReveal(st, revealed) {
+    st.classList.toggle('is-revealed', revealed)
     var button = foot.querySelector('[data-act="reveal"]')
     if (button) button.textContent = revealed ? 'Hide answers' : 'Show answers'
     updateScore()
+  }
+
+  function toggleReveal() {
+    if (!shown) return
+    setReveal(shown, !shown.classList.contains('is-revealed'))
   }
 
   /* ---------- mock: choosing the stations ---------- */
@@ -271,13 +329,14 @@
     var maxQ = stations.reduce(function (most, st) { return Math.max(most, st._qs.length) }, 1)
     var topics = []
     stations.forEach(function (st) { if (topics.indexOf(st._topic) < 0) topics.push(st._topic) })
-    barEl.innerHTML =
+    swapBar(
       '<div class="zp-ospe-form">' +
-        '<label>Stations (1 to ' + stations.length + ')<input type="number" name="n" min="1" max="' + stations.length + '" value="' + d.n + '"></label>' +
-        '<label>Questions per station (0 = all, up to ' + maxQ + ')<input type="number" name="q" min="0" max="' + maxQ + '" value="' + d.q + '"></label>' +
-        '<label>Minutes per station (0 = no timer)<input type="number" name="m" min="0" max="60" value="' + d.m + '"></label>' +
+        '<label>Stations<input type="number" inputmode="numeric" enterkeyhint="go" name="n" min="1" max="' + stations.length + '" value="' + d.n + '"><small>1 to ' + stations.length + '</small></label>' +
+        '<label>Questions per station<input type="number" inputmode="numeric" enterkeyhint="go" name="q" min="0" max="' + maxQ + '" value="' + d.q + '"><small>0 = all</small></label>' +
+        '<label>Minutes per station<input type="number" inputmode="numeric" enterkeyhint="go" name="m" min="0" max="60" value="' + d.m + '"><small>0 = no timer</small></label>' +
       '</div>' +
       '<p class="zp-ospe-note">Stations are drawn from all ' + topics.length + (topics.length === 1 ? ' topic' : ' topics') + ', in proportion to their size.</p>'
+    )
     foot.innerHTML =
       '<button type="button" class="zp-btn zp-btn--main" data-act="start">Start mock</button>' +
       (saved.missed.length ? '<button type="button" class="zp-btn" data-act="retry">Retry my missed stations (' + saved.missed.length + ')</button>' : '')
@@ -304,7 +363,7 @@
       left: 0,
       paused: false
     }
-    answerPhase()
+    answerPhase('next')
     scrollToTop()
   }
 
@@ -320,7 +379,10 @@
     if (!clock) return
     var seconds = Math.max(0, Math.ceil(ms / 1000))
     clock.textContent = pad(Math.floor(seconds / 60)) + ':' + pad(seconds % 60)
-    clock.classList.toggle('is-low', seconds <= 10)
+    var low = seconds <= 10
+    clock.classList.toggle('is-low', low)
+    var run = barEl.querySelector('.zp-ospe-run')
+    if (run) run.classList.toggle('is-low', low)
     if (fill) fill.style.width = Math.max(0, Math.min(100, ms / (plan.minutes * 60000) * 100)) + '%'
   }
 
@@ -334,17 +396,18 @@
     }
   }
 
-  function answerPhase() {
+  function answerPhase(dir) {
     stopTimer()
     var item = plan.items[plan.k]
     var timed = plan.minutes > 0
-    barEl.innerHTML =
-      '<div class="zp-ospe-row"><strong>Station ' + (plan.k + 1) + ' of ' + plan.items.length + '</strong>' +
-      (timed ? '<span class="zp-ospe-clock"></span><button type="button" class="zp-btn" data-act="pause">Pause</button>' : '<span class="zp-ospe-note">No timer</span>') +
+    swapBar(
+      '<div class="zp-ospe-row zp-ospe-run"><strong>Station ' + (plan.k + 1) + ' of ' + plan.items.length + '</strong>' +
+      (timed ? '<span class="zp-ospe-clock"></span><button type="button" class="zp-btn zp-btn--small" data-act="pause">Pause</button>' : '<span class="zp-ospe-note">No timer</span>') +
       '</div>' +
-      (timed ? '<div class="zp-ospe-track"><span></span></div>' : '')
+      (timed ? '<div class="zp-ospe-track zp-ospe-timer" aria-hidden="true"><span></span></div>' : '')
+    )
     foot.innerHTML = '<button type="button" class="zp-btn zp-btn--main" data-act="done">I\u2019m done</button>'
-    showStation(item.st, { revealed: false, reset: true, only: item.qs, name: 'Station ' + (plan.k + 1) })
+    showStation(item.st, { revealed: false, reset: true, only: item.qs, name: 'Station ' + (plan.k + 1), dir: dir })
     if (timed) {
       plan.left = plan.minutes * 60000
       plan.endAt = Date.now() + plan.left
@@ -364,7 +427,6 @@
       plan.endAt = Date.now() + plan.left
       timer = setInterval(tick, 250)
       if (button) button.textContent = 'Pause'
-      shown.hidden = false
     } else {
       plan.paused = true
       plan.left = Math.max(0, plan.endAt - Date.now())
@@ -378,13 +440,13 @@
     stopTimer()
     var item = plan.items[plan.k]
     var last = plan.k === plan.items.length - 1
-    barEl.innerHTML =
+    swapBar(
       '<div class="zp-ospe-row"><strong>Station ' + (plan.k + 1) + ' of ' + plan.items.length + ' \u00B7 mark your answers</strong>' +
       '<span class="zp-ospe-score"></span></div>' +
       (timeUp ? '<p class="zp-ospe-note">Time is up.</p>' : '')
+    )
     foot.innerHTML = '<button type="button" class="zp-btn zp-btn--main" data-act="next-station">' + (last ? 'See results' : 'Next station') + '</button>'
-    item.st.classList.add('is-revealed')
-    updateScore()
+    setReveal(item.st, true)
   }
 
   function nextStation() {
@@ -393,7 +455,7 @@
     plan.results.push({ n: item.st._n, topic: item.st._topic, got: score.got, total: score.total })
     if (plan.k + 1 < plan.items.length) {
       plan.k += 1
-      answerPhase()
+      answerPhase('next')
       scrollToTop()
     } else {
       results()
@@ -426,20 +488,32 @@
       var t = byTopic[topic]
       var p = t.total ? Math.round(t.got / t.total * 100) : 0
       return '<div class="zp-ospe-topic' + (p < PASS * 100 ? ' is-weak' : '') + '"><span>' + topic + '</span>' +
-        '<div class="zp-ospe-bar-track"><span style="width:' + p + '%"></span></div><b>' + t.got + ' / ' + t.total + '</b></div>'
+        '<div class="zp-ospe-bar-track"><span data-w="' + p + '" style="width:0"></span></div><b>' + t.got + ' / ' + t.total + '</b></div>'
     }).join('')
 
-    barEl.innerHTML =
-      '<div class="zp-ospe-result"><h3>Score: <span>' + got + ' / ' + total + '</span> (' + percent + '%)</h3>' +
+    swapBar(
+      '<div class="zp-ospe-result"><h3>Score: <span class="zp-ospe-got">' + got + '</span> / ' + total + ' <small class="zp-ospe-pct">(' + percent + '%)</small></h3>' +
       '<p class="zp-ospe-note">By topic</p>' + rows +
       (missed.length
         ? '<p class="zp-ospe-note">Stations below 60 percent: ' + missed.join(', ') + '. They are marked in the station list.</p>'
         : '<p class="zp-ospe-note">No station below 60 percent. Well done.</p>') +
       '</div>'
+    )
     foot.innerHTML =
       (missed.length ? '<button type="button" class="zp-btn zp-btn--main" data-act="retry-now">Retry missed stations</button>' : '') +
       '<button type="button" class="zp-btn' + (missed.length ? '' : ' zp-btn--main') + '" data-act="newmock">New mock</button>' +
       '<button type="button" class="zp-btn" data-act="mode-study">Study all</button>'
+
+    /* the numbers count up and the bars fill in */
+    countUp(barEl.querySelector('.zp-ospe-got'), got)
+    window.requestAnimationFrame(function () {
+      window.requestAnimationFrame(function () {
+        ;[].forEach.call(barEl.querySelectorAll('.zp-ospe-bar-track span'), function (bar) {
+          bar.style.width = bar.getAttribute('data-w') + '%'
+        })
+      })
+    })
+    if (total && got / total >= CELEBRATE && window.zpCelebrate) window.zpCelebrate('Score ' + percent + '%. Excellent work!')
 
     saved.missed = missed
     saved.last = { got: got, total: total, date: new Date().toISOString().slice(0, 10) }
@@ -458,8 +532,8 @@
     var act = target.getAttribute('data-act')
     if (act === 'mode-study') study(idx, true)
     else if (act === 'mode-mock') mockSetup()
-    else if (act === 'prev') study(idx - 1, true)
-    else if (act === 'next') study(idx + 1, true)
+    else if (act === 'prev') study(idx - 1, true, 'prev')
+    else if (act === 'next') study(idx + 1, true, 'next')
     else if (act === 'reveal') toggleReveal()
     else if (act === 'start') startMock(null)
     else if (act === 'retry') startMock(retryList())
@@ -481,7 +555,11 @@
     prepare()
 
     ui = el('div', 'zp-ospe-ui')
-    modesEl = el('div', 'zp-ospe-modes', '<button type="button" data-act="mode-study">Study all</button><button type="button" data-act="mode-mock">Mock exam</button>')
+    modesEl = el('div', 'zp-ospe-modes',
+      '<span class="zp-ospe-thumb" aria-hidden="true"></span>' +
+      '<button type="button" role="tab" data-act="mode-study">Study all</button>' +
+      '<button type="button" role="tab" data-act="mode-mock">Mock exam</button>')
+    modesEl.setAttribute('role', 'tablist')
     barEl = el('div', 'zp-ospe-bar')
     ui.appendChild(modesEl)
     ui.appendChild(barEl)
@@ -494,7 +572,31 @@
     ui.addEventListener('change', function (event) {
       if (event.target.matches && event.target.matches('.zp-ospe-pick')) study(number(event.target.value, 0), true)
     })
-    wrap.addEventListener('change', updateScore)
+    wrap.addEventListener('change', function (event) {
+      var target = event.target
+      if (target && target.matches && target.matches('.zp-sq-tick input')) {
+        var label = target.closest('label')
+        if (label) {
+          label.classList.remove('is-pop')
+          void label.offsetWidth
+          label.classList.add('is-pop')
+        }
+      }
+      updateScore()
+    })
+
+    /* while Listen reads an answer, the answers open by themselves */
+    if (window.MutationObserver) {
+      new window.MutationObserver(function (changes) {
+        changes.forEach(function (change) {
+          var target = change.target
+          if (!target.classList || !target.classList.contains('zp-reading')) return
+          var inAnswer = target.closest ? target.closest('.zp-sq-answer') : null
+          var station = target.closest ? target.closest('.zp-station') : null
+          if (inAnswer && station && !station.classList.contains('is-revealed')) setReveal(station, true)
+        })
+      }).observe(wrap, { attributes: true, attributeFilter: ['class'], subtree: true })
+    }
 
     study(0, false)
   }

@@ -32,7 +32,13 @@
     if (!main) return list
     ;[].forEach.call(main.children, function (child) {
       if (child.classList.contains('zp-section')) {
-        ;[].forEach.call(child.children, function (part) { list.push(part) })
+        ;[].forEach.call(child.children, function (part) {
+          if (part.classList.contains('zp-qa-list')) {
+            ;[].forEach.call(part.children, function (card) { list.push(card) })
+          } else {
+            list.push(part)
+          }
+        })
       } else {
         list.push(child)
       }
@@ -121,6 +127,8 @@
   }
 
   function init() {
+    /* a station page shows one station at a time, so there is no reading place to return to */
+    if (document.querySelector('.zp-ospe')) return
     window.addEventListener('scroll', later, { passive: true })
     window.addEventListener('pagehide', save)
     document.addEventListener('visibilitychange', function () {

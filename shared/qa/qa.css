@@ -239,25 +239,35 @@ html.zp-qa-on .zp-qa-panel {
   outline-offset: 2px;
 }
 
-/* ---------- the search and filter bar ---------- */
+/* ---------- the search and filter bar ----------
+   Fixed in one place at the top of the screen. It slides away when you scroll down and comes back when you
+   scroll up. The page keeps room for it (see --zp-qa-pad), so it never covers the title. */
+html.zp-qa-on body { padding-top: var(--zp-qa-pad, 0); }
+
 .zp-qa-bar {
-  position: sticky;
-  top: 8px;
-  z-index: 40;
-  max-width: 860px;
-  margin: 0 auto var(--zp-space-3);
+  position: fixed;
+  top: 62px;
+  left: 50%;
+  z-index: 940;
+  width: min(920px, calc(100% - 28px));
   padding: 12px 14px 12px;
   border: 1px solid var(--zp-border);
   border-radius: var(--zp-radius-lg);
   background: var(--zp-surface);
   box-shadow: 0 10px 26px -16px rgba(16, 24, 40, 0.5);
-  transition: transform 260ms cubic-bezier(0.2, 0.7, 0.2, 1), opacity 200ms ease;
+  transform: translateX(-50%);
+  transition: transform 300ms cubic-bezier(0.2, 0.7, 0.2, 1), opacity 220ms ease;
 }
 
 .zp-qa-bar.is-hidden {
-  transform: translateY(-140%);
+  transform: translate(-50%, -170%);
   opacity: 0;
   pointer-events: none;
+}
+
+/* on a wide screen the tools sit far to the right, so the bar can use the very top */
+@media (min-width: 1250px) {
+  .zp-qa-bar { top: 14px; }
 }
 
 .zp-qa-bar-top {
@@ -269,13 +279,15 @@ html.zp-qa-on .zp-qa-panel {
 .zp-qa-search {
   flex: 1 1 auto;
   min-width: 0;
-  padding: 10px 14px;
+  min-height: 44px;
+  padding: 10px 16px;
   border: 1px solid var(--zp-border);
   border-radius: var(--zp-radius-pill);
   background: var(--zp-bg);
   font-family: var(--zp-font);
-  font-size: 14px;
+  font-size: 16px;
   color: var(--zp-text);
+  touch-action: manipulation;
 }
 
 .zp-qa-search:focus-visible {
@@ -285,7 +297,8 @@ html.zp-qa-on .zp-qa-panel {
 
 .zp-qa-tool {
   flex: 0 0 auto;
-  padding: 9px 13px;
+  min-height: 44px;
+  padding: 0 14px;
   border: 1px solid var(--zp-border);
   border-radius: var(--zp-radius-pill);
   background: transparent;
@@ -296,6 +309,7 @@ html.zp-qa-on .zp-qa-panel {
   color: var(--zp-text);
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 .zp-qa-tool:focus-visible,
@@ -389,6 +403,35 @@ html.zp-qa-on .zp-qa-panel {
 
 .zp-qa-none[hidden] { display: none; }
 
+/* ---------- the cards of a lesson: one column, two on a wide screen ---------- */
+.zp-qa-list { display: block; }
+
+@media (min-width: 1100px) {
+  .zp-qa-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 18px;
+    align-items: start;
+  }
+  .zp-qa-q { font-size: 17px; }
+}
+
+/* ---------- little rewards ---------- */
+.zp-qa-chip b.is-bump { animation: zp-qa-bump 420ms cubic-bezier(0.3, 1.6, 0.5, 1); }
+
+@keyframes zp-qa-bump {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.35); }
+  100% { transform: scale(1); }
+}
+
+.zp-qa-rate button.is-on { animation: zp-qa-pop 320ms cubic-bezier(0.3, 1.6, 0.5, 1); }
+
+@keyframes zp-qa-pop {
+  0%   { transform: scale(0.88); }
+  100% { transform: scale(1); }
+}
+
 /* ---------- per-lesson counts and filtered-out lessons ---------- */
 .zp-qa-count {
   display: inline-block;
@@ -407,10 +450,6 @@ html.zp-qa-on .zp-qa-panel {
 .zp-section.zp-qa-empty > :not(h2) { display: none; }
 .zp-section.zp-qa-empty > h2.zp-h2 { opacity: 0.45; margin-bottom: 0; }
 
-@media (max-width: 900px) {
-  .zp-qa-bar { top: 62px; }
-}
-
 @media (max-width: 600px) {
   .zp-qa-q { padding: 14px 58px 14px 14px; font-size: 16px; }
   .zp-qa-body { padding: 4px 14px 16px; }
@@ -423,11 +462,15 @@ html.zp-qa-on .zp-qa-panel {
   .zp-qa-q::before,
   .zp-qa-bar,
   .zp-qa-meter span { transition-duration: 0.01ms !important; transition-delay: 0s !important; }
-  .zp-qa.is-open .zp-qa-body > * { animation: none; }
+  .zp-qa.is-open .zp-qa-body > *,
+  .zp-qa-chip b.is-bump,
+  .zp-qa-rate button.is-on { animation: none; }
 }
 
 /* the PDF and the printed page show every answer and none of the controls */
 @media print {
+  html.zp-qa-on body { padding-top: 0 !important; }
+  .zp-qa-list { display: block !important; }
   .zp-qa-panel {
     display: grid !important;
     grid-template-rows: 1fr !important;
@@ -442,6 +485,7 @@ html.zp-qa-on .zp-qa-panel {
   .zp-section.zp-qa-empty > :not(h2) { display: block; }
 }
 
+html.zp-print-view .zp-qa-list { display: block !important; }
 html.zp-print-view .zp-qa-panel {
   display: grid !important;
   grid-template-rows: 1fr !important;

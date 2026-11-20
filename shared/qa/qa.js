@@ -90,7 +90,16 @@
     var rated = n.k + n.s + n.d
     var values = { all: total, 'new': total - rated, s: n.s, d: n.d, k: n.k }
     ;[].forEach.call(bar.querySelectorAll('.zp-qa-chip'), function (chip) {
-      chip.querySelector('b').textContent = String(values[chip.getAttribute('data-filter')])
+      var number = chip.querySelector('b')
+      var next = String(values[chip.getAttribute('data-filter')])
+      if (number.textContent !== next) {
+        if (number.textContent !== '0' || next !== '0') {
+          number.classList.remove('is-bump')
+          void number.offsetWidth
+          number.classList.add('is-bump')
+        }
+        number.textContent = next
+      }
     })
     parts.meter.style.width = (total ? rated / total * 100 : 0) + '%'
 
@@ -158,6 +167,13 @@
     })
   }
 
+  /* the bar is fixed at the top of the screen, so the page keeps room for it above the lesson title */
+  function reserveRoom() {
+    if (!bar) return
+    var top = parseFloat(window.getComputedStyle(bar).top) || 0
+    root.style.setProperty('--zp-qa-pad', Math.ceil(top + bar.offsetHeight + 14) + 'px')
+  }
+
   /* ---------- building the bar and the cards ---------- */
   function buildBar(first) {
     bar = document.createElement('div')
@@ -165,7 +181,7 @@
     bar.setAttribute('role', 'search')
     bar.innerHTML =
       '<div class="zp-qa-bar-top">' +
-        '<input type="search" class="zp-qa-search" placeholder="Search questions and answers" aria-label="Search questions and answers" autocomplete="off">' +
+        '<input type="search" class="zp-qa-search" placeholder="Search questions and answers\u2026" aria-label="Search questions and answers" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" inputmode="search" enterkeyhint="search">' +
         '<button type="button" class="zp-qa-tool" data-qa="expand">Open all</button>' +
         '<button type="button" class="zp-qa-tool" data-qa="collapse">Close all</button>' +
       '</div>' +
@@ -177,7 +193,7 @@
         '<button type="button" class="zp-qa-chip" data-filter="k">Knew it <b>0</b></button>' +
       '</div>' +
       '<div class="zp-qa-meter" aria-hidden="true"><span></span></div>'
-    first.parentNode.insertBefore(bar, first)
+    document.body.appendChild(bar)
 
     var none = document.createElement('div')
     none.className = 'zp-qa-none'
@@ -279,6 +295,23 @@
 
     root.classList.add('zp-qa-on')
 
+    /* the cards of each lesson sit in a list, which becomes two columns on a wide screen */
+    ;[].forEach.call(document.querySelectorAll('main .zp-section'), function (el) {
+      var run = null
+      ;[].slice.call(el.children).forEach(function (child) {
+        if (cards.indexOf(child) > -1) {
+          if (!run) {
+            run = document.createElement('div')
+            run.className = 'zp-qa-list'
+            el.insertBefore(run, child)
+          }
+          run.appendChild(child)
+        } else if (!child.classList.contains('zp-qa-list')) {
+          run = null
+        }
+      })
+    })
+
     /* the lessons that hold questions, each with its own count */
     ;[].forEach.call(document.querySelectorAll('main .zp-section'), function (el) {
       var own = cards.filter(function (card) { return el.contains(card) })
@@ -295,6 +328,10 @@
     cards.forEach(paint)
     setFilter('all')
     counts()
+    reserveRoom()
+    window.addEventListener('resize', reserveRoom)
+    window.addEventListener('load', reserveRoom)
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(reserveRoom)
 
     window.addEventListener('scroll', onScroll, { passive: true })
 

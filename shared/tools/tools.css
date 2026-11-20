@@ -197,8 +197,5 @@ html.zp-hide-terms .zp-term:not(.is-shown) {
   -webkit-user-select: none;
 }
 
-/* the station pages build their own pages, so Listen and Draw are not offered there */
-html.zp-station-page .zp-tool--row { display: none; }
-
 /* the PDF view has its own pages and no tool buttons */
 html.zp-print-view .zp-tools { display: none; }

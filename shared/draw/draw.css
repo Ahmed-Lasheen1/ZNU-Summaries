@@ -134,3 +134,80 @@ html.zp-drawing .zp-here { display: none; }
 @media print {
   .zp-ink, .zp-draw-surface, .zp-draw-bar { display: none !important; }
 }
+
+/* ---------- the small satisfying things ---------- */
+
+/* the ring that shows the tip and follows the mouse or pen */
+.zp-draw-ring {
+  --ring: var(--zp-muted);
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 970;
+  box-sizing: border-box;
+  border: 1.5px solid var(--ring);
+  border-radius: 50%;
+  background: transparent;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.zp-draw-ring[hidden] { display: none; }
+.zp-draw-ring.is-hi { border-radius: 4px; background: var(--ring); opacity: 0.45; border-color: transparent; }
+.zp-draw-ring.is-erase { border-style: dashed; border-color: var(--zp-muted); }
+.zp-draw-ring.is-pen { background: var(--ring); opacity: 0.85; }
+
+/* a stroke that has just snapped into a clean shape pulses once */
+.zp-ink-snap { animation: zp-ink-snap 240ms cubic-bezier(0.2, 0.9, 0.3, 1.2); }
+
+@keyframes zp-ink-snap {
+  from { stroke-width: calc(var(--w) * 1.9); }
+  to   { stroke-width: var(--w); }
+}
+
+/* an erased stroke fades away */
+.zp-ink-fade { animation: zp-ink-fade 260ms ease forwards; }
+
+@keyframes zp-ink-fade {
+  from { opacity: 1; }
+  to   { opacity: 0; stroke-width: 0; }
+}
+
+/* the bar rises into place and the active tool pops */
+.zp-draw-bar { animation: zp-draw-bar-in 300ms cubic-bezier(0.2, 0.9, 0.3, 1.1) both; }
+
+@keyframes zp-draw-bar-in {
+  from { opacity: 0; transform: translate(-50%, 18px) scale(0.96); }
+  to   { opacity: 1; transform: translate(-50%, 0) scale(1); }
+}
+
+.zp-draw-btn.is-on { animation: zp-draw-pop 260ms cubic-bezier(0.3, 1.6, 0.5, 1); }
+.zp-draw-sw.is-on { animation: zp-draw-pop 260ms cubic-bezier(0.3, 1.6, 0.5, 1); }
+
+@keyframes zp-draw-pop {
+  0%   { transform: scale(0.82); }
+  100% { transform: scale(1); }
+}
+
+/* the size of the pen and the highlighter shows as a dot on their buttons */
+.zp-draw-btn[data-size] { position: relative; }
+.zp-draw-btn[data-size]::after {
+  content: "";
+  position: absolute;
+  right: 3px;
+  bottom: 3px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.8;
+}
+.zp-draw-btn[data-size="0"]::after { width: 3px; height: 3px; }
+.zp-draw-btn[data-size="2"]::after { width: 8px; height: 8px; right: 2px; bottom: 2px; }
+
+.zp-draw-msg.is-tip { color: var(--zp-muted); }
+.zp-draw-btn[hidden] { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .zp-ink-snap, .zp-ink-fade, .zp-draw-bar, .zp-draw-btn.is-on, .zp-draw-sw.is-on { animation: none; }
+}

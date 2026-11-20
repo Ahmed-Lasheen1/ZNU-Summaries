@@ -16,7 +16,7 @@
   var SKIP = [
     '.zp-done-btn', '.zp-recall-progress', '.zp-source', '.zp-lesson-illustration', '.zp-toast',
     '.zp-confetti', '.zp-zoom', '.zp-here', '.zp-listen', '.zp-tools', '.zp-progress', '.zp-footer',
-    '.zp-pdf-bar', '.zp-qa-rate', '.zp-qa-src', '.zp-qa-bar', '.zp-qa-count', '.zp-qa-none', '.zp-ink', '.zp-draw-surface', '.zp-draw-bar', '.zp-resume', '.zp-ospe-ui', '.zp-ospe-foot',
+    '.zp-pdf-bar', '.zp-qa-rate', '.zp-qa-src', '.zp-sq-tick', '.zp-qa-bar', '.zp-qa-count', '.zp-qa-none', '.zp-ink', '.zp-draw-surface', '.zp-draw-bar', '.zp-resume', '.zp-ospe-ui', '.zp-ospe-foot',
     'script', 'style', 'noscript', 'svg', 'template', '[hidden]', '[data-zp-listen="skip"]'
   ].join(', ')
 
@@ -234,6 +234,22 @@
     })
   }
 
+  /* a station: its title, then each question, a short silence to think, then its answer.
+     station/station.js opens the answers when the reading reaches them. */
+  function station(el) {
+    var title = el.querySelector('.zp-station-title')
+    if (title) push(title, textOf(title))
+    var number = 0
+    each(el.querySelectorAll('.zp-sq > li'), function (li) {
+      if (li.hidden) return
+      number += 1
+      var question = li.querySelector('.zp-sq-text')
+      var answer = li.querySelector('.zp-sq-answer-body') || li.querySelector('.zp-sq-answer')
+      push(question || li, 'Question ' + number + '. ' + (question ? textOf(question) : ''), answer ? RECALL_WAIT : 0)
+      if (answer) push(answer, 'Answer. ' + textOf(answer))
+    })
+  }
+
   function layers(el) {
     var start = el.getAttribute('data-start')
     var end = el.getAttribute('data-end')
@@ -332,6 +348,7 @@
     ['.zp-flip', flip],
     ['details.zp-recall', recall],
     ['.zp-qa', qa],
+    ['.zp-station', station],
     ['.zp-layers', layers],
     ['.zp-tree', tree],
     ['.zp-bignum', bignum],

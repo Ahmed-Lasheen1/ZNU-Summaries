@@ -1,27 +1,29 @@
-/* STATION: the OSPE station page (study all, or a timed mock).
-   The lesson file holds every station as plain markup. station/station.js adds the small control bar
-   and shows one station at a time. Without the script, every station is shown one under the other.
+/* STATION: the OSPE station page (study all, or a timed mock), laid out like an exam sheet.
+   The lesson file holds every station as plain markup. station/station.js adds a slim top row
+   (mode switch and station picker) and a fixed bar at the bottom of the screen (previous, show answers, next,
+   the timer in a mock). Without the script, every station is shown one under the other with its answers.
 
    <div class="zp-ospe" data-mock-stations="10" data-mock-questions="4" data-mock-minutes="2">
      <article class="zp-station" data-topic="Topic name">
-       <h2 class="zp-station-title"><span class="zp-st-name">Station 1</span> <small class="zp-st-marks">(6 marks)</small></h2>
+       <h2 class="zp-station-title"><span class="zp-st-name">Station 1</span></h2>
        <div class="zp-station-media">
          <div class="zp-sfig"><img src="data:image/webp;base64,..." alt="Station 1, picture 1" width="800" height="600">
            <span class="zp-cover" style="left:10%;top:20%;width:30%;height:8%"></span></div>
        </div>
        <ol class="zp-sq">
-         <li data-marks="1"><div class="zp-sq-text">Question <span class="zp-sq-marks">(1 mark)</span></div>
+         <li><div class="zp-sq-text">Question</div>
            <div class="zp-sq-answer"><p>Answer.</p></div></li>
        </ol>
      </article>
    </div>
 
-   zp-cover boxes hide label text on a picture until "Show answers" is tapped.
+   Every question is worth one point. Marks written in older pages (zp-st-marks, zp-sq-marks, data-marks)
+   are hidden and ignored, so those pages keep working without any change.
+   zp-cover boxes hide label text on a picture until the answers are shown.
    On a wide screen the pictures stay in view on the left while the questions scroll on the right. */
 
 .zp-ospe,
-.zp-ospe-ui,
-.zp-ospe-foot {
+.zp-ospe-ui {
   width: 100%;
   max-width: 860px;
   margin-left: auto;
@@ -30,18 +32,37 @@
 
 @media (min-width: 1000px) {
   .zp-ospe,
-  .zp-ospe-ui,
-  .zp-ospe-foot { max-width: 1180px; }
+  .zp-ospe-ui { max-width: 1180px; }
 }
 
-/* ---------- the control bar (everything centred) ---------- */
+/* marks are no longer shown: every question is one point */
+.zp-st-marks,
+.zp-sq-marks { display: none !important; }
+
+/* ---------- the slim top row ---------- */
 .zp-ospe-ui {
-  margin-bottom: var(--zp-space-2);
-  padding: 16px 18px 18px;
+  margin-bottom: 14px;
+  padding: 12px 14px;
   border: 1px solid var(--zp-border);
   border-radius: var(--zp-radius-lg);
   background: var(--zp-surface);
   text-align: center;
+  scroll-margin-top: 12px;
+}
+
+.zp-ospe-ui[data-view="study"] {
+  display: grid;
+  grid-template-columns: 230px minmax(0, 1fr);
+  gap: 8px 14px;
+  align-items: center;
+  text-align: left;
+}
+
+.zp-ospe-ui[data-view="study"] .zp-ospe-modes,
+.zp-ospe-ui[data-view="study"] .zp-ospe-bar { margin: 0; }
+
+@media (max-width: 700px) {
+  .zp-ospe-ui[data-view="study"] { grid-template-columns: minmax(0, 1fr); }
 }
 
 /* the Study all / Mock exam switch: a thumb slides to the side you pick */
@@ -49,9 +70,9 @@
   position: relative;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  width: min(340px, 100%);
+  width: min(230px, 100%);
   margin: 0 auto;
-  padding: 4px;
+  padding: 3px;
   border: 1px solid var(--zp-border);
   border-radius: var(--zp-radius-pill);
   background: var(--zp-accent-soft);
@@ -59,10 +80,10 @@
 
 .zp-ospe-thumb {
   position: absolute;
-  top: 4px;
-  bottom: 4px;
-  left: 4px;
-  width: calc(50% - 4px);
+  top: 3px;
+  bottom: 3px;
+  left: 3px;
+  width: calc(50% - 3px);
   border-radius: var(--zp-radius-pill);
   background: var(--zp-accent);
   box-shadow: 0 6px 14px -6px rgba(16, 24, 40, 0.55);
@@ -74,14 +95,14 @@
 .zp-ospe-modes button {
   position: relative;
   z-index: 1;
-  min-height: 44px;
-  padding: 0 12px;
+  min-height: 38px;
+  padding: 0 10px;
   border: 0;
   border-radius: var(--zp-radius-pill);
   background: transparent;
   font-family: var(--zp-font);
   font-weight: 700;
-  font-size: 14px;
+  font-size: 13px;
   color: var(--zp-muted);
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
@@ -91,16 +112,15 @@
 
 .zp-ospe-modes button.is-on { color: var(--zp-bg); }
 
-.zp-ospe-bar { margin-top: 14px; }
+.zp-ospe-bar { margin-top: 12px; }
 
-/* what is in the bar rises in whenever it changes */
+/* what is in the top row rises in whenever it changes */
 .zp-ospe-bar.is-in > * { animation: zp-ospe-rise 380ms cubic-bezier(0.2, 0.7, 0.2, 1) both; }
 .zp-ospe-bar.is-in > :nth-child(2) { animation-delay: 60ms; }
-.zp-ospe-bar.is-in > :nth-child(3) { animation-delay: 120ms; }
-.zp-ospe-bar.is-in > :nth-child(n+4) { animation-delay: 180ms; }
+.zp-ospe-bar.is-in > :nth-child(n+3) { animation-delay: 120ms; }
 
 @keyframes zp-ospe-rise {
-  from { opacity: 0; transform: translateY(10px); }
+  from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: none; }
 }
 
@@ -109,16 +129,14 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 10px 16px;
+  gap: 8px 14px;
 }
 
-.zp-ospe-row + .zp-ospe-meter,
-.zp-ospe-meter + .zp-ospe-row { margin-top: 10px; }
+.zp-ospe-run .zp-ospe-note { margin: 0; }
 
 /* inputs: 16px or more, so phones do not zoom in when they are tapped */
 .zp-ospe-pick,
-.zp-ospe-form input,
-.zp-sq-tick select {
+.zp-ospe-form input {
   min-height: 44px;
   padding: 9px 14px;
   border: 1px solid var(--zp-border);
@@ -130,38 +148,21 @@
   touch-action: manipulation;
 }
 
-.zp-ospe-pick { width: min(460px, 100%); text-align: center; text-align-last: center; }
-
-.zp-ospe-meter { width: min(460px, 100%); margin-left: auto; margin-right: auto; }
-
-.zp-ospe-meter-label {
-  display: block;
-  margin-bottom: 6px;
-  font-weight: 700;
-  font-size: 12.5px;
-  letter-spacing: 0.06em;
-  color: var(--zp-muted);
-}
-
-.zp-ospe-score {
-  min-height: 1.4em;
-  font-weight: 700;
-  font-size: 14.5px;
-  color: var(--zp-clin);
-}
+.zp-ospe-pick { width: 100%; }
 
 .zp-ospe-note {
   margin: 8px auto 0;
   max-width: none;
-  font-size: 13.5px;
+  font-size: 13px;
+  line-height: 1.5;
   color: var(--zp-muted);
 }
 
 .zp-ospe-form {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 14px;
-  margin: 0 auto 6px;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  margin: 0 auto 4px;
   max-width: 640px;
 }
 
@@ -183,6 +184,7 @@
 
 .zp-ospe-form input { display: block; width: 100%; margin-top: 6px; text-align: center; }
 
+/* ---------- buttons ---------- */
 .zp-btn {
   min-height: 44px;
   padding: 0 22px;
@@ -214,46 +216,87 @@
 .zp-ospe-modes button:focus-visible,
 .zp-ospe-pick:focus-visible,
 .zp-ospe-form input:focus-visible,
-.zp-sq-tick select:focus-visible {
+.zp-sq-text:focus-visible,
+.zp-sq-tick button:focus-visible {
   outline: 2px solid var(--zp-accent);
   outline-offset: 2px;
 }
 
+/* ---------- the fixed bar at the bottom of the screen ---------- */
 .zp-ospe-foot {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 12px;
-  margin-top: var(--zp-space-2);
-  margin-bottom: var(--zp-space-1);
+  position: fixed;
+  left: 50%;
+  bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  z-index: 930;
+  width: min(720px, calc(100% - 24px));
+  padding: 0 12px 12px;
+  border: 1px solid var(--zp-border);
+  border-radius: 20px;
+  background: var(--zp-surface);
+  box-shadow: 0 14px 34px -14px rgba(16, 24, 40, 0.6);
+  font-family: var(--zp-font);
+  color: var(--zp-text);
+  transform: translateX(-50%);
+  animation: zp-ospe-foot-in 300ms cubic-bezier(0.2, 0.9, 0.3, 1.1) both;
 }
 
-/* the progress bar and the timer */
-.zp-ospe-track {
-  height: 6px;
-  border-radius: 6px;
+@keyframes zp-ospe-foot-in {
+  from { opacity: 0; transform: translate(-50%, 16px); }
+  to   { opacity: 1; transform: translate(-50%, 0); }
+}
+
+/* station progress, or the time left in a mock */
+.zp-ospe-prog {
+  height: 3px;
+  margin: 0 -12px;
+  border-radius: 20px 20px 0 0;
   background: var(--zp-border);
   overflow: hidden;
 }
 
-.zp-ospe-track span {
+.zp-ospe-prog span {
   display: block;
-  width: 100%;
+  width: 0;
   height: 100%;
-  border-radius: 6px;
   background: var(--zp-accent);
-  transition: width 450ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition: width 300ms linear;
 }
 
-.zp-ospe-timer { margin-top: 12px; }
-.zp-ospe-timer span { transition: width 250ms linear; }
-.zp-ospe-run.is-low + .zp-ospe-timer span { background: var(--zp-warn); }
+.zp-ospe-foot.is-low .zp-ospe-prog span { background: var(--zp-warn); }
+
+.zp-ospe-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 9px 2px 8px;
+  font-weight: 600;
+  font-size: 12.5px;
+  line-height: 1.3;
+}
+
+.zp-ospe-m1 { font-weight: 800; white-space: nowrap; }
+
+.zp-ospe-m2 {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--zp-muted);
+}
+
+.zp-ospe-m3 {
+  margin-left: auto;
+  white-space: nowrap;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--zp-clin);
+}
 
 .zp-ospe-clock {
-  font-weight: 800;
-  font-size: 26px;
+  display: inline-block;
+  font-size: 18px;
   line-height: 1;
-  font-variant-numeric: tabular-nums;
   color: var(--zp-text);
   transition: color 240ms ease;
 }
@@ -265,55 +308,133 @@
   50%      { transform: scale(1.12); }
 }
 
-/* ---------- a station ---------- */
+.zp-ospe-ctrls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.zp-ospe-ctrls .zp-btn { flex: 0 0 auto; }
+.zp-ospe-ctrls .zp-ospe-main { flex: 1 1 auto; min-width: 0; padding: 0 14px; }
+
+.zp-ospe-nav {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 0 14px 0 10px;
+}
+
+.zp-ospe-nav svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* the keyboard hint only appears where there is a keyboard */
+.zp-ospe-hint { display: none; }
+
+@media (hover: hover) and (pointer: fine) and (min-width: 900px) {
+  .zp-ospe-hint {
+    display: block;
+    margin-top: 8px;
+    text-align: center;
+    font-weight: 500;
+    font-size: 11.5px;
+    color: var(--zp-muted);
+  }
+  .zp-ospe-hint:empty { display: none; }
+}
+
+@media (max-width: 460px) {
+  .zp-ospe-nav { width: 48px; padding: 0; }
+  .zp-ospe-nav span { display: none; }
+}
+
+/* the page keeps room for the bar, so the last question is never hidden behind it */
+html.zp-station-page body { padding-bottom: var(--zp-ospe-pad, 120px); }
+
+/* the bar steps up above the Listen player and the Draw tools while they are open */
+html.zp-listening .zp-ospe-foot { bottom: calc(176px + env(safe-area-inset-bottom, 0px)); }
+html.zp-drawing .zp-ospe-foot { bottom: calc(150px + env(safe-area-inset-bottom, 0px)); }
+html.zp-listening.zp-drawing .zp-ospe-foot { bottom: calc(320px + env(safe-area-inset-bottom, 0px)); }
+
+html.zp-station-page.zp-listening body { padding-bottom: calc(var(--zp-ospe-pad, 120px) + 170px); }
+html.zp-station-page.zp-drawing body { padding-bottom: calc(var(--zp-ospe-pad, 120px) + 140px); }
+html.zp-station-page.zp-listening.zp-drawing body { padding-bottom: calc(var(--zp-ospe-pad, 120px) + 310px); }
+
+html.zp-station-page .zp-toast { bottom: calc(var(--zp-ospe-pad, 120px) + 8px); }
+
+/* ---------- a station: one exam sheet ---------- */
 .zp-station {
   margin: 0 0 var(--zp-space-3);
-  padding: 20px 20px 10px;
+  padding: 0;
   border: 1px solid var(--zp-border);
-  border-left: 5px solid var(--zp-accent);
   border-radius: var(--zp-radius-lg);
   background: var(--zp-surface);
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.06), 0 12px 28px -22px rgba(16, 24, 40, 0.4);
 }
 
 .zp-station[hidden],
 .zp-sq > li[hidden] { display: none !important; }
 
-.zp-st-in-next { animation: zp-st-next 420ms cubic-bezier(0.2, 0.7, 0.2, 1) both; }
-.zp-st-in-prev { animation: zp-st-prev 420ms cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+.zp-st-in-next { animation: zp-st-next 380ms cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+.zp-st-in-prev { animation: zp-st-prev 380ms cubic-bezier(0.2, 0.7, 0.2, 1) both; }
 
 @keyframes zp-st-next {
-  from { opacity: 0; transform: translateX(32px); }
+  from { opacity: 0; transform: translateX(28px); }
   to   { opacity: 1; transform: none; }
 }
 
 @keyframes zp-st-prev {
-  from { opacity: 0; transform: translateX(-32px); }
+  from { opacity: 0; transform: translateX(-28px); }
   to   { opacity: 1; transform: none; }
 }
 
+/* the header strip of the sheet: the station on the left, its topic on the right */
 .zp-station-title {
-  margin: 0 0 var(--zp-space-2);
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin: 0;
+  padding: 13px 22px;
+  border-bottom: 1px solid var(--zp-border);
+  border-radius: var(--zp-radius-lg) var(--zp-radius-lg) 0 0;
+  background: var(--zp-accent-soft);
   font-family: var(--zp-font);
   font-weight: 800;
-  font-size: 21px;
+  font-size: 15px;
   line-height: 1.3;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--zp-accent);
 }
 
-.zp-station-title small {
-  margin-left: 6px;
+.zp-station-title::after {
+  content: attr(data-topic);
+  margin-left: auto;
+  padding-left: 12px;
   font-weight: 600;
-  font-size: 13px;
+  font-size: 12.5px;
+  letter-spacing: 0;
+  text-align: right;
+  text-transform: none;
   color: var(--zp-muted);
 }
 
+/* the pictures */
 .zp-station-media {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
   justify-content: center;
   gap: 12px;
-  margin: 0 0 var(--zp-space-2);
+  margin: 0;
+  padding: 18px 22px 4px;
 }
 
 /* shrinks to the picture, so the cover boxes (percentages) always sit on the picture */
@@ -328,14 +449,15 @@
   display: block;
   width: auto;
   max-width: 100%;
-  max-height: 440px;
+  max-height: 340px;
+  max-height: min(420px, 40dvh);
   height: auto;
   border: 1px solid var(--zp-border);
   border-radius: var(--zp-radius-md);
   background: #ffffff;
 }
 
-/* cover boxes fade away when the answers open */
+/* cover boxes fade away when the answers are shown */
 .zp-cover {
   position: absolute;
   display: none;
@@ -370,25 +492,88 @@ html.zp-station-page .zp-station.is-revealed .zp-cover {
   pointer-events: none;
 }
 
-.zp-sq { margin: 0 0 var(--zp-space-2); }
-.zp-sq > li { margin-bottom: 16px; }
+/* ---------- the questions: numbered like an exam sheet ---------- */
+.zp-sq { margin: 0; padding: 6px 22px 8px; }
+
+main .zp-ospe .zp-station ol.zp-sq > li {
+  position: relative;
+  max-width: none;
+  margin: 0;
+  padding: 16px 0 16px 44px;
+  border-bottom: 1px solid var(--zp-border);
+}
+
+main .zp-ospe .zp-station ol.zp-sq > li:last-child { border-bottom: 0; }
+
+main .zp-ospe .zp-station ol.zp-sq > li::before {
+  left: 0;
+  top: 15px;
+  width: 30px;
+  height: 30px;
+  border: 1.5px solid var(--zp-accent);
+  background: var(--zp-accent-soft);
+  color: var(--zp-accent);
+  font-size: 14px;
+  font-weight: 800;
+  transition: background-color 220ms ease, color 220ms ease, border-color 220ms ease;
+}
+
+/* the number turns green or red once you have marked yourself */
+main .zp-ospe .zp-station ol.zp-sq > li.is-got::before {
+  border-color: var(--zp-clin);
+  background: var(--zp-clin);
+  color: var(--zp-bg);
+}
+
+main .zp-ospe .zp-station ol.zp-sq > li.is-missed::before {
+  border-color: var(--zp-warn);
+  background: var(--zp-warn);
+  color: var(--zp-bg);
+}
 
 .zp-sq-text {
+  position: relative;
+  min-height: 30px;
   font-weight: 600;
+  font-size: 16.5px;
   line-height: 1.55;
 }
 
-.zp-sq-marks {
-  margin-left: 6px;
-  font-weight: 600;
-  font-size: 12.5px;
-  color: var(--zp-muted);
-  white-space: nowrap;
+/* with the script, tapping the question shows or hides its answer */
+html.zp-station-page .zp-sq-text {
+  padding-right: 78px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
-/* the answer: grows open, the lines settle in */
+html.zp-station-page .zp-sq-text::after {
+  content: "Show";
+  position: absolute;
+  right: 0;
+  top: 2px;
+  padding: 3px 12px;
+  border: 1.5px solid var(--zp-clin);
+  border-radius: var(--zp-radius-pill);
+  background: transparent;
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--zp-clin);
+  transition: background-color 180ms ease, color 180ms ease;
+}
+
+html.zp-station-page .zp-sq > li.is-open .zp-sq-text::after {
+  content: "Hide";
+  background: var(--zp-clin);
+  color: var(--zp-bg);
+}
+
+html.zp-station-page .zp-station.is-locked .zp-sq-text { padding-right: 0; cursor: default; }
+html.zp-station-page .zp-station.is-locked .zp-sq-text::after { display: none; }
+
+/* the answer */
 .zp-sq-answer {
-  margin-top: 8px;
+  margin-top: 10px;
   padding: 10px 14px;
   border-left: 4px solid var(--zp-clin);
   border-radius: var(--zp-radius-md);
@@ -411,6 +596,16 @@ html.zp-station-page .zp-station.is-revealed .zp-cover {
 .zp-sq-answer p,
 .zp-sq-answer ul { margin: 0; max-width: none; }
 
+.zp-sq-answer img {
+  display: block;
+  max-width: 100%;
+  max-height: 260px;
+  height: auto;
+  margin: 8px auto 0;
+  border-radius: var(--zp-radius-sm);
+}
+
+/* with the script the answer grows open, the lines settle in */
 html.zp-station-page .zp-sq-answer {
   display: grid;
   grid-template-rows: 0fr;
@@ -421,16 +616,17 @@ html.zp-station-page .zp-sq-answer {
   opacity: 0;
   visibility: hidden;
   transition:
-    grid-template-rows 420ms cubic-bezier(0.2, 0.7, 0.2, 1),
-    margin-top 420ms cubic-bezier(0.2, 0.7, 0.2, 1),
-    opacity 280ms ease,
-    visibility 0s linear 420ms;
+    grid-template-rows 380ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    opacity 260ms ease,
+    visibility 0s linear 380ms;
 }
 
 html.zp-station-page .zp-sq-answer::before { display: none; }
+
 .zp-sq-answer-in { min-height: 0; overflow: hidden; }
 
 html.zp-station-page .zp-sq-answer-body {
+  margin-top: 10px;
   padding: 10px 14px;
   border-left: 4px solid var(--zp-clin);
   border-radius: var(--zp-radius-md);
@@ -448,29 +644,65 @@ html.zp-station-page .zp-sq-answer-body::before {
   color: var(--zp-clin);
 }
 
-html.zp-station-page .zp-station.is-revealed .zp-sq-answer {
+html.zp-station-page .zp-sq > li.is-open .zp-sq-answer {
   grid-template-rows: 1fr;
-  margin-top: 8px;
   opacity: 1;
   visibility: visible;
-  transition-delay: 0s, 0s, 80ms, 0s;
+  transition-delay: 0s, 60ms, 0s;
 }
 
+/* "Got it" and "Missed it" under each answer */
 .zp-sq-tick {
-  margin-top: 10px;
-  font-weight: 600;
-  font-size: 13.5px;
-  color: var(--zp-text);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--zp-border);
+  font-size: 13px;
 }
 
-.zp-sq-tick label { display: inline-flex; align-items: center; gap: 8px; min-height: 36px; cursor: pointer; }
-.zp-sq-tick input[type="checkbox"] { width: 20px; height: 20px; margin: 0; accent-color: var(--zp-clin); }
-.zp-sq-tick select { min-height: 40px; padding: 4px 10px; }
-.zp-sq-tick label.is-pop { animation: zp-ospe-pop 340ms cubic-bezier(0.3, 1.6, 0.5, 1); }
+.zp-sq-tick > span {
+  margin-right: 2px;
+  font-weight: 700;
+  font-size: 12.5px;
+  color: var(--zp-muted);
+}
+
+.zp-sq-tick button {
+  --t: var(--zp-clin);
+  min-height: 36px;
+  padding: 0 16px;
+  border: 1.5px solid var(--t);
+  border-radius: var(--zp-radius-pill);
+  background: transparent;
+  font-family: var(--zp-font);
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 1.2;
+  color: var(--t);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: background-color 180ms ease, color 180ms ease, transform 180ms ease;
+}
+
+.zp-sq-tick button[data-mark="miss"] { --t: var(--zp-warn); }
+.zp-sq-tick button:active { transform: scale(0.96); }
+.zp-sq-tick button.is-on { background: var(--t); color: var(--zp-bg); animation: zp-ospe-pop 320ms cubic-bezier(0.3, 1.6, 0.5, 1); }
 
 @keyframes zp-ospe-pop {
-  0%   { transform: scale(0.9); }
+  0%   { transform: scale(0.88); }
   100% { transform: scale(1); }
+}
+
+/* a paused mock hides the station, so it cannot be read while the clock is stopped */
+.zp-station.is-paused > :not(.zp-station-title) {
+  filter: blur(14px);
+  pointer-events: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 /* ---------- mock results ---------- */
@@ -515,50 +747,81 @@ html.zp-station-page .zp-station.is-revealed .zp-sq-answer {
 .zp-ospe-topic.is-weak .zp-ospe-bar-track span { background: var(--zp-warn); }
 .zp-ospe-topic b { font-weight: 700; white-space: nowrap; }
 
-/* ---------- big screens: pictures stay in view on the left, questions on the right ---------- */
+/* ---------- big screens: the pictures stay in view on the left, the questions scroll on the right ---------- */
 @media (min-width: 1000px) {
   .zp-station:not(.zp-station--nomedia) {
     display: grid;
     grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
-    column-gap: 32px;
     align-items: start;
-    padding: 24px 28px 14px;
   }
 
   .zp-station:not(.zp-station--nomedia) > .zp-station-title { grid-column: 1 / -1; }
 
   .zp-station:not(.zp-station--nomedia) > .zp-station-media {
     position: sticky;
-    top: 16px;
+    top: 14px;
     flex-direction: column;
     flex-wrap: nowrap;
     align-items: center;
-    margin: 0;
+    padding: 20px 24px 20px 24px;
   }
 
-  .zp-station:not(.zp-station--nomedia) .zp-sfig img { max-height: min(430px, 44vh); }
-  .zp-station:not(.zp-station--nomedia) > .zp-sq { margin: 0; }
-  .zp-station-title { font-size: 24px; }
+  .zp-station:not(.zp-station--nomedia) .zp-sfig img {
+    max-height: 380px;
+    max-height: min(560px, calc(100dvh - 270px));
+    min-height: 120px;
+  }
+
+  .zp-station:not(.zp-station--nomedia) > .zp-sq {
+    padding: 8px 24px 10px 26px;
+    border-left: 1px solid var(--zp-border);
+  }
+
+  .zp-station.zp-station--nomedia .zp-sq { padding-left: 28px; padding-right: 28px; }
   .zp-sq-text { font-size: 16.5px; }
-  .zp-sq-answer, .zp-sq-answer-body { font-size: 15.5px; }
+  .zp-sq-answer,
+  html.zp-station-page .zp-sq-answer-body { font-size: 15.5px; }
 }
 
 @media (max-width: 600px) {
-  .zp-station { padding: 16px 14px 6px; }
-  .zp-ospe-ui { padding: 14px 12px 16px; }
-  .zp-sfig img { max-height: 340px; }
+  .zp-station-title { padding: 12px 16px; }
+  .zp-station-media { padding: 14px 16px 2px; }
+  .zp-sq { padding: 4px 16px 6px; }
+  .zp-sfig img { max-height: 280px; max-height: min(360px, 36dvh); }
+  .zp-ospe-ui { padding: 10px 12px; }
   .zp-ospe-topic { grid-template-columns: minmax(70px, 30%) 1fr auto; gap: 8px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .zp-ospe-thumb,
-  .zp-ospe-track span,
+  .zp-ospe-prog span,
   .zp-ospe-topic .zp-ospe-bar-track span,
   html.zp-station-page .zp-sq-answer,
   html.zp-station-page .zp-cover { transition-duration: 0.01ms !important; transition-delay: 0s !important; }
   .zp-ospe-bar.is-in > *,
+  .zp-ospe-foot,
   .zp-st-in-next,
   .zp-st-in-prev,
   .zp-ospe-clock.is-low,
-  .zp-sq-tick label.is-pop { animation: none; }
+  .zp-sq-tick button.is-on { animation: none; }
 }
+
+/* the printed page and the PDF show every station with all its answers and none of the controls */
+@media print {
+  .zp-station { box-shadow: none; }
+  .zp-station:not(.zp-station--nomedia) { display: block !important; }
+  .zp-station-media { position: static !important; }
+  .zp-sq-answer {
+    grid-template-rows: 1fr !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transition: none !important;
+  }
+  .zp-sq-answer-in { overflow: visible !important; }
+  .zp-sq-text { padding-right: 0 !important; }
+  .zp-sq-text::after { display: none !important; }
+  .zp-station.is-paused > * { filter: none !important; }
+  html.zp-station-page body { padding-bottom: 0 !important; }
+}
+
+html.zp-print-view .zp-station-media { position: static; }

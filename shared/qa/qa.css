@@ -3,7 +3,7 @@
    under each answer and the counts. Without the script, or in the PDF and printed page, every answer is shown.
 
    The page is always ONE column: every question is a full-width row, on a phone and on the biggest screen.
-   On a big screen the whole page stays a comfortable reading width instead of stretching.
+   It uses the normal width of the lesson page, with no extra limit.
 
    <article class="zp-qa">
      <p class="zp-qa-q">Question text?</p>
@@ -19,8 +19,7 @@
    A picture inside an answer is a normal zp-figure placed between the answer's blocks (never inside a list or a table).
    It is centered, never taller than about 380px, and keeps its caption underneath. */
 
-/* ---------- one column, a readable width ---------- */
-html.zp-qa-on main { max-width: 980px; }
+/* ---------- one column, the normal lesson width ---------- */
 
 .zp-qa {
   --q: var(--sec, var(--zp-accent));
@@ -503,7 +502,6 @@ html.zp-qa-on body { padding-top: var(--zp-qa-pad, 0); }
 /* the PDF and the printed page show every answer and none of the controls */
 @media print {
   html.zp-qa-on body { padding-top: 0 !important; }
-  html.zp-qa-on main { max-width: none; }
   .zp-qa-list { display: block !important; }
   .zp-qa-panel {
     display: grid !important;

@@ -10,14 +10,23 @@
      <div class="zp-qa-panel"><div class="zp-qa-inner"><div class="zp-qa-body">
        <p class="zp-qa-core">One-line core answer with <strong class="zp-term">key terms</strong>.</p>
        <ul><li>Point</li></ul>
-       <figure class="zp-figure"><img src="data:image/webp;base64,..." alt="..." width="900" height="600"><figcaption>Short caption</figcaption></figure>
+       <figure class="zp-figure"><img src="data:image/webp;base64,..." alt="..." width="900" height="600"><figcaption>Name of the picture</figcaption></figure>
        <p class="zp-qa-keys"><span>Key words</span> word, word, word</p>
        <p class="zp-qa-src">Source: page 192</p>
      </div></div></div>
    </article>
 
-   A picture inside an answer is a normal zp-figure placed between the answer's blocks (never inside a list or a table).
-   It is centered, never taller than about 380px, and keeps its caption underneath. */
+   A picture inside an answer is a normal zp-figure. It is either a direct child of zp-qa-body, placed between the
+   answer's blocks (never inside a list or a table), or it sits beside a list or short paragraphs inside a zp-fig-row
+   that is itself a direct child of zp-qa-body:
+
+   <div class="zp-fig-row">
+     <div class="zp-fig-text"><ul><li>Point</li></ul></div>
+     <figure class="zp-figure">...</figure>
+   </div>
+
+   Beside its text only on wide screens; on phones and in the PDF the figure sits under the text.
+   The figure is centered, never taller than about 380px (520px beside text), and keeps its name caption underneath. */
 
 /* ---------- one column, the normal lesson width ---------- */
 
@@ -153,13 +162,14 @@ html.zp-qa-on .zp-qa-panel {
 .zp-qa-body ol { max-width: none; }
 .zp-qa-body > :last-child { margin-bottom: 0; }
 
-/* photos in an answer: centered, never taller than the screen can comfortably show, caption underneath */
+/* photos in an answer: centered, never taller than the screen can comfortably show, name caption underneath */
 .zp-qa-body .zp-figure {
   max-width: 560px;
   margin: 14px auto;
 }
 
 .zp-qa-body .zp-figure--small { max-width: 340px; }
+.zp-qa-body .zp-figure--wide { max-width: 760px; }
 
 .zp-qa-body .zp-figure img,
 .zp-qa-body > img {
@@ -175,6 +185,18 @@ html.zp-qa-on .zp-qa-panel {
 }
 
 .zp-qa-body .zp-figure figcaption { max-width: 100%; }
+
+/* a picture beside its list or short paragraphs: stacked under the text on a phone, in two columns on a wide screen */
+.zp-qa-body .zp-fig-row { margin: 14px 0; }
+.zp-qa-body .zp-fig-row > .zp-figure { max-width: 560px; margin: 14px auto 0; }
+
+@media screen and (min-width: 1000px) {
+  .zp-qa-body .zp-fig-row > .zp-figure { max-width: none; margin: 0; }
+  .zp-qa-body .zp-fig-row > .zp-figure img {
+    max-height: 520px;
+    max-height: min(520px, 70dvh);
+  }
+}
 
 /* wide tables and pictures never push the card wider than the screen */
 .zp-qa-body .zp-table-wrap { max-width: 100%; }
@@ -515,6 +537,7 @@ html.zp-qa-on body { padding-top: var(--zp-qa-pad, 0); }
   .zp-qa { break-inside: avoid; page-break-inside: avoid; }
   .zp-qa-q::before, .zp-qa-q::after { display: none !important; }
   .zp-section.zp-qa-empty > :not(h2) { display: block; }
+  .zp-qa-body .zp-fig-row > .zp-figure { max-width: 560px; margin: 14px auto 0; }
 }
 
 html.zp-print-view .zp-qa-list { display: block !important; }
@@ -531,3 +554,5 @@ html.zp-print-view .zp-qa-none { display: none !important; }
 html.zp-print-view .zp-qa-q::before,
 html.zp-print-view .zp-qa-q::after { display: none !important; }
 html.zp-print-view .zp-qa-body > * { animation: none !important; }
+html.zp-print-view .zp-qa-body .zp-fig-row > .zp-figure { max-width: 560px; margin: 14px auto 0; }
+html.zp-print-view .zp-qa-body .zp-fig-row > .zp-figure img { max-height: 380px; }

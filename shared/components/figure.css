@@ -1,24 +1,46 @@
-/* FIGURE: a photo or picture from the handout, placed next to the information it explains.
+/* FIGURE: a photo or picture from the handout, placed with the information it explains.
    No zoom. The picture is never stretched past its own size, so it stays sharp.
+   Each figure is a small framed card. Its top bar takes the colour of the section it sits in
+   (the page accent outside a section). Its caption is the NAME of the picture, not a number.
+
+   1. Full width, in the flow of the section (the original form, still fully supported):
 
    <figure class="zp-figure">
      <img src="data:image/webp;base64,..." alt="What the picture shows" width="900" height="600">
-     <figcaption>Short caption</figcaption>
+     <figcaption>Name of the picture</figcaption>
    </figure>
 
-   Small version (for narrow pictures): add the class zp-figure--small. */
+   Variants: zp-figure--small for a small or narrow picture,
+             zp-figure--wide for a wide picture full of detail (it gets more room).
+
+   2. Beside its text (wide screens only). On phones, tablets and in the PDF it simply stacks:
+      the text first, the figure under it. It is not sticky.
+
+   <div class="zp-fig-row">
+     <div class="zp-fig-text"> a paragraph or a list </div>
+     <figure class="zp-figure"> ... </figure>
+   </div>
+
+   Add zp-fig-row--left to put the figure on the left instead of the right. */
 
 .zp-figure {
+  --fig: var(--sec, var(--zp-accent));
+  --fig-soft: var(--sec-soft, var(--zp-accent-soft));
   width: 100%;
   max-width: 640px;
   margin: var(--zp-space-3) auto;
-  padding: 0;
+  padding: 12px 12px 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  border: 1px solid var(--zp-border);
+  border-top: 4px solid var(--fig);
+  border-radius: var(--zp-radius-lg);
+  background: linear-gradient(180deg, var(--fig-soft), var(--zp-surface) 90px);
 }
 
 .zp-figure--small { max-width: 380px; }
+.zp-figure--wide { max-width: 920px; }
 
 .zp-figure img {
   display: block;
@@ -27,12 +49,67 @@
   height: auto;
   margin: 0 auto;
   border: 1px solid var(--zp-border);
-  border-radius: var(--zp-radius-md);
+  border-radius: var(--zp-radius-sm);
   background: #ffffff;
 }
 
+/* the caption is the name of the picture */
 .zp-figure figcaption {
-  margin-top: var(--zp-space-1);
+  margin-top: 10px;
   max-width: 560px;
   text-align: center;
+  font-family: var(--zp-font);
+  font-weight: 700;
+  font-size: 13.5px;
+  line-height: 1.4;
+  color: var(--fig);
 }
+
+/* ---------- beside its text ---------- */
+.zp-fig-row { margin: var(--zp-space-3) 0; }
+
+/* on a phone or tablet the figure sits under its text */
+.zp-fig-row > .zp-figure { margin: var(--zp-space-3) auto 0; }
+
+.zp-fig-text > :first-child { margin-top: 0; }
+.zp-fig-text > :last-child { margin-bottom: 0; }
+
+@media screen and (min-width: 1000px) {
+  .zp-fig-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    column-gap: 28px;
+    align-items: start;
+  }
+
+  .zp-fig-row--left { grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); }
+  .zp-fig-row--left > .zp-figure { order: -1; }
+
+  .zp-fig-row > .zp-figure {
+    max-width: none;
+    margin: 0;
+  }
+
+  .zp-fig-row > .zp-figure img {
+    max-height: 520px;
+    max-height: min(520px, 70dvh);
+  }
+}
+
+@media (max-width: 600px) {
+  .zp-figure { padding: 10px 10px 8px; }
+}
+
+/* the printed page and the PDF show the figure under its text, never in two columns */
+@media print {
+  .zp-fig-row {
+    display: block !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  .zp-fig-row > .zp-figure { max-width: 640px; margin: 24px auto 0; }
+}
+
+html.zp-print-view .zp-fig-row { display: block; }
+html.zp-print-view .zp-fig-row > .zp-figure { max-width: 640px; margin: 24px auto 0; }
+html.zp-print-view .zp-fig-row > .zp-figure img { max-height: none; }

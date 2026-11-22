@@ -21,7 +21,9 @@
      <figure class="zp-figure"> ... </figure>
    </div>
 
-   Add zp-fig-row--left to put the figure on the left instead of the right. */
+   Add zp-fig-row--left to put the figure on the left instead of the right.
+   Width of the figure column, chosen so the figure is about as tall as its text (no empty gap):
+   zp-fig-row--s (one third), none (about 44%), zp-fig-row--l (one half), zp-fig-row--xl (about 55%). */
 
 .zp-figure {
   --fig: var(--sec, var(--zp-accent));
@@ -66,7 +68,15 @@
 }
 
 /* ---------- beside its text ---------- */
-.zp-fig-row { margin: var(--zp-space-3) 0; }
+.zp-fig-row {
+  --txt: 1.25fr;
+  --img: 1fr;
+  margin: var(--zp-space-3) 0;
+}
+
+.zp-fig-row--s  { --txt: 2fr;   --img: 1fr; }
+.zp-fig-row--l  { --txt: 1fr;   --img: 1fr; }
+.zp-fig-row--xl { --txt: 0.8fr; --img: 1fr; }
 
 /* on a phone or tablet the figure sits under its text */
 .zp-fig-row > .zp-figure { margin: var(--zp-space-3) auto 0; }
@@ -77,12 +87,12 @@
 @media screen and (min-width: 1000px) {
   .zp-fig-row {
     display: grid;
-    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, var(--txt)) minmax(0, var(--img));
     column-gap: 28px;
     align-items: start;
   }
 
-  .zp-fig-row--left { grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); }
+  .zp-fig-row--left { grid-template-columns: minmax(0, var(--img)) minmax(0, var(--txt)); }
   .zp-fig-row--left > .zp-figure { order: -1; }
 
   .zp-fig-row > .zp-figure {

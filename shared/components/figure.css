@@ -1,44 +1,38 @@
-/* FIGURE: a photo or picture from the handout, placed with the information it explains.
+/* FIGURE: a photo or picture from the handout, made part of the lesson.
    No frame, no outline, no zoom. The picture is never stretched past its own size, so it stays sharp.
    The caption is the NAME of the picture, not a number.
 
-   1. Full width, in the flow of the section (for detailed pictures with many small labels):
+   The lesson only ever writes ONE form: the figure, placed directly after the paragraph or list it explains.
 
+   <p>The text that explains the picture.</p>
    <figure class="zp-figure">
      <img src="data:image/webp;base64,..." alt="What the picture shows" width="900" height="600">
      <figcaption>Name of the picture</figcaption>
    </figure>
 
-   Variants: zp-figure--small for a small or narrow picture,
-             zp-figure--wide for a wide picture full of detail (it gets more room).
+   components/figure.js then does the layout, so every picture looks the same way:
+   - On a wide screen (1000px and up) it moves the paragraph(s) or list just before the figure and the figure
+     into one row, with the picture on the right, in the free space beside the text. It tries several picture
+     widths (and one to three blocks of text) and keeps the combination where the picture and the text are the
+     same height, so there is no empty space above or below either of them.
+   - When no combination fits well, on phones and tablets, and when the script does not run, the picture sits
+     directly under its text, lined up with the left edge of the text.
+   - zp-figure--wide (for a detailed picture with many small labels) is never put beside text: it sits under
+     its text at a larger size.
 
-   2. Beside its text (the default for every picture that is not detailed). Always on the right.
-      The text comes first in the markup, the figure second:
+   On a light page the white background of a picture is blended into the page, so the drawing looks printed on it.
 
-   <div class="zp-fig-row">
-     <div class="zp-fig-text"> one or two paragraphs or lists </div>
-     <figure class="zp-figure"> ... </figure>
-   </div>
-
-   On a wide screen (1000px and up) figure.js tries several widths for the picture and keeps the one
-   where the picture and the text come out the same height, so there is no empty space above or below
-   either of them. If no width fits well (for example a tall picture beside two lines of text) it adds the
-   class zp-fig-stack and the picture sits above its text instead.
-   On phones, tablets, in the PDF and when the script does not run, the picture sits above its text
-   (the PDF view and printing keep the picture under its text, see print.css).
-
-   Old classes still work so that finished lessons do not change: zp-fig-row--left (figure on the left),
-   and zp-fig-row--s, --l, --xl (a starting width, used only when the script does not run).
-   New lessons use none of them. */
+   Older lessons that wrote the row themselves (zp-fig-row with zp-fig-text, and --left, --s, --l, --xl) still
+   work and are fitted the same way. New lessons never write a row. */
 
 .zp-figure {
   width: 100%;
   max-width: 640px;
-  margin: var(--zp-space-3) auto;
+  margin: var(--zp-space-3) 0;
   padding: 0;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   border: 0;
   background: none;
 }
@@ -51,8 +45,16 @@
   width: auto;
   max-width: 100%;
   height: auto;
-  margin: 0 auto;
+  margin: 0;
   border-radius: var(--zp-radius-sm);
+  background: transparent;
+  /* the white of the picture takes the colour of the page */
+  mix-blend-mode: multiply;
+}
+
+/* on a dark page a white picture cannot be blended in, so it stays a clean white panel */
+html[data-theme="dark"] .zp-figure img {
+  mix-blend-mode: normal;
   background: #ffffff;
 }
 
@@ -64,11 +66,11 @@
   }
 }
 
-/* the caption is the name of the picture */
+/* the caption is the name of the picture, lined up with the picture */
 .zp-figure figcaption {
   margin-top: 8px;
   max-width: 560px;
-  text-align: center;
+  text-align: left;
   font-family: var(--zp-font);
   font-weight: 600;
   font-size: 12.5px;
@@ -76,7 +78,7 @@
   color: var(--zp-muted);
 }
 
-/* ---------- beside its text ---------- */
+/* ---------- a picture next to its text (built by figure.js) ---------- */
 .zp-fig-row {
   --fig-w: 44%;
   display: flex;
@@ -88,11 +90,8 @@
 .zp-fig-row--l  { --fig-w: 50%; }
 .zp-fig-row--xl { --fig-w: 55%; }
 
-/* narrow screens, and a row that figure.js stacked: the picture first, then the text that explains it */
-.zp-fig-row > .zp-figure {
-  order: -1;
-  margin: 0 auto var(--zp-space-2);
-}
+/* narrow screens, and a row that figure.js stacked: the text first, then its picture under it */
+.zp-fig-row > .zp-figure { margin: var(--zp-space-2) 0 0; }
 
 .zp-fig-text > :first-child { margin-top: 0; }
 .zp-fig-text > :last-child { margin-bottom: 0; }
@@ -109,17 +108,20 @@
     grid-template-columns: var(--fig-w) minmax(0, 1fr);
   }
 
+  /* beside the text, the picture is centred in its own column */
   .zp-fig-row:not(.zp-fig-stack) > .zp-figure {
-    order: 0;
     max-width: none;
     margin: 0;
+    align-items: center;
   }
 
+  .zp-fig-row:not(.zp-fig-stack) > .zp-figure img { margin: 0 auto; }
+  .zp-fig-row:not(.zp-fig-stack) > .zp-figure figcaption { text-align: center; }
   .zp-fig-row--left:not(.zp-fig-stack) > .zp-figure { order: -1; }
 }
 
 @media (max-width: 600px) {
-  .zp-figure { margin: var(--zp-space-2) auto; }
+  .zp-figure { margin: var(--zp-space-2) 0; }
 }
 
 /* the printed page and the PDF show the picture under its text, never in two columns */
@@ -129,9 +131,9 @@
     break-inside: avoid;
     page-break-inside: avoid;
   }
-  .zp-fig-row > .zp-figure { max-width: 640px; margin: 24px auto 0; }
+  .zp-fig-row > .zp-figure { max-width: 640px; margin: 24px 0 0; }
 }
 
 html.zp-print-view .zp-fig-row { display: block; }
-html.zp-print-view .zp-fig-row > .zp-figure { max-width: 640px; margin: 24px auto 0; }
+html.zp-print-view .zp-fig-row > .zp-figure { max-width: 640px; margin: 24px 0 0; }
 html.zp-print-view .zp-fig-row > .zp-figure img { max-height: none; }

@@ -10,34 +10,33 @@
      <figcaption>Name of the picture</figcaption>
    </figure>
 
-   components/figure.js then does the layout, so every picture looks the same way:
-   - On a wide screen (1000px and up) it moves the paragraph(s) or list just before the figure and the figure
-     into one row, with the picture on the right, in the free space beside the text. It tries several picture
-     widths (and one to three blocks of text) and keeps the combination where the picture and the text are the
-     same height, so there is no empty space above or below either of them.
-   - When no combination fits well, on phones and tablets, and when the script does not run, the picture sits
-     directly under its text, lined up with the left edge of the text.
-   - zp-figure--wide (for a detailed picture with many small labels) is never put beside text: it sits under
-     its text at a larger size.
+   The layout follows two well-tried conventions (the thumbnail of an encyclopedia page and the margin figure of
+   Tufte-style handouts): on a wide screen the picture is a modest size and floats on the right, beside the text it
+   explains, and the text flows around it and carries on underneath. components/figure.js sets its width from the
+   height of that text (never more than about 420px, never above the picture's own size) and moves the figure to
+   the start of that text, which is what makes it float beside it.
+   On a narrow screen, when the script does not run, and in the PDF, the picture is centred directly under its text.
+   zp-figure--wide (for a detailed picture with many small labels) is never floated: it is centred under its text
+   at a larger size.
 
    On a light page the white background of a picture is blended into the page, so the drawing looks printed on it.
 
-   Older lessons that wrote the row themselves (zp-fig-row with zp-fig-text, and --left, --s, --l, --xl) still
-   work and are fitted the same way. New lessons never write a row. */
+   Older lessons that wrote a row themselves (zp-fig-row with zp-fig-text) still work as a simple two-column
+   layout. New lessons never write a row. */
 
 .zp-figure {
   width: 100%;
-  max-width: 640px;
-  margin: var(--zp-space-3) 0;
+  max-width: 380px;
+  margin: var(--zp-space-3) auto;
   padding: 0;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   border: 0;
   background: none;
 }
 
-.zp-figure--small { max-width: 380px; }
+.zp-figure--small { max-width: 340px; }
 .zp-figure--wide { max-width: 920px; }
 
 .zp-figure img {
@@ -45,7 +44,7 @@
   width: auto;
   max-width: 100%;
   height: auto;
-  margin: 0;
+  margin: 0 auto;
   border-radius: var(--zp-radius-sm);
   background: transparent;
   /* the white of the picture takes the colour of the page */
@@ -58,7 +57,7 @@ html[data-theme="dark"] .zp-figure img {
   background: #ffffff;
 }
 
-/* a very tall picture never takes more than the screen (not in the PDF pages) */
+/* a very tall picture on its own line never takes more than the screen (not in the PDF pages) */
 @media screen {
   html:not(.zp-print-view) .zp-figure img {
     max-height: 640px;
@@ -66,11 +65,11 @@ html[data-theme="dark"] .zp-figure img {
   }
 }
 
-/* the caption is the name of the picture, lined up with the picture */
+/* the caption is the name of the picture, centred under it */
 .zp-figure figcaption {
   margin-top: 8px;
   max-width: 560px;
-  text-align: left;
+  text-align: center;
   font-family: var(--zp-font);
   font-weight: 600;
   font-size: 12.5px;
@@ -78,62 +77,74 @@ html[data-theme="dark"] .zp-figure img {
   color: var(--zp-muted);
 }
 
-/* ---------- a picture next to its text (built by figure.js) ---------- */
+/* ---------- beside its text: a floating picture (set up by figure.js) ---------- */
+@media screen {
+  .zp-figure.zp-fig-float {
+    float: right;
+    clear: right;
+    width: var(--fig-w, 320px);
+    max-width: none;
+    margin: 4px 0 16px 28px;
+  }
+
+  /* the width is set by figure.js, so the picture fills it (and is never taller than its own shape allows) */
+  html:not(.zp-print-view) .zp-figure.zp-fig-float img {
+    width: 100%;
+    max-height: none;
+  }
+}
+
+/* whatever comes after a floating picture and is not plain text starts below it, so a box, a table or a
+   heading never runs underneath the picture */
+.zp-section > :not(p):not(ul):not(ol):not(figure),
+.zp-qa-body > :not(p):not(ul):not(ol):not(figure),
+.zp-qa-body > .zp-qa-keys,
+.zp-qa-body > .zp-qa-src { clear: right; }
+
+/* ---------- an older lesson that wrote its own row ---------- */
 .zp-fig-row {
-  --fig-w: 44%;
   display: flex;
   flex-direction: column;
   margin: var(--zp-space-3) 0;
 }
 
-.zp-fig-row--s  { --fig-w: 33%; }
-.zp-fig-row--l  { --fig-w: 50%; }
-.zp-fig-row--xl { --fig-w: 55%; }
-
-/* narrow screens, and a row that figure.js stacked: the text first, then its picture under it */
-.zp-fig-row > .zp-figure { margin: var(--zp-space-2) 0 0; }
-
+.zp-fig-row > .zp-figure { margin: var(--zp-space-2) auto 0; }
 .zp-fig-text > :first-child { margin-top: 0; }
 .zp-fig-text > :last-child { margin-bottom: 0; }
 
 @media screen and (min-width: 1000px) {
-  .zp-fig-row:not(.zp-fig-stack) {
+  .zp-fig-row {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) var(--fig-w);
+    grid-template-columns: minmax(0, 1fr) 44%;
     column-gap: 28px;
     align-items: center;
   }
 
-  .zp-fig-row--left:not(.zp-fig-stack) {
-    grid-template-columns: var(--fig-w) minmax(0, 1fr);
-  }
-
-  /* beside the text, the picture is centred in its own column */
-  .zp-fig-row:not(.zp-fig-stack) > .zp-figure {
-    max-width: none;
-    margin: 0;
-    align-items: center;
-  }
-
-  .zp-fig-row:not(.zp-fig-stack) > .zp-figure img { margin: 0 auto; }
-  .zp-fig-row:not(.zp-fig-stack) > .zp-figure figcaption { text-align: center; }
-  .zp-fig-row--left:not(.zp-fig-stack) > .zp-figure { order: -1; }
+  .zp-fig-row > .zp-figure { max-width: none; margin: 0; }
+  .zp-fig-row--left { grid-template-columns: 44% minmax(0, 1fr); }
+  .zp-fig-row--left > .zp-figure { order: -1; }
 }
 
 @media (max-width: 600px) {
-  .zp-figure { margin: var(--zp-space-2) 0; }
+  .zp-figure { margin: var(--zp-space-2) auto; }
 }
 
-/* the printed page and the PDF show the picture under its text, never in two columns */
+/* the printed page and the PDF show the picture centred under its text, never floating or in two columns */
 @media print {
+  .zp-figure.zp-fig-float {
+    float: none !important;
+    width: 100% !important;
+    max-width: 380px !important;
+    margin: 24px auto !important;
+  }
   .zp-fig-row {
     display: block !important;
     break-inside: avoid;
     page-break-inside: avoid;
   }
-  .zp-fig-row > .zp-figure { max-width: 640px; margin: 24px 0 0; }
+  .zp-fig-row > .zp-figure { max-width: 380px; margin: 24px auto 0; }
 }
 
 html.zp-print-view .zp-fig-row { display: block; }
-html.zp-print-view .zp-fig-row > .zp-figure { max-width: 640px; margin: 24px 0 0; }
+html.zp-print-view .zp-fig-row > .zp-figure { max-width: 380px; margin: 24px auto 0; }
 html.zp-print-view .zp-fig-row > .zp-figure img { max-height: none; }

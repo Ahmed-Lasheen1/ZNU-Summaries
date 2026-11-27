@@ -9,8 +9,10 @@
      the whole station. Under each answer the student taps "Got it" or "Missed it". The row turns green or red.
    - Mock exam: a timed run. The number of stations, questions per station and minutes per station start at the values
      written on the page (data-mock-stations, data-mock-questions, data-mock-minutes) and the student can change them.
-     Stations are drawn from every topic in proportion to its size, never purely at random. During a station the
-     answers are locked and the timer runs. Then the answers open and the student marks each one.
+     Stations are drawn from every topic in proportion to its size, never purely at random. When a station shows fewer
+     questions than it has, every question marked data-must is always included first (a marked question is never
+     dropped, even when there are more marked questions than places) and the other questions fill the rest at random.
+     During a station the answers are locked and the timer runs. Then the answers open and the student marks each one.
      At the end there is a score by topic. Stations below 60 percent are remembered on this device.
      Switching to Study, switching to another browser tab or closing the page pauses the clock by itself,
      and the Mock exam tab returns exactly where the student stopped (tap Resume).
@@ -522,11 +524,18 @@
     return shuffle(chosen)
   }
 
+  /* the questions a station shows in a mock. A question marked data-must is always taken first, even when
+     there are more marked questions than places; random questions fill the rest. They stay in the page's order. */
   function pickQuestions(st, count) {
     var all = st._qs
     if (!count || count >= all.length) return all.slice()
-    var keep = shuffle(all.map(function (li, i) { return i })).slice(0, count).sort(function (a, b) { return a - b })
-    return keep.map(function (i) { return all[i] })
+
+    var must = all.filter(function (li) { return li.hasAttribute('data-must') })
+    if (must.length >= count) return must
+
+    var rest = all.filter(function (li) { return must.indexOf(li) < 0 })
+    var drawn = shuffle(rest).slice(0, count - must.length)
+    return all.filter(function (li) { return must.indexOf(li) > -1 || drawn.indexOf(li) > -1 })
   }
 
   /* ---------- mock: setting it up ---------- */

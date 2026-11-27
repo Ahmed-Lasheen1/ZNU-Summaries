@@ -9,9 +9,12 @@
      the whole station. Under each answer the student taps "Got it" or "Missed it". The row turns green or red.
    - Mock exam: a timed run. The number of stations, questions per station and minutes per station start at the values
      written on the page (data-mock-stations, data-mock-questions, data-mock-minutes) and the student can change them.
-     Stations are drawn from every topic in proportion to its size, never purely at random. When a station shows fewer
-     questions than it has, every question marked data-must is always included first (a marked question is never
-     dropped, even when there are more marked questions than places) and the other questions fill the rest at random.
+     Stations are drawn from every topic in proportion to its size, never purely at random. When the mock has fewer
+     stations than there are topics, that many different topics are drawn at random (a bigger topic a little more
+     likely) and one station is taken from each.
+     When a station shows fewer questions than it has, every question marked data-must is always included first
+     (a marked question is never dropped, even when there are more marked questions than places) and the other
+     questions fill the rest at random.
      During a station the answers are locked and the timer runs. Then the answers open and the student marks each one.
      At the end there is a score by topic. Stations below 60 percent are remembered on this device.
      Switching to Study, switching to another browser tab or closing the page pauses the clock by itself,
@@ -490,33 +493,55 @@
     var n = Math.max(1, Math.min(count, total))
     var every = n >= g.length
 
-    var q = g.map(function (list) { return Math.min(list.length, Math.floor(n * list.length / total)) })
-    if (every) q = q.map(function (v) { return Math.max(1, v) })
-    var sum = q.reduce(add, 0)
-
-    while (sum > n) {
-      var most = -1
-      q.forEach(function (v, i) {
-        if (v > (every ? 1 : 0) && (most < 0 || v > q[most])) most = i
-      })
-      if (most < 0) break
-      q[most] -= 1
-      sum -= 1
-    }
-    while (sum < n) {
-      var pick = -1
-      var best = -1
-      q.forEach(function (v, i) {
-        if (v >= g[i].length) return
-        var want = n * g[i].length / total - v + Math.random() * 0.01
-        if (want > best) {
-          best = want
-          pick = i
+    var q
+    if (!every) {
+      /* fewer places than topics: one station from each of n different topics,
+         chosen at random, a bigger topic being a little more likely */
+      q = g.map(function () { return 0 })
+      var open = g.map(function (list, i) { return i })
+      for (var p = 0; p < n; p++) {
+        var weight = open.reduce(function (s, i) { return s + g[i].length }, 0)
+        var roll = Math.random() * weight
+        var chosenTopic = open[open.length - 1]
+        for (var k = 0; k < open.length; k++) {
+          roll -= g[open[k]].length
+          if (roll < 0) {
+            chosenTopic = open[k]
+            break
+          }
         }
-      })
-      if (pick < 0) break
-      q[pick] += 1
-      sum += 1
+        q[chosenTopic] = 1
+        open.splice(open.indexOf(chosenTopic), 1)
+      }
+    } else {
+      q = g.map(function (list) { return Math.min(list.length, Math.floor(n * list.length / total)) })
+      q = q.map(function (v) { return Math.max(1, v) })
+      var sum = q.reduce(add, 0)
+
+      while (sum > n) {
+        var most = -1
+        q.forEach(function (v, i) {
+          if (v > 1 && (most < 0 || v > q[most])) most = i
+        })
+        if (most < 0) break
+        q[most] -= 1
+        sum -= 1
+      }
+      while (sum < n) {
+        var pick = -1
+        var best = -1
+        q.forEach(function (v, i) {
+          if (v >= g[i].length) return
+          var want = n * g[i].length / total - v + Math.random() * 0.01
+          if (want > best) {
+            best = want
+            pick = i
+          }
+        })
+        if (pick < 0) break
+        q[pick] += 1
+        sum += 1
+      }
     }
 
     var chosen = []

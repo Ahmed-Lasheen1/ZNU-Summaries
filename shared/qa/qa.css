@@ -43,6 +43,35 @@
 .zp-qa.is-open { box-shadow: 0 12px 28px -18px rgba(16, 24, 40, 0.5); }
 .zp-qa.is-filtered { display: none; }
 
+/* the number of the question (data-n, written in the page), kept when the student filters or searches.
+   It is drawn by the stylesheet, so Listen never reads it aloud. */
+.zp-qa[data-n]::before {
+  content: attr(data-n);
+  position: absolute;
+  z-index: 2;
+  left: 14px;
+  top: 14px;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 7px;
+  box-sizing: border-box;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: var(--q);
+  font-family: var(--zp-font);
+  font-weight: 800;
+  font-size: 12px;
+  line-height: 1;
+  color: var(--zp-bg);
+  pointer-events: none;
+}
+
+.zp-qa[data-n] > .zp-qa-q { padding-left: 58px; }
+
+/* the first card, when the page has no lesson sections, starts a little below the at-a-glance card */
+.zp-glance + .zp-qa { margin-top: var(--zp-space-4); }
+
 /* ---------- the question ---------- */
 .zp-qa-q {
   position: relative;
@@ -488,6 +517,8 @@ html.zp-qa-on body { padding-top: var(--zp-qa-pad, 0); }
 
 @media (max-width: 600px) {
   .zp-qa-q { padding: 14px 58px 14px 14px; font-size: 16px; }
+  .zp-qa[data-n]::before { left: 12px; top: 12px; }
+  .zp-qa[data-n] > .zp-qa-q { padding-left: 52px; }
   .zp-qa-body { padding: 4px 14px 16px; }
   .zp-qa-tool { padding: 9px 10px; }
   .zp-qa-body > .zp-figure:not(.zp-fig-float) img,
